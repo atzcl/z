@@ -1,7 +1,6 @@
 import { Application } from 'egg'
 
 const path = require('path')
-const HANDLERS = 'handlers'
 
 /**
  * 自定义 Loader 加载拓展目录
@@ -9,23 +8,27 @@ const HANDLERS = 'handlers'
  * @desc https://eggjs.org/zh-cn/advanced/loader.html
  */
 module.exports = (app: Application) => {
-  loadHandlers(app)
+  // 加载所有处理第三方业务
+  loadCustomizeCtx('handlers', app)
+  // 加载所有验证文件
+  loadCustomizeCtx('validates', app, 'validateRule')
+  // 加载所有 Repository 层文件
+  loadCustomizeCtx('repositories', app, 'repository')
 }
 
 /**
- * 加载 handlers 目录的所有 js，并注入 ctx 中
+ * 加载指定目录的所有 js，并注入 ctx 中 （懒加载）
  *
  * @param {Application} app Application 对象
  */
-async function loadHandlers(app: Application) {
+function loadCustomizeCtx(loadPath: string, app: Application, customizeCtx: string = '') {
   // 获取所有的 loadUnit
-  const handlePaths = app.loader.getLoadUnits().map((unit: any) => path.join(unit.path, `app/${HANDLERS}`))
+  const handlePaths = app.loader.getLoadUnits().map((unit: any) => path.join(unit.path, `app/${loadPath}`))
 
-  app.loader.loadToContext(handlePaths, HANDLERS, {
-    // service 需要继承 app.Service，所以要拿到 app 参数
-    // 设置 call 在加载时会调用函数返回 UserService
+  app.loader.loadToContext(handlePaths, customizeCtx === '' ? loadPath : customizeCtx, {
+    // 设置 call 在加载时会调用函数返回相对应的处理
     call: true
-  });
+  })
 }
 
 // async function loadToApp(app: Application) {
