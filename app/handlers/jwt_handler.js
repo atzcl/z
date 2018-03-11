@@ -7,9 +7,8 @@
 |
 */
 Object.defineProperty(exports, "__esModule", { value: true });
-/// <reference path='../../index.d.ts' />
 const base_handler_1 = require("../base_class/base_handler");
-class jwtHandler extends base_handler_1.default {
+class JwtHandler extends base_handler_1.default {
     /**
      * 获取加密 token
      *
@@ -28,4 +27,4 @@ class jwtHandler extends base_handler_1.default {
         return this.app.jwt.decode(token);
     }
 }
-exports.default = jwtHandler;
+exports.default = JwtHandler;

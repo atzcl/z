@@ -6,11 +6,9 @@
 |
 */
 
-/// <reference path='../../index.d.ts' />
-
 import BaseHandler from '../base_class/base_handler'
 
-export default class jwtHandler extends BaseHandler {
+export default class JwtHandler extends BaseHandler {
   /**
    * 获取加密 token
    *

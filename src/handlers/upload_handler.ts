@@ -2,11 +2,14 @@
 +-----------------------------------------------------------------------------------------------------------------------
 | Author: 植成樑 <atzcl0310@gmail.com>  Blog：https://www.zcloop.com
 +-----------------------------------------------------------------------------------------------------------------------
-| handlers 基类
+| 处理上传业务
 |
 */
-/// <reference path='../../index.d.ts' />
 
-import { BaseContextClass } from 'egg'
+import BaseHandler from '../base_class/base_handler'
 
-export default class BaseHandler extends BaseContextClass {}
+export default class UploadHandler extends BaseHandler {
+  public async imageUpload(): Promise<void> {
+    console.log(this.ctx)
+  }
+}

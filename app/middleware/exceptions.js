@@ -1,6 +1,14 @@
 "use strict";
+/*
++-----------------------------------------------------------------------------------------------------------------------
+| Author: 植成樑 <atzcl0310@gmail.com>  Blog：https://www.zcloop.com
++-----------------------------------------------------------------------------------------------------------------------
+| 处理异常
+|
+*/
+Object.defineProperty(exports, "__esModule", { value: true });
 module.exports = () => {
-    return async function (ctx, next) {
+    return async (ctx, next) => {
         try {
             // 无错误则直接放行
             await next();
