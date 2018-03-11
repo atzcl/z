@@ -12,8 +12,10 @@
     "egg": "^2.4.1",
     "egg-jwt": "^2.2.1",
     "egg-redis": "^2.0.0",
+    "egg-router-plus": "^1.2.0",
     "egg-scripts": "^2.5.1",
     "egg-sequelize": "^3.1.2",
+    "egg-validate": "^1.0.0",
     "lodash": "^4.17.5",
     "mysql2": "^1.5.2",
     "rd": "^1.1.2"
