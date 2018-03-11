@@ -9,8 +9,10 @@
 import { Application } from 'egg'
 
 module.exports = (app: Application) => {
-  const { controller, router } = app
+  const { controller, router, middleware } = app
 
+  // 定义路由前缀并设置使用的中间件
+  const adminV1Router = router.namespace('/admin/v1', (middleware as any).authJwt())
   // 登录路由
-  router.get('/login', controller.admin.auth.login.index)
+  adminV1Router.get('/login', controller.admin.auth.login.index)
 }
