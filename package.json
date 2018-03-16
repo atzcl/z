@@ -5,12 +5,13 @@
   "private": true,
   "dependencies": {
     "@types/bcryptjs": "^2.4.1",
-    "@types/lodash": "^4.14.104",
+    "@types/lodash": "^4.14.105",
     "@types/node": "^9.4.7",
+    "@types/nodemailer": "^4.6.0",
     "@types/sequelize": "^4.27.10",
     "bcryptjs": "^2.4.3",
     "egg": "^2.4.1",
-    "egg-jwt": "^2.2.1",
+    "egg-jwt": "^3.0.0",
     "egg-redis": "^2.0.0",
     "egg-router-plus": "^1.2.0",
     "egg-scripts": "^2.5.1",
@@ -18,7 +19,10 @@
     "egg-validate": "^1.0.0",
     "lodash": "^4.17.5",
     "mysql2": "^1.5.2",
-    "rd": "^1.1.2"
+    "nodemailer": "^4.6.3",
+    "rd": "^1.1.2",
+    "sharp": "^0.20.0",
+    "uuid": "^3.2.1"
   },
   "devDependencies": {
     "autod": "^3.0.1",
@@ -44,7 +48,10 @@
     "lint": "eslint .",
     "ci": "npm run lint && npm run cov",
     "autod": "autod",
-    "tsc:w": "tsc -p tsconfig.json -w"
+    "tsc:w": "tsc -p tsconfig.json -w",
+    "migrate:new": "egg-sequelize migration:create",
+    "migrate:up": "egg-sequelize db:migrate",
+    "migrate:down": "egg-sequelize db:migrate:undo"
   },
   "ci": {
     "version": "8"
