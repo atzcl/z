@@ -15,10 +15,28 @@ module.exports = () => {
       await next()
     } catch (error) {
       // 状态码
-      const statusCode = error.status || 500
+      let statusCode = error.status || 500
       // 错误提示
-      const statusMessage = error.message || 'error'
+      let statusMessage = error.message || 'error'
+
+      // 异常处理 [ 后面增加 message 自定义吧 ]
+      if (error.name === 'UnprocessableEntityError') {
+        statusCode = 422
+        try {
+          statusMessage = `${error.message}: [${error.errors[0].field}] ${error.errors[0].message}`
+        } catch (e) {
+          statusMessage = error.message
+        }
+      }
+
+      // egg-sequelize 的异常处理
+      if (error.name === 'SequelizeUniqueConstraintError') {
+        statusCode = 422
+        statusMessage = `数据库操作失败: ${error.errors[0].message}`
+      }
+
       // todo: 实现邮件、微信告警
+
       // 响应返回
       ctx.body = {
         code: statusCode,

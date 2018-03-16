@@ -6,6 +6,12 @@ exports.jwt = {
   package: 'egg-jwt',
 };
 
+// 开启 egg-sequelize
+exports.sequelize = {
+  enable: true,
+  package: 'egg-sequelize',
+};
+
 // 挂载 egg-router-plus 路由拓展
 exports.routerPlus = {
   enable: true,

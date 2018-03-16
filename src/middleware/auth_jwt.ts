@@ -6,20 +6,29 @@
 |
 */
 
-import { Context } from 'egg'
+import { Application, Context } from 'egg'
 
-module.exports = () => {
+module.exports = (app: Application) => {
   /**
    * 该中间件无须验证的路由数组
    */
   const except: string[] = [
-    '/admin/v1/login'
+    // 后端登录
+    `/v1/${app.config.myApps.adminRouter}/login`,
+    `/v1/${app.config.myApps.adminRouter}/register`,
   ]
 
   return async (ctx: Context, next: Function) => {
     // 判断当前访问路径是否是无须验证的路由数组
     if (except.includes(ctx.path)) {
       await next()
+      return
+    }
+
+    ctx.body = {
+      code: 401,
+      data: null,
+      msg: '请先登录'
     }
   }
 }

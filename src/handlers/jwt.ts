@@ -8,7 +8,7 @@
 
 import BaseHandler from '../base_class/base_handler'
 
-export default class JwtHandler extends BaseHandler {
+export default class Jwt extends BaseHandler {
   /**
    * 获取加密 token
    *

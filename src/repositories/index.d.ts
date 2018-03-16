@@ -1,4 +1,5 @@
 import AuthLogin from './admin/auth/login'
+import AuthRegister from './admin/auth/register'
 
 declare module 'egg' {
   // 拓展 egg 的 app.ctx
@@ -6,7 +7,8 @@ declare module 'egg' {
     repository: {
       admin: {
         auth: {
-          login: AuthLogin
+          login: AuthLogin,
+          register: AuthRegister
         }
       }
     }

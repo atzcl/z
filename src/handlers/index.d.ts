@@ -1,13 +1,15 @@
-import jwtHandler from './jwt_handler'
-import uploadHandler from './upload_handler'
+import Jwt from './jwt'
+import Mail from './mail'
+import Uploads from './uploads'
 
 declare module 'egg' {
-  // 拓展 egg 的 app.ctx
+  // 拓展 egg 的 Application
   export interface Context {
     // 放置各类处理额外业务逻辑处理
     handlers: {
-      jwtHandler: jwtHandler,
-      uploadHandler: uploadHandler
+      jwt: Jwt
+      mail: Mail
+      uploads: Uploads
     }
   }
 }

@@ -1,15 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const base_repository_1 = require("../../../base_class/base_repository");
-class LoginRepository extends base_repository_1.default {
+class RegisterRepository extends base_repository_1.default {
+    /**
+     * 定义 model
+     */
     get model() {
         return this.ctx.model.UserAdmin;
     }
     /**
-     * 查询用户信息
+     * 创建用户
      */
-    async getInfo() {
-        return await this.findByField('name', this.ctx.request.body.name);
+    async createUser() {
+        return await this.created();
     }
 }
-exports.default = LoginRepository;
+exports.default = RegisterRepository;

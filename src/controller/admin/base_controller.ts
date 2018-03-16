@@ -2,13 +2,13 @@
 +-----------------------------------------------------------------------------------------------------------------------
 | Author: 植成樑 <atzcl0310@gmail.com>  Blog：https://www.zcloop.com
 +-----------------------------------------------------------------------------------------------------------------------
-| Service 基类
+| Admin 模块基类
 |
 */
 
-import { Service } from 'egg'
+import { Controller } from 'egg'
 
-export default class BaseService extends Service {
+export default class BaseController extends Controller {
   /**
    * @var {any} 返回的 data 数据
    */

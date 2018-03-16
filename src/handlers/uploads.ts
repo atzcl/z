@@ -2,10 +2,11 @@
 +-----------------------------------------------------------------------------------------------------------------------
 | Author: 植成樑 <atzcl0310@gmail.com>  Blog：https://www.zcloop.com
 +-----------------------------------------------------------------------------------------------------------------------
-| Admin 模块基类
+| 处理上传业务
 |
 */
 
-import { Controller } from 'egg'
 
-export default class BaseController extends Controller {}
+import BaseHandler from '../base_class/base_handler'
+
+export default class Uploads extends BaseHandler {}

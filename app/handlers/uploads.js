@@ -3,11 +3,11 @@
 +-----------------------------------------------------------------------------------------------------------------------
 | Author: 植成樑 <atzcl0310@gmail.com>  Blog：https://www.zcloop.com
 +-----------------------------------------------------------------------------------------------------------------------
-| Admin 模块基类
+| 处理上传业务
 |
 */
 Object.defineProperty(exports, "__esModule", { value: true });
-const egg_1 = require("egg");
-class BaseController extends egg_1.Controller {
+const base_handler_1 = require("../base_class/base_handler");
+class Uploads extends base_handler_1.default {
 }
-exports.default = BaseController;
+exports.default = Uploads;

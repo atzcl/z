@@ -9,24 +9,35 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const base_validate_1 = require("../../base_class/base_validate");
 class auth extends base_validate_1.default {
-    // login 请求验证
-    async login() {
-        let rule = {};
-        // 根据不同的请求类型来返回不同的验证规则
-        switch (this.ctx.request.method) {
-            case 'POST':
-                rule = {
-                    name: {
-                        required: true,
-                        type: 'string'
-                    },
-                    password: 'string'
-                };
-            case 'PUT':
-            case 'GET':
-            case 'DELETE':
-        }
-        return rule;
+    // 注册验证
+    register() {
+        return {
+            name: {
+                required: true,
+                type: 'string',
+                min: 5,
+                max: 32,
+            },
+            password: {
+                required: true,
+                type: 'password',
+                compare: 're-password'
+            }
+        };
+    }
+    login() {
+        return {
+            name: {
+                required: true,
+                type: 'string',
+                min: 5,
+                max: 32,
+            },
+            password: {
+                required: true,
+                type: 'password'
+            }
+        };
     }
 }
 exports.default = auth;

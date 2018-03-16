@@ -1,7 +1,10 @@
 import BaseService from '../service'
 
 export default class IndexService extends BaseService {
-  async index(name: string = 'Service 层输出') {
-    await this.succeed(name)
+  async index() {
+    const { ctx } = this
+    ctx.validate(ctx.validateRule.admin.auth.login())
+
+    this.succeed('验证成功')
   }
 }

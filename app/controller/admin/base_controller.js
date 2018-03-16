@@ -3,12 +3,12 @@
 +-----------------------------------------------------------------------------------------------------------------------
 | Author: 植成樑 <atzcl0310@gmail.com>  Blog：https://www.zcloop.com
 +-----------------------------------------------------------------------------------------------------------------------
-| Service 基类
+| Admin 模块基类
 |
 */
 Object.defineProperty(exports, "__esModule", { value: true });
 const egg_1 = require("egg");
-class BaseService extends egg_1.Service {
+class BaseController extends egg_1.Controller {
     constructor() {
         super(...arguments);
         /**
@@ -91,4 +91,4 @@ class BaseService extends egg_1.Service {
         this.toResponse();
     }
 }
-exports.default = BaseService;
+exports.default = BaseController;

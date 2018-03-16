@@ -6,28 +6,4 @@
 |
 */
 
-const bcryptjs = require('bcryptjs')
-
-/**
- * bcryptjs 加密
- *
- * @param string value 需要加密的值
- * @param number salt 加密的强度 0 - 12
- * @returns string
- */
-exports.bcrypt = (value: string, salt: number = 10): string => {
-  return bcryptjs.hashSync(value, bcryptjs.genSaltSync(salt))
-}
-
-/**
- * 比对输入值与已加密值是否一致
- *
- * @param string value 输入值
- * @param string hash 已加密的 hash 值
- * @returns boolean
- */
-exports.checkBcrypt = (value: string, hash: string): boolean => {
-  return bcryptjs.compareSync(value, hash)
-}
-
 exports.toResponse = (code:  number, data:  any, msg: string) => {}
