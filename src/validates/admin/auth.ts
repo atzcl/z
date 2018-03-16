@@ -9,25 +9,35 @@
 import BaseValidate from '../../base_class/base_validate'
 
 export default class auth extends BaseValidate {
-  // login 请求验证
-  public async login(): Promise<object> {
-    let rule = {}
-
-    // 根据不同的请求类型来返回不同的验证规则
-    switch (this.ctx.request.method) {
-      case 'POST':
-        rule = {
-          name: {
-            required: true,
-            type: 'string'
-          },
-          password: 'string'
-        }
-      case 'PUT':
-      case 'GET':
-      case 'DELETE':
+  // 注册验证
+  public register(): object {
+    return {
+      name: {
+        required: true,
+        type: 'string',
+        min: 5,
+        max: 32,
+      },
+      password: {
+        required: true,
+        type: 'password',
+        compare: 're-password'
+      }
     }
+  }
 
-    return rule
+  public login(): object {
+    return {
+      name: {
+        required: true,
+        type: 'string',
+        min: 5,
+        max: 32,
+      },
+      password: {
+        required: true,
+        type: 'password'
+      }
+    }
   }
 }

@@ -8,26 +8,23 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 const base_controller_1 = require("../base_controller");
 const validate_1 = require("../../../lib/decorator/validate");
-class LoginController extends base_controller_1.default {
+class RegisterController extends base_controller_1.default {
     /**
-     * 用户登录
+     * 用户注册
      *
      * @returns void
      */
-    async login() {
-        // 查询用户详情
-        const result = await this.ctx.repository.admin.auth.login.getInfo();
+    async register() {
+        // 创建用户
+        const result = await this.ctx.repository.admin.auth.register.createUser();
         if (result) {
-            // 判断密码是否一致
-            if (await this.app.verifyBcrypt(this.ctx.request.body.password, result.dataValues.password)) {
-                this.succeed('登录成功');
-                return;
-            }
+            await this.succeed(result.id);
+            return;
         }
-        this.ctx.throw(422, '账号或密码不正确');
+        this.ctx.throw(500, '注册失败~');
     }
 }
 __decorate([
-    validate_1.validateBody('admin.auth.login')
-], LoginController.prototype, "login", null);
-exports.default = LoginController;
+    validate_1.validateBody('admin.auth.register')
+], RegisterController.prototype, "register", null);
+exports.default = RegisterController;
