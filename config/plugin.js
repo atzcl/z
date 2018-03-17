@@ -6,7 +6,7 @@ exports.jwt = {
   package: 'egg-jwt',
 };
 
-// 开启 egg-sequelize
+// 挂载 egg-sequelize
 exports.sequelize = {
   enable: true,
   package: 'egg-sequelize',
@@ -21,4 +21,16 @@ exports.routerPlus = {
 // 挂载 egg-validate 数据验证
 exports.validate = {
   package: 'egg-validate',
+};
+
+// 挂载 egg-redis redis 拓展
+exports.redis = {
+  enable: true,
+  package: 'egg-redis',
+};
+
+// 挂载 egg-session-redis 将 session 储存到 redis
+exports.sessionRedis = {
+  enable: true,
+  package: 'egg-session-redis',
 };

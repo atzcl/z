@@ -60,7 +60,7 @@ module.exports = appInfo => {
     },
   };
 
-  // redis 配置
+  // redis 配置 [ 后面如果需要对某一业务进行缓存的时候，可以开启多实例来进行特定储存 ]
   config.redis = {
     client: {
       host: '127.0.0.1',
@@ -68,6 +68,7 @@ module.exports = appInfo => {
       password: '',
       db: '0',
     },
+    agent: true,
   };
 
   config.bodyParser = {
