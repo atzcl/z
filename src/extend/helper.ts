@@ -6,4 +6,6 @@
 |
 */
 
-exports.toResponse = (code:  number, data:  any, msg: string) => {}
+exports.toResponse = (code: number, data: any, msg: string) => {
+  //
+}

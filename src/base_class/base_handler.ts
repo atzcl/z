@@ -5,7 +5,6 @@
 | handlers 基类
 |
 */
-/// <reference path='../../index.d.ts' />
 
 import { BaseContextClass } from 'egg'
 

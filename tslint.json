@@ -1,10 +1,11 @@
 {
   "defaultSeverity": "error",
   "extends": "tslint-config-standard",
-  "globals": {
-    "require": true
+  "jsRules": {
+    "no-unused-expression": true
   },
   "rules": {
     "no-consecutive-blank-lines": false
-  }
+  },
+  "rulesDirectory": []
 }

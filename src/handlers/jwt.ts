@@ -14,7 +14,7 @@ export default class Jwt extends BaseHandler {
    *
    * @param {object} sub token 的标识（默认为用户标识）
    */
-  public async createJWT(sub: object): Promise<string> {
+  public async createJWT (sub: object): Promise<string> {
     return this.app.jwt.sign({ sub: sub }, this.app.config.jwt.secret)
   }
 
@@ -24,7 +24,7 @@ export default class Jwt extends BaseHandler {
    * @param {string} $token JWT token
    * @return {any} Promise 对象
    */
-  public async decodeJWT(token: string): Promise<any> {
+  public async decodeJWT (token: string): Promise<any> {
     return this.app.jwt.decode(token)
   }
 }

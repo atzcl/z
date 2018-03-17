@@ -15,7 +15,7 @@ module.exports = (app: Application) => {
   const except: string[] = [
     // 后端登录
     `/v1/${app.config.myApps.adminRouter}/login`,
-    `/v1/${app.config.myApps.adminRouter}/register`,
+    `/v1/${app.config.myApps.adminRouter}/register`
   ]
 
   return async (ctx: Context, next: Function) => {

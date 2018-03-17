@@ -25,28 +25,31 @@ export default class BaseController extends Controller {
   private statusMessage: string = 'success'
 
   /**
-   * 
+   * 设置返回 data 数据
+   *
    * @param {any} val 返回数据
    * @returns this
    */
-  public async setStatusData(val: any): Promise<void> {
+  public async setStatusData (val: any): Promise<void> {
     this.statusData = val
   }
 
   /**
-   * 
+   * 设置返回 msg
+   *
    * @param { string } val 提示语
    * @returns this
    */
-  public async setStatusMessage(val: string): Promise<void> {
+  public async setStatusMessage (val: string): Promise<void> {
     this.statusMessage = val
   }
 
   /**
-   * 
+   * 设置返回 code
+   *
    * @param {number} val 状态码
    */
-  public async setStatusCode(val: number): Promise<void> {
+  public async setStatusCode (val: number): Promise<void> {
     this.statusCode = val
   }
 
@@ -55,7 +58,7 @@ export default class BaseController extends Controller {
    *
    * @param { number } total 如果是分页返回的话，应该加上 count 总页数数据
    */
-  public async toResponse(total: number = 0) {
+  public async toResponse (total: number = 0) {
     // 组装返回格式
     let response = {
       code: this.statusCode,
@@ -74,25 +77,26 @@ export default class BaseController extends Controller {
   }
 
   /**
-   * 响应返回
+   * 响应成功返回
    *
    * @param {any} data 返回的 data 值
    * @param {string} message 返回的 msg 提示
    * @returns {object} response
    */
-  public async succeed(data: any = null, message: string = 'success'): Promise<void> {
+  public async succeed (data: any = null, message: string = 'success'): Promise<void> {
     await this.setStatusData(data)
     await this.setStatusMessage(message)
     this.toResponse()
   }
 
   /**
-   * 
-   * @param {string} message 错误提示 
+   * 响应失败返回
+   *
+   * @param {string} message 错误提示
    * @param {number} code 状态码
    * @returns {object} response
    */
-  public async failed(message: string = 'error', code: number = 422): Promise<void> {
+  public async failed (message: string = 'error', code: number = 422): Promise<void> {
     await this.setStatusMessage(message)
     await this.setStatusCode(code)
     this.toResponse()
@@ -100,9 +104,9 @@ export default class BaseController extends Controller {
 }
 
 interface ZApiToResponse {
-  code:  number,
-  data:  any,
+  code: number,
+  data: any,
   total: number,
-  msg :  string,
-  time:  number
+  msg: string,
+  time: number
 }

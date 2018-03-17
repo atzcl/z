@@ -8,7 +8,7 @@ export default class RegisterController extends Controller {
    * @returns void
    */
   @validateBody('admin.auth.register')
-  public async register() {
+  public async register () {
     // 创建用户
     const result: any = await this.ctx.repository.admin.auth.register.createUser()
 

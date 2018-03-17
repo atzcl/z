@@ -25,13 +25,13 @@ module.exports = (app: Application) => {
  * @param {Application} app Application 对象
  * @param {sting} customizeCtx 挂载的名称
  */
-function loadCustomizeCtx(loadPath: string, app: Application, customizeCtx: string = '') {
+function loadCustomizeCtx (loadPath: string, app: Application, customizeCtx: string = '') {
   // 载入配置
   const opt = {
     call: true,
     override: true, // 遇到已经存在的文件，直接覆盖
     caseStyle: 'lower',
-    directory: app.loader.getLoadUnits().map((unit: any) => path.join(unit.path, `app/${loadPath}`)),
+    directory: app.loader.getLoadUnits().map((unit: any) => path.join(unit.path, `app/${loadPath}`))
   }
 
   app.loader.loadToContext(opt.directory, customizeCtx === '' ? loadPath : customizeCtx, opt)
@@ -44,13 +44,13 @@ function loadCustomizeCtx(loadPath: string, app: Application, customizeCtx: stri
  * @param {Application} app Application 对象
  * @param {sting} customizeCtx 挂载的名称
  */
-async function loadCustomizeApp(loadPath: string, app: Application,  customizeCtx: string = '') {
+async function loadCustomizeApp(loadPath: string, app: Application, customizeCtx: string = '') {
   // 加载配置
   const opt = {
     call: true,
     override: true,
     caseStyle: 'lower',
-    directory: app.loader.getLoadUnits().map((unit: any) => path.join(unit.path, `app/${loadPath}`)),
+    directory: app.loader.getLoadUnits().map((unit: any) => path.join(unit.path, `app/${loadPath}`))
   }
 
   // 挂载在 app 对象中

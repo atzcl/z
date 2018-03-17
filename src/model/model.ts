@@ -5,16 +5,11 @@ import { DefineAttributes } from 'sequelize'
  * 模型基类，可以在这里定义全局使用的作用域、hook、必要的字段定义
  *
  * @param {object} app 传入的 egg 的 Application 对象
- * @param {string} table 表名 
- * @param {object|string} attributes 定义表的字段数据
- * @param {object} options 模型的相关配置
+ * param {string} table 表名
+ * param {object|string} attributes 定义表的字段数据
+ * param {object} options 模型的相关配置
  */
-export const BaseModel = (
-  app: Application,
-  table: string,
-  attributes: DefineAttributes,
-  options?: object
-) => {
+export const BaseModel = (app: Application, table: string, attributes: DefineAttributes, options?: object) => {
   const { INTEGER } = app.Sequelize
 
   // 设置默认数据
@@ -22,7 +17,7 @@ export const BaseModel = (
     id: {
       type: INTEGER, // 类型: 整型
       primaryKey: true, // 主键
-      autoIncrement: true, // 自增
+      autoIncrement: true // 自增
     },
     ...attributes
   }, {
@@ -30,7 +25,7 @@ export const BaseModel = (
     timestamps: true,
     // 不使用驼峰样式自动添加属性，而是下划线样式 [ createdAt => created_at ]
     underscored: true,
-    ...options,
+    ...options
     // scopes: {
     //   // 定义全局作用域，使用方法如: .scope('onlyTrashed') or .scope('onlyTrashed1', 'onlyTrashed12') [ 多个作用域 ]
     //   onlyTrashed: {

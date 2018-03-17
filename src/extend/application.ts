@@ -16,7 +16,7 @@ module.exports = {
    * @param {number} salt 加密的强度 0 - 12
    * @returns string
    */
-  async createBcrypt(value: string, salt: number = 10): Promise<string> {
+  async createBcrypt (value: string, salt: number = 10): Promise<string> {
     return bcryptjs.hashSync(value, bcryptjs.genSaltSync(salt))
   },
   /**
@@ -26,7 +26,7 @@ module.exports = {
    * @param {string} hash 已加密的 hash 值
    * @returns boolean
    */
-  async verifyBcrypt(value: string, hash: string): Promise<boolean> {
+  async verifyBcrypt (value: string, hash: string): Promise<boolean> {
     return bcryptjs.compareSync(value, hash)
   }
 }

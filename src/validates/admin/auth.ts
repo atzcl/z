@@ -8,15 +8,15 @@
 
 import BaseValidate from '../../base_class/base_validate'
 
-export default class auth extends BaseValidate {
+export default class Auth extends BaseValidate {
   // 注册验证
-  public register(): object {
+  public register (): object {
     return {
       name: {
         required: true,
         type: 'string',
         min: 5,
-        max: 32,
+        max: 32
       },
       password: {
         required: true,
@@ -26,13 +26,13 @@ export default class auth extends BaseValidate {
     }
   }
 
-  public login(): object {
+  public login (): object {
     return {
       name: {
         required: true,
         type: 'string',
         min: 5,
-        max: 32,
+        max: 32
       },
       password: {
         required: true,

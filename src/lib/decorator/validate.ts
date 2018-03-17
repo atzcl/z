@@ -8,15 +8,15 @@
 
 import { forEach } from 'lodash'
 
-export function validateBody(path: string) {
+export function validateBody (path: string) {
   // target 参数,对于静态成员来说是类的构造函数，对于实例成员是类的原型对象。
   // key 成员的名字，其实就是函数名字
   // descriptor 成员的属性描述符
-  return function(target: any, key: string, descriptor: PropertyDescriptor) {
+  return function (target: any, key: string, descriptor: PropertyDescriptor) {
     // 被装饰的函数被保存在 value 中
     const originFun = descriptor.value
-    descriptor.value = async function() {
-      const { ctx } = (<any>this)
+    descriptor.value = async function () {
+      const { ctx } = (this as any)
 
       // 切割传入的路径字符串
       const getValidatePath: string[] = path.split('.')

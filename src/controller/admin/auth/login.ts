@@ -1,5 +1,5 @@
 import Controller from '../base_controller'
-import { validateBody } from '../../../lib/decorator/validate';
+import { validateBody } from '../../../lib/decorator/validate'
 
 export default class LoginController extends Controller {
   /**
@@ -8,7 +8,7 @@ export default class LoginController extends Controller {
    * @returns void
    */
   @validateBody('admin.auth.login')
-  public async login(): Promise<void> {
+  public async login (): Promise<void> {
     // 查询用户详情
     const result: any = await this.ctx.repository.admin.auth.login.getInfo()
 

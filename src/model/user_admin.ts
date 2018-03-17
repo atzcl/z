@@ -6,11 +6,11 @@ module.exports = (app: Application) => {
 
   // 创建模型
   const modelSchema = BaseModel(app, 'user_admin', {
-    name: { type: STRING(32), unique: true, allowNull: false, comment: '用户名', },
-    email: { type: STRING(64), unique: true, allowNull: true, comment: '邮箱地址', },
-    phone: { type: STRING(20), unique: true, allowNull: true, comment: '手机号码', },
-    status: { type: BOOLEAN, allowNull: false, defaultValue: 1, comment: '用户状态: 1 正常； 0 禁用', },
-    password: { type: STRING(255), allowNull: false, comment: '密码', }
+    name: { type: STRING(32), unique: true, allowNull: false, comment: '用户名' },
+    email: { type: STRING(64), unique: true, allowNull: true, comment: '邮箱地址' },
+    phone: { type: STRING(20), unique: true, allowNull: true, comment: '手机号码' },
+    status: { type: BOOLEAN, allowNull: false, defaultValue: 1, comment: '用户状态: 1 正常； 0 禁用' },
+    password: { type: STRING(255), allowNull: false, comment: '密码' }
   }, {
     // 开启软删除
     paranoid: true
@@ -44,7 +44,7 @@ module.exports = (app: Application) => {
   })
 
   return modelSchema
-};
+}
 
 export interface UserAdmin {
   name: string

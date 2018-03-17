@@ -63,10 +63,10 @@ module.exports = appInfo => {
   // redis 配置
   config.redis = {
     client: {
-      host: process.env.EGG_REDIS_HOST || '127.0.0.1',
-      port: process.env.EGG_REDIS_PORT || 6379,
-      password: process.env.EGG_REDIS_PASSWORD || '',
-      db: process.env.EGG_REDIS_DB || '0',
+      host: '127.0.0.1',
+      port: 6379,
+      password: '',
+      db: '0',
     },
   };
 

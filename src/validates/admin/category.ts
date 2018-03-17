@@ -8,8 +8,8 @@
 
 import BaseValidate from '../../base_class/base_validate'
 
-export default class category extends BaseValidate {
-  public default(): object {
+export default class Category extends BaseValidate {
+  public default (): object {
     let rule = {}
 
     // 根据不同的请求类型来返回不同的验证规则

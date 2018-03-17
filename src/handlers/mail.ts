@@ -19,7 +19,7 @@ export default class Mail extends BaseHandler {
    *
    * @param {object} data 发送邮件的内容
    */
-  public async sendMail(data: object) {
+  public async sendMail (data: object) {
     const { app, ctx } = this
 
     // 如果是本地开发环境，就不需要发送邮件

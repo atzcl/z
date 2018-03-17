@@ -2,29 +2,11 @@ import BaseService from '../service'
 
 export default class IndexService extends BaseService {
   /**
-   * 处理登录
-   */
-  public async login() {
-    const { ctx } = this
-    
-    // 验证请求数据是否合法
-    ctx.validate({
-      name: {
-        required: true,
-        type: 'string'
-      },
-      password: 'string'
-    })
-
-    this.succeed('验证成功')
-  }
-
-  /**
    * 处理注册邮件发送
    */
-  public async registerMail(): Promise<void> {
+  public async registerMail (): Promise<void> {
     const { ctx, app } = this
-    
+
     // docs: https://nodemailer.com/message/
     const from = `${app.config.myApps.appName} <${app.config.myApps.mail_options.auth.user}>` // 发送人名称
     const to = 'atzcl47@qq.com' // 接收邮件地址
@@ -36,7 +18,7 @@ export default class IndexService extends BaseService {
       from,
       to,
       subject,
-      html,
+      html
     })
   }
 }

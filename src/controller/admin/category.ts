@@ -6,25 +6,35 @@ export default class CategoryController extends Controller {
    *
    * @returns void
    */
-  public async index() {}
+  public async index () {
+    //
+  }
 
   /**
    * 查询指定数据
    */
-  public async show() {}
+  public async show () {
+    //
+  }
 
   /**
    * 创建数据
    */
-  public async create() {}
+  public async create () {
+    //
+  }
 
   /**
    * 更新数据
    */
-  public async update() {}
+  public async update () {
+    //
+  }
 
   /**
    * 删除数据
    */
-  public async destroy() {}
+  public async destroy () {
+    //
+  }
 }

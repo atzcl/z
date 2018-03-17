@@ -6,7 +6,6 @@
 |
 */
 
-
 import BaseHandler from '../base_class/base_handler'
 
 export default class Uploads extends BaseHandler {}
