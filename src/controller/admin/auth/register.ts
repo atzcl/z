@@ -1,4 +1,4 @@
-import Controller from '../base_controller'
+import Controller from '../../base_controller'
 import { validateBody } from '../../../lib/decorator/validate'
 
 export default class RegisterController extends Controller {

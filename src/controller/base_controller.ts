@@ -64,7 +64,7 @@ export default class BaseController extends Controller {
       code: this.statusCode,
       data: this.statusData,
       msg: this.statusMessage,
-      time: Date.now()
+      time: Math.floor(new Date().getTime() / 1000)
     }
 
     // 如果有传入，那么就添加总页数的属性

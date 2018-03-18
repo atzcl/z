@@ -7,7 +7,17 @@ export interface DefaultConfig {
     secret: string,
     enable: boolean,
     match?: string
-  },
+  };
+  jwt_extra: {
+    iss: string,
+    iat: number,
+    exp: number,
+    nbf: number,
+    ttl: number,
+    refresh_ttl: number,
+    sub: string,
+    jti: string,
+  };
   myApps: {
     appName: string,
     debug: boolean,

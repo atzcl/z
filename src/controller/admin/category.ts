@@ -1,4 +1,4 @@
-import Controller from './base_controller'
+import Controller from '../base_controller'
 
 export default class CategoryController extends Controller {
   /**
