@@ -83,16 +83,16 @@ module.exports = appInfo => {
     match: '/jwt',
   };
 
-  // egg-jwt 额外配置
+  // jwt 额外配置
   config.jwt_extra = {
-    iss: 'iss', // 令牌的签发者
-    iat: 'iat', // 令牌的发布时间 (unix时间戳）
-    exp: 'exp', // 令牌失效日期 (unix时间戳）
-    nbf: 'nbf', // 令牌从什么时候可用的时间 (unix时间戳)
-    ttl: 'ttl', // token 过期时间
-    refresh_ttl: '', // token 可刷新的时间 []
-    sub: 'sub', // 令牌标识 [ 也就是存放我们自己数据的地方 ]
-    jti: 'jti', // 令牌的唯一标识符 （ sub 和 iat md5 加密后的字符）
+    ttl: 2 * 7 * 24, // token 过期时间,单位: 小时
+    refresh_ttl: 4 * 7 * 24, // token 可刷新的时间 [失效时间] 单位: 小时
+    // iss: 'atzcl', // 令牌的签发者
+    // iat: 'iat', // 令牌的发布时间 (unix时间戳）
+    // exp: 'exp', // 令牌失效日期 (unix时间戳）
+    // nbf: 'nbf', // 令牌从什么时候可用的时间 (unix时间戳)
+    // sub: 'sub', // 令牌标识 [ 也就是存放我们自己数据的地方 ]
+    // jti: 'jti', // 令牌的唯一标识符 （ sub 和 iat md5 加密后的字符）
   };
 
   return config;

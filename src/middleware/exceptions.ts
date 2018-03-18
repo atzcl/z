@@ -35,6 +35,17 @@ module.exports = () => {
         statusMessage = `数据库操作失败: ${error.errors[0].message}`
       }
 
+      // 处理由 jwt 签发的 token 失效异常
+      if (error.name === 'TokenExpiredError') {
+        statusCode = 403
+        statusMessage = 'token 已过期，请重新登录'
+      }
+
+      if (error.name === 'JsonWebTokenError') {
+        statusCode = 422
+        statusMessage = '非法的 token'
+      }
+
       // todo: 实现邮件、微信告警
 
       // 响应返回
@@ -42,7 +53,7 @@ module.exports = () => {
         code: statusCode,
         data: null,
         msg: statusMessage,
-        time: Date.now()
+        time: Math.floor(new Date().getTime() / 1000)
       }
     }
   }
