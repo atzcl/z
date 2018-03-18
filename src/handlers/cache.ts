@@ -85,7 +85,7 @@ export default class CacheManager extends BaseHandler {
     }
 
     try {
-      return this.store.get(this.getPrefixKey(key))
+      return await this.store.get(this.getPrefixKey(key))
     } catch (error) {
       throw new Error('[cache]: get 方法只能获取 string 类型缓存')
     }
@@ -98,7 +98,7 @@ export default class CacheManager extends BaseHandler {
    * @returns {boolean}
    */
   public async has (key: string): Promise<boolean> {
-    return !isNull(this.get(key))
+    return !isNull(await this.get(key))
   }
 
   public async del (key: string) {
