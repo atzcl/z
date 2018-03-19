@@ -9,17 +9,28 @@ export default class LoginController extends Controller {
    */
   @validateBody('admin.auth.login')
   public async login (): Promise<void> {
+    const { ctx } = this
+
     // 查询用户详情
-    const result: any = await this.ctx.repository.admin.auth.login.getInfo()
+    const result: any = await ctx.repository.admin.auth.login.getInfo()
 
     if (result) {
       // 判断密码是否一致
-      if (await this.app.verifyBcrypt(this.ctx.request.body.password, result.dataValues.password)) {
-        this.succeed('登录成功')
+      if (await this.app.verifyBcrypt(ctx.request.body.password, result.password)) {
+        // 删除密码属性
+        delete result.password
+
+        // 成功返回
+        this.succeed({
+          name: result.name,
+          status: result.status,
+          token: await ctx.handlers.jwt.create(result)
+        })
+
         return
       }
     }
 
-    this.ctx.throw(422, '账号或密码不正确')
+    ctx.throw(422, '账号或密码不正确')
   }
 }

@@ -6,7 +6,7 @@
 |
 */
 
-import { forOwn } from 'lodash'
+import { forOwn, isNull, isArray } from 'lodash'
 import { Model } from 'sequelize'
 import { BaseContextClass } from 'egg'
 
@@ -22,7 +22,7 @@ export default abstract class BaseRepository extends BaseContextClass {
    *
    * @returns {object}
    */
-  async fill (): Promise<object> {
+  public async fill (): Promise<object> {
     // 为了不对请求的数据造成污染，这样应该是储存比对符合的数据，然后返回调用者
     let result: any = {}
 
@@ -38,6 +38,23 @@ export default abstract class BaseRepository extends BaseContextClass {
   }
 
   /**
+   * 包装输出数据 [ 后面拓展获取器 ]
+   *
+   * @param {any} result 需要包装的数据
+   */
+  public async parserResult (result: any) {
+    // try {
+    //   if (!isNull(result) && this.model.hidden().length > 0) {
+    //     console.log(result.dataValues)
+    //   }
+    // } catch (error) {
+    //   // console.log(error)
+    // }
+
+    return result
+  }
+
+  /**
    * 创建数据
    */
   public async created () {
@@ -48,9 +65,16 @@ export default abstract class BaseRepository extends BaseContextClass {
     return this.model.create(body)
   }
 
-  public async findByField (field: string, value: string) {
+  /**
+   * 获取指定条件的单条数据
+   *
+   * @param {string} field 查询字段
+   * @param {string | number | boolean} value 查询字段值
+   */
+  public async findByField (field: string, value: string | number | boolean) {
     let whereObj: any = {}
     whereObj[field] = value
-    return this.model.findOne({ where: whereObj })
+
+    return this.parserResult(await this.model.findOne({ where: whereObj }))
   }
 }

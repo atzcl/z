@@ -19,6 +19,7 @@ declare module 'egg' {
 declare module 'sequelize' {
   interface Model<TInstance, TAttributes> {
     fillable(): string[],
-    hidden(): string[]
+    hidden(): string[],
+    visible(): string[]
   }
 }

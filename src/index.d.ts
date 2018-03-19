@@ -81,5 +81,7 @@ declare module 'egg' {
 
   // 拓展 egg 的 app.helper 对象，导出项目编写的 Helper 给 TypeScript
   export interface IHelper {
+    toResponse(ctx: Context, code: number, data: any, msg: string): void
+    getDataValues(result: any):null | object
   }
 }

@@ -19,7 +19,7 @@ module.exports = (app: Application) => {
   /**
    * @returns {array} 可批量赋值的数组
    */
-  modelSchema.fillable = () => {
+  modelSchema.fillable = (): string[] => {
     return [
       'name',
       'email',
@@ -29,9 +29,19 @@ module.exports = (app: Application) => {
   }
 
   /**
-   * @returns {array} 输出数据时，隐藏字段数组
+   * @returns {array} 输出数据时显示的属性 [ 白名单 ]
    */
-  modelSchema.hidden = () => {
+  modelSchema.visible = (): string[] => {
+    return [
+      'id',
+      'name'
+    ]
+  }
+
+  /**
+   * @returns {array} 输出数据时，隐藏字段数组 [ 黑名单 ]
+   */
+  modelSchema.hidden = (): string[] => {
     return [
       'password'
     ]
