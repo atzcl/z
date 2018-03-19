@@ -13,22 +13,34 @@ module.exports = (app: Application) => {
    * 该中间件无须验证的路由数组
    */
   const except: string[] = [
-    // 后端登录
-    `/v1/${app.config.myApps.adminRouter}/login`,
-    `/v1/${app.config.myApps.adminRouter}/register`
+    `/v1/${app.config.myApps.adminRouter}/login`, // 后端登录
+    `/v1/${app.config.myApps.adminRouter}/register` // 后端注册
   ]
 
   return async (ctx: Context, next: Function) => {
     // 判断当前访问路径是否是无须验证的路由数组
     if (except.includes(ctx.path)) {
-      await next()
-      return
+
+      // 放行
+      return next()
     }
 
-    ctx.body = {
-      code: 401,
-      data: null,
-      msg: '请先登录'
+    // 获取 header 携带的 authorization 头
+    let getToken = ctx.get('authorization')
+    // 判断是否有有携带 authorization 头
+    if (getToken) {
+      try {
+        // 验证 token 是否合法有效，并将解密后的 sub 数据挂载到 request 的 body 的 jwt_sub 中，方便后续使用
+        ctx.request.body.jwt_sub = await ctx.handlers.jwt.getSub(getToken.split(' ')[1])
+
+        // 放行
+        return next()
+      } catch (error) {
+        //
+      }
     }
+
+    // 中断后续
+    await ctx.helper.toResponse(ctx, 401, null, '请登录')
   }
 }
