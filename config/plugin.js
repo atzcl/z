@@ -34,3 +34,9 @@ exports.sessionRedis = {
   enable: true,
   package: 'egg-session-redis',
 };
+
+// 挂载 egg-socket.io
+exports.io = {
+  enable: true,
+  package: 'egg-socket.io',
+};

@@ -71,6 +71,27 @@ module.exports = appInfo => {
     agent: true,
   };
 
+  // egg-socket.io 配置
+  exports.io = {
+    init: { }, // passed to engine.io
+    namespace: {
+      '/': {
+        connectionMiddleware: [],
+        packetMiddleware: [],
+      },
+      '/example': {
+        connectionMiddleware: [],
+        packetMiddleware: [],
+      },
+    },
+    redis: {
+      host: '127.0.0.1',
+      port: 6379,
+      auth_pass: '',
+      db: 1,
+    },
+  };
+
   config.bodyParser = {
     jsonLimit: '1mb',
     formLimit: '1mb',
