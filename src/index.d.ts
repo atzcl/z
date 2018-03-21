@@ -32,6 +32,16 @@ export interface DefaultConfig {
         pass: string
       }
     }
+  };
+  wechat: {
+    app_id: string
+    secret: string
+    token: string
+    aes_key: string
+    mini_app_id: string
+    mini_secret: string
+    mini_token: string
+    mini_aes_key: string
   }
 }
 

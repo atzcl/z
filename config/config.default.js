@@ -92,6 +92,21 @@ module.exports = appInfo => {
     },
   };
 
+  // 代理
+  config.proxy = true;
+
+  config.wechat = {
+    app_id: 'app_id', // AppID
+    secret: 'secret', // AppSecret
+    token: 'atzcl.cn', // Token
+    aes_key: '', // EncodingAESKey
+    // 小程序
+    mini_app_id: '', // AppID
+    mini_secret: '', // AppSecret
+    mini_token: '', // Token
+    mini_aes_key: '', // EncodingAESKey
+  };
+
   config.bodyParser = {
     jsonLimit: '1mb',
     formLimit: '1mb',
