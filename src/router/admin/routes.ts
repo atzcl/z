@@ -14,7 +14,9 @@ module.exports = (app: Application) => {
   // 定义路由前缀并设置使用的中间件
   const adminV1Router = router.namespace(`/v1/${app.config.myApps.adminRouter}`, (middleware as any).authJwt(app))
   // 登录
-  adminV1Router.post('/login', controller.admin.auth.login.login)
+  adminV1Router.post('admin.login', '/login', controller.admin.auth.login.login)
   // 注册
-  adminV1Router.post('/register', controller.admin.auth.register.register)
+  adminV1Router.post('admin.register', '/register', controller.admin.auth.register.register)
+  // 文章分类
+  adminV1Router.resources('admin.category', '/categories', controller.admin.category)
 }

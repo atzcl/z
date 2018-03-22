@@ -34,6 +34,7 @@ export interface DefaultConfig {
     }
   };
   wechat: {
+    base_uri: string
     app_id: string
     secret: string
     token: string

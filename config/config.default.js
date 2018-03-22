@@ -105,6 +105,7 @@ module.exports = appInfo => {
     mini_secret: '', // AppSecret
     mini_token: '', // Token
     mini_aes_key: '', // EncodingAESKey
+    base_uri: 'https://api.weixin.qq.com/cgi-bin/',
   };
 
   config.bodyParser = {

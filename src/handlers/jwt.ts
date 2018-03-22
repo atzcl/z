@@ -10,6 +10,9 @@ import { createHash } from 'crypto'
 import BaseHandler from '../base_class/base_handler'
 
 export default class Jwt extends BaseHandler {
+  // 储存到缓存的前缀
+  private cachePrefix: string = 'jwt.'
+
   /**
    * 获取加密 token
    *
@@ -85,7 +88,7 @@ export default class Jwt extends BaseHandler {
     }
 
     // 储存到缓存黑名单中去
-    return this.ctx.handlers.cache.set(key, 'black_success', refreshTtlTime)
+    return this.ctx.handlers.cache.set(this.cachePrefix + key, 'black_success', refreshTtlTime)
   }
 
   /**
@@ -98,7 +101,7 @@ export default class Jwt extends BaseHandler {
     let key = createHash('md5').update(token).digest('hex')
 
     // 返回获取该缓存
-    return this.ctx.handlers.cache.has(key)
+    return this.ctx.handlers.cache.has(this.cachePrefix + key)
   }
 
   /**
