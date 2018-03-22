@@ -23,26 +23,29 @@ export default class CacheManager extends BaseHandler {
    * @returns {string}
    */
   public getPrefixKey (key: string): string {
-    return `${this.app.config.name}_${key}`
+    return `${this.app.config.name}.${key}`
   }
 
   /**
    * 设置字符串类型缓存
    *
    * @param {string} key 缓存标识
-   * @param {string|number}    value 缓存的数据
+   * @param {any}    value 缓存的数据
    * @param {number} time 缓存过期时间
    * @param {string} unit 指定时间单位 （h/m/s/ms）默认为 s
    */
   public async set (
     key: string,
-    value: string | number,
+    value: any,
     time: number = 0,
     unit: string = 's'
   ) {
     if (isNull(key) || isNull(value)) {
       throw new Error('[cache]: 请传入正确参数')
     }
+
+    // 为了能传入 object、array 这类的值，所以这里转换成 json
+    value = JSON.stringify(value)
 
     if (!isNull(time)) {
       // 转换为小写
@@ -85,7 +88,7 @@ export default class CacheManager extends BaseHandler {
     }
 
     try {
-      return await this.store.get(this.getPrefixKey(key))
+      return JSON.parse(await this.store.get(this.getPrefixKey(key))) // 因为上面加储存值转换为 json, 所以这里需要把它转换回来
     } catch (error) {
       throw new Error('[cache]: get 方法只能获取 string 类型缓存')
     }
@@ -95,12 +98,17 @@ export default class CacheManager extends BaseHandler {
    * 判断缓存是否存在
    *
    * @param {string} key
-   * @returns {boolean}
+   * @returns {boolean} tue 存在；false 不存在
    */
   public async has (key: string): Promise<boolean> {
     return !isNull(await this.get(key))
   }
 
+  /**
+   * 删除指定缓存
+   *
+   * @param {string} key 缓存标识
+   */
   public async del (key: string) {
     if (isNull(key)) {
       throw new Error('[cache]: 请传入需要删除的缓存名称')
