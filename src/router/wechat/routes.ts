@@ -9,10 +9,10 @@
 import { Application } from 'egg'
 
 module.exports = (app: Application) => {
-  const { controller, router } = app
+  const { controller, router, middleware } = app
 
   // 定义路由前缀并设置使用的中间件
-  const wechatRouter = router.namespace('/wechat')
+  const wechatRouter = router.namespace('/wechat', (middleware as any).xmlToJson(app))
   // 微信入口
   wechatRouter.all('/', controller.wechat.index.index)
 }

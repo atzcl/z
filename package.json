@@ -11,6 +11,7 @@
     "@types/node": "^9.4.7",
     "@types/nodemailer": "^4.6.0",
     "@types/sequelize": "^4.27.10",
+    "@types/xml2js": "^0.4.2",
     "bcryptjs": "^2.4.3",
     "egg": "^2.5.0",
     "egg-graphql": "^2.1.0",
@@ -25,9 +26,11 @@
     "lodash": "^4.17.5",
     "mysql2": "^1.5.3",
     "nodemailer": "^4.6.3",
+    "raw-body": "^2.3.2",
     "rd": "^1.1.2",
     "sharp": "^0.20.1",
-    "uuid": "^3.2.1"
+    "uuid": "^3.2.1",
+    "xml2js": "^0.4.19"
   },
   "devDependencies": {
     "autod": "^3.0.1",
