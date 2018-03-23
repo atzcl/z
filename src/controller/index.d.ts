@@ -8,6 +8,7 @@ import CategoryController from './admin/category'
 
 /***************  wechat 模块  *********************/
 import IndexController from './wechat'
+import LoginController from './wechat/login';
 
 declare module 'egg' {
   // 拓展 egg 的 app.controller 对象，导出项目编写的 Controller 给 TypeScript
@@ -23,7 +24,8 @@ declare module 'egg' {
       category: CategoryController
     },
     wechat: {
-      index: IndexController
+      index: IndexController,
+      login: LoginController
     }
   }
 }

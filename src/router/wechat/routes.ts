@@ -15,4 +15,6 @@ module.exports = (app: Application) => {
   const wechatRouter = router.namespace('/wechat', (middleware as any).xmlToJson(app))
   // 微信入口
   wechatRouter.all('/', controller.wechat.index.index)
+  //
+  wechatRouter.get('wechat.login', '/login_qr_code', controller.wechat.login.qrCode)
 }

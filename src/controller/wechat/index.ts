@@ -24,7 +24,7 @@ export default class IndexController extends Controller {
   public async parseMessage () {
     switch (this.ctx.request.body.MsgType) {
       case 'event':
-        return this.sendTextMessage('收到事件消息')
+        return this.parseEvent()
       case 'text':
         return this.sendTextMessage('收到文字消息')
       case 'image':
@@ -44,6 +44,33 @@ export default class IndexController extends Controller {
     }
 
     this.ctx.throw(403, '')
+  }
+
+  /**
+   * 解析微信返回的各种 Event 类型，并进行相应处理
+   *
+   * @returns {void}
+   */
+  public async parseEvent () {
+    // 判断事件类型 // 转化为小写
+    switch (this.ctx.request.body.Event.toLowerCase()) {
+      case 'subscribe':
+        if (this.ctx.request.body.EventKey) {
+          return this.sendTextMessage(`感谢您通过扫描带参数二维码的订阅, scene_id: ${this.ctx.request.body.EventKey}`)
+        }
+        return this.sendTextMessage('感谢您的订阅')
+      case 'unsubscribe':
+        return this.sendTextMessage('你居然取消订阅，太可怕了')
+      case 'scan':
+        console.log(this.ctx.request.body)
+        return this.sendTextMessage(
+          `已关注公众号后，扫描带参数的二维码的事件, scene_id: ${this.ctx.request.body.EventKey}`
+        )
+      case 'latitude':
+        return this.sendTextMessage('上报地理位置事件')
+      case 'click':
+        return this.sendTextMessage('点击菜单拉取消息时的事件推送')
+    }
   }
 
   /**

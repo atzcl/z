@@ -6,7 +6,7 @@
 |
 */
 
-import { forOwn, isNull, isArray } from 'lodash'
+import { forOwn } from 'lodash'
 import { Model } from 'sequelize'
 import { BaseContextClass } from 'egg'
 

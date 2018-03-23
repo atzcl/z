@@ -6,7 +6,6 @@
 |
 */
 
-import { has } from 'lodash'
 import BaseHandler from '../../base_class/base_handler'
 
 export default class AccessToken extends BaseHandler {
@@ -59,7 +58,7 @@ export default class AccessToken extends BaseHandler {
    *
    * @param {boolean} refresh 是否需要刷新 access_token
    */
-  public async getToken (refresh: boolean = false) {
+  public async getToken (refresh: boolean = false): Promise<object> {
     const { ctx } = this
 
     // 如果不是指定需要刷新 token,并且存在缓存
