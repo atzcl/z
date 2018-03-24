@@ -9,19 +9,30 @@ module.exports = appInfo => {
   // 中间件配置
   config.middleware = [ 'exceptions' ];
 
-  // 自定义配置
+  // 自定义配置，后面会抽离一部分存放到数据，提供在线修改
   config.myApps = {
     appName: 'z', // 应用名称
     debug: false, // 是否本地开发环境
-    appUrl: 'http://z.test', // 应用的 url
+    appUrl: 'xxx', // 应用的 url
     adminRouter: 'system', // 后台路由名称
     mail_options: {
       host: 'smtp.qq.com', // 地址
       port: 465, // 端口
       secure: true, // TLS 设置
       auth: {
-        user: 'atzcl@qq.com', // 账号
-        pass: 'cupxqyumbmbhbihd', // 密码
+        user: 'xxx', // 账号
+        pass: 'xxx', // 密码 [授权码]
+      },
+    },
+    exception_notify: {
+      is_open: 0, // 是否打开异常通知，0 关闭；1 开启
+      type: 1, // 异常通知类型，1 微信； 2 邮件；更多...
+      wechat_opt: {
+        touser: 'xxxx', // 接收通知的用户 open_id
+        template_id: 'xxxx', // 模板消息的 id
+      },
+      email_opt: {
+        to: 'xxxx@gmail.com', // 接收通知的用户邮件地址
       },
     },
   };
@@ -43,11 +54,11 @@ module.exports = appInfo => {
   // egg-sequelize 配置
   config.sequelize = {
     dialect: 'mysql', // support: mysql, mariadb, postgres, mssql
-    database: 'z', // 数据库名称
-    host: 'localhost', // 数据库地址
+    database: 'xxxx', // 数据库名称
+    host: '123.0.0.1', // 数据库地址
     port: '3306', // 数据库端口
-    username: 'root', // 用户名
-    password: 'root', // 密码
+    username: 'xxxx', // 用户名
+    password: 'xxxx', // 密码
     dialectOptions: {
       charset: 'utf8mb4',
       collate: 'utf8mb4_unicode_ci',
@@ -96,14 +107,14 @@ module.exports = appInfo => {
   config.proxy = true;
 
   config.wechat = {
-    app_id: 'app_id', // AppID
-    secret: 'secret', // AppSecret
-    token: 'atzcl.cn', // Token
+    app_id: 'xxxx', // AppID
+    secret: 'xxxx', // AppSecret
+    token: 'xxxx', // Token
     aes_key: '', // EncodingAESKey
     // 小程序
-    mini_app_id: '', // AppID
-    mini_secret: '', // AppSecret
-    mini_token: '', // Token
+    mini_app_id: 'xxxx', // AppID
+    mini_secret: 'xxxx', // AppSecret
+    mini_token: 'xxxx', // Token
     mini_aes_key: '', // EncodingAESKey
     base_uri: 'https://api.weixin.qq.com/cgi-bin/',
   };

@@ -1,4 +1,5 @@
 app/
+config/config.local.js
 logs/
 npm-debug.log
 yarn-error.log
