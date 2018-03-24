@@ -3,54 +3,12 @@ import { VerifyOptions, Secret, SignOptions, DecodeOptions } from 'jsonwebtoken'
 
 // config 配置声明
 export interface DefaultConfig {
-  jwt: {
-    secret: string,
-    enable: boolean,
-    match?: string
-  };
-  jwt_extra: {
-    iss: string,
-    iat: number,
-    exp: number,
-    nbf: number,
-    ttl: number,
-    refresh_ttl: number,
-    sub: string,
-    jti: string,
-  };
-  myApps: {
-    appName: string,
-    debug: boolean,
-    appUrl: string,
-    adminRouter: string,
-    mail_options: {
-      host: string,
-      port: number,
-      secure: boolean,
-      auth: {
-        user: string,
-        pass: string
-      }
-    }
-  };
-  wechat: {
-    base_uri: string
-    app_id: string
-    secret: string
-    token: string
-    aes_key: string
-    mini_app_id: string
-    mini_secret: string
-    mini_token: string
-    mini_aes_key: string
-  }
+  
 }
 
 declare module 'egg' {
   // 拓展 egg 的 app 对象
   export interface Application {
-    // 增加合并该项目的 config 声明
-    config: EggAppConfig & DefaultConfig;
     // jwt
     jwt: {
       // 加密
@@ -78,10 +36,67 @@ declare module 'egg' {
     verifyBcrypt(value: string, hash: string): boolean;
   }
 
+  // 拓展 egg 的 EggAppConfig
+  export interface EggAppConfig {
+    jwt: {
+      secret: string,
+      enable: boolean,
+      match?: string
+    };
+    jwt_extra: {
+      iss: string,
+      iat: number,
+      exp: number,
+      nbf: number,
+      ttl: number,
+      refresh_ttl: number,
+      sub: string,
+      jti: string,
+    };
+    myApps: {
+      appName: string,
+      debug: boolean,
+      appUrl: string,
+      adminRouter: string,
+      mail_options: {
+        host: string,
+        port: number,
+        secure: boolean,
+        auth: {
+          user: string,
+          pass: string
+        }
+      },
+      exception_notify: {
+        is_open: number
+        type: number
+        wechat_opt: {
+          touser: string
+          template_id: string
+        },
+        email_opt: {
+          to: string
+        },
+      }
+    };
+    wechat: {
+      base_uri: string
+      app_id: string
+      secret: string
+      token: string
+      aes_key: string
+      mini_app_id: string
+      mini_secret: string
+      mini_token: string
+      mini_aes_key: string
+    }
+  }
+
   // 拓展 egg 的 Context 对象
   export interface Context {
     // egg-validate 拓展的 validate 方法声明
     validate(rules: object, data?: object): void;
+    abort(code: number, message?: string): void;
   }
 
   // 拓展 egg 的 Router 对象

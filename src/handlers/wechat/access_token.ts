@@ -108,7 +108,7 @@ export default class AccessToken extends BaseHandler {
 
     // 判断是否返回错误
     if (result.data.errcode) {
-      await this.ctx.throw(422, `${result.data.errcode} ---> ${result.data.errmsg}`)
+      await this.ctx.abort(422, `${result.data.errcode} ---> ${result.data.errmsg}`)
     }
 
     return result.data

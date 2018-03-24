@@ -31,6 +31,6 @@ export default class LoginController extends Controller {
       }
     }
 
-    ctx.throw(422, '账号或密码不正确')
+    ctx.abort(422, '账号或密码不正确')
   }
 }

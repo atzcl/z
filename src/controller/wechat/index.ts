@@ -43,7 +43,7 @@ export default class IndexController extends Controller {
         break
     }
 
-    this.ctx.throw(403, '')
+    this.ctx.abort(403, '')
   }
 
   /**

@@ -17,6 +17,6 @@ export default class RegisterController extends Controller {
       return
     }
 
-    this.ctx.throw(500, '注册失败~')
+    this.ctx.abort(500, '注册失败~')
   }
 }

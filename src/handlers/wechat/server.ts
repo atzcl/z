@@ -21,7 +21,7 @@ export default class Server extends BaseHandler {
 
     // 判断访问的是否是微信服务器
     if (await this.signature() !== ctx.request.query.signature) {
-      ctx.throw(403, '该访问不被允许')
+      ctx.abort(403, '该访问不被允许')
     }
 
     // 将微信传递的 echostr 随机字符原样返回

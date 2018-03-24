@@ -71,6 +71,6 @@ export default class WeChatRequest extends BaseHandler {
   private async isError (res: any) {
     if (!res.errcode) return
 
-    await this.ctx.throw(422, `${res.errcode} ---> ${res.errmsg}`)
+    await this.ctx.abort(422, `【 微信调用异常 】${res.errcode} ---> ${res.errmsg}`)
   }
 }

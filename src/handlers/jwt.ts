@@ -37,7 +37,7 @@ export default class Jwt extends BaseHandler {
 
     // 判断该 token 是否已被拉黑
     if (await this.verifyBlack(token)) {
-      await this.ctx.throw(403, '无效的 token')
+      await this.ctx.abort(403, '无效的 token')
     }
 
     return result
@@ -116,7 +116,7 @@ export default class Jwt extends BaseHandler {
     } catch (error) {
       // 如果 jwt 抛出的异常并不是 token 失效，那么就可以认定该 token 是非法的了
       if (error.name !== 'TokenExpiredError') {
-        this.ctx.throw(422, '无效的 token')
+        this.ctx.abort(422, '无效的 token')
       }
     }
 
@@ -129,7 +129,7 @@ export default class Jwt extends BaseHandler {
 
     // 判断是否已失效
     if (refreshTtl < Math.floor(new Date().getTime() / 1000)) {
-      this.ctx.throw(403, 'token 已失效')
+      this.ctx.abort(403, 'token 已失效')
     }
 
     // 签发新 token

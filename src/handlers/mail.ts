@@ -36,10 +36,9 @@ export default class Mail extends BaseHandler {
         await transporter.sendMail(data)
         break
       } catch (e) {
-        console.log(e)
         // 当重试发送到第 5 次的时候，就抛出异常
         if (i === 4) {
-          ctx.throw(500, '邮件发送失败')
+          ctx.abort(500, '邮件发送失败')
         }
       }
     }
