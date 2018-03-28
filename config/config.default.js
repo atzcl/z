@@ -39,9 +39,9 @@ module.exports = appInfo => {
 
   // onerror 配置
   config.onerror = {
-    all(err, ctx) {
-      console.log(err, ctx);
-    },
+    // all(err, ctx) {
+    //   console.log(err, ctx);
+    // },
   };
 
   // 安全配置
@@ -55,7 +55,7 @@ module.exports = appInfo => {
   config.sequelize = {
     dialect: 'mysql', // support: mysql, mariadb, postgres, mssql
     database: 'xxxx', // 数据库名称
-    host: '123.0.0.1', // 数据库地址
+    host: '127.0.0.1', // 数据库地址
     port: '3306', // 数据库端口
     username: 'xxxx', // 用户名
     password: 'xxxx', // 密码
@@ -84,14 +84,16 @@ module.exports = appInfo => {
 
   // egg-socket.io 配置
   exports.io = {
-    init: { }, // passed to engine.io
+    init: {
+      init: { wsEngine: 'uws' }, // 使用 uws 来代替默认的 us
+    },
     namespace: {
       '/': {
         connectionMiddleware: [],
         packetMiddleware: [],
       },
-      '/example': {
-        connectionMiddleware: [],
+      '/loginQrCode': {
+        connectionMiddleware: [ 'auth' ],
         packetMiddleware: [],
       },
     },
@@ -106,6 +108,7 @@ module.exports = appInfo => {
   // 代理
   config.proxy = true;
 
+  // 微信相关配置
   config.wechat = {
     app_id: 'xxxx', // AppID
     secret: 'xxxx', // AppSecret
@@ -142,6 +145,15 @@ module.exports = appInfo => {
     // sub: 'sub', // 令牌标识 [ 也就是存放我们自己数据的地方 ]
     // jti: 'jti', // 令牌的唯一标识符 （ sub 和 iat md5 加密后的字符）
   };
+
+  config.view = {
+    defaultViewEngine: 'ejs',
+    mapping: {
+      '.html': 'ejs',
+    },
+  };
+
+  config.ejs = {};
 
   return config;
 };

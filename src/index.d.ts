@@ -1,10 +1,9 @@
 import { Redis }  from 'ioredis'
+import ExtendHelper from './extend/helper'
+import ExtendContext from './extend/context'
+import ExtendApplication from './extend/application'
 import { VerifyOptions, Secret, SignOptions, DecodeOptions } from 'jsonwebtoken'
-
-// config 配置声明
-export interface DefaultConfig {
-  
-}
+import IndexController from './controller';
 
 declare module 'egg' {
   // 拓展 egg 的 app 对象
@@ -32,71 +31,15 @@ declare module 'egg' {
     ): null | { [key: string]: any } | string;
     }
     redis: Redis;
-    createBcrypt(value: string, salt?: number): string;
-    verifyBcrypt(value: string, hash: string): boolean;
-  }
-
-  // 拓展 egg 的 EggAppConfig
-  export interface EggAppConfig {
-    jwt: {
-      secret: string,
-      enable: boolean,
-      match?: string
-    };
-    jwt_extra: {
-      iss: string,
-      iat: number,
-      exp: number,
-      nbf: number,
-      ttl: number,
-      refresh_ttl: number,
-      sub: string,
-      jti: string,
-    };
-    myApps: {
-      appName: string,
-      debug: boolean,
-      appUrl: string,
-      adminRouter: string,
-      mail_options: {
-        host: string,
-        port: number,
-        secure: boolean,
-        auth: {
-          user: string,
-          pass: string
-        }
-      },
-      exception_notify: {
-        is_open: number
-        type: number
-        wechat_opt: {
-          touser: string
-          template_id: string
-        },
-        email_opt: {
-          to: string
-        },
-      }
-    };
-    wechat: {
-      base_uri: string
-      app_id: string
-      secret: string
-      token: string
-      aes_key: string
-      mini_app_id: string
-      mini_secret: string
-      mini_token: string
-      mini_aes_key: string
-    }
+    createBcrypt: typeof ExtendApplication.createBcrypt;
+    verifyBcrypt: typeof ExtendApplication.verifyBcrypt;
   }
 
   // 拓展 egg 的 Context 对象
   export interface Context {
     // egg-validate 拓展的 validate 方法声明
-    validate(rules: object, data?: object): void;
-    abort(code: number, message?: string): void;
+    validate: typeof ExtendContext.abort;
+    abort: typeof ExtendContext.abort;
   }
 
   // 拓展 egg 的 Router 对象
@@ -105,9 +48,72 @@ declare module 'egg' {
     namespace(prefix: string, ...middlewares: Function[]): Router;
   }
 
+  export interface IController {
+    index: IndexController
+  }
+
   // 拓展 egg 的 app.helper 对象，导出项目编写的 Helper 给 TypeScript
   export interface IHelper {
-    toResponse(ctx: Context, code: number, data: any, msg: string): void
-    getDataValues(result: any):null | object
+    parseMsg: typeof ExtendHelper.parseMsg;
+    toResponse: typeof ExtendHelper.toResponse;
+    getDataValues: typeof ExtendHelper.getDataValues;
+    toSocketResponse: typeof ExtendHelper.toSocketResponse;
   }
+
+    // 拓展 egg 的 EggAppConfig [ 将自定义的 config 加载在这里 ]
+    export interface EggAppConfig {
+      jwt: {
+        secret: string,
+        enable: boolean,
+        match?: string
+      };
+      jwt_extra: {
+        iss: string,
+        iat: number,
+        exp: number,
+        nbf: number,
+        ttl: number,
+        refresh_ttl: number,
+        sub: string,
+        jti: string,
+      };
+      myApps: {
+        appName: string,
+        debug: boolean,
+        appUrl: string,
+        adminRouter: string,
+        mail_options: {
+          host: string,
+          port: number,
+          secure: boolean,
+          auth: {
+            user: string,
+            pass: string
+          }
+        },
+        exception_notify: {
+          is_open: number
+          type: number
+          wechat_opt: {
+            touser: string
+            template_id: string
+          },
+          email_opt: {
+            to: string
+          },
+        },
+        modules_list: string[]
+      };
+      wechat: {
+        base_uri: string
+        app_id: string
+        secret: string
+        token: string
+        aes_key: string
+        mini_app_id: string
+        mini_secret: string
+        mini_token: string
+        mini_aes_key: string
+      }
+    }
 }
