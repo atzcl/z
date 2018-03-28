@@ -7,7 +7,7 @@
 */
 
 import { createHash } from 'crypto'
-import BaseHandler from '../base_class/base_handler'
+import BaseHandler from './base_handler'
 
 export default class Jwt extends BaseHandler {
   // 储存到缓存的前缀

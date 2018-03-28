@@ -6,7 +6,7 @@
 |
 */
 
-import BaseHandler from '../base_class/base_handler'
+import BaseHandler from './base_handler'
 
 // ip2region 地址库
 const IP2Region = require('ip2region')

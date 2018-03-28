@@ -2,10 +2,17 @@
 +-----------------------------------------------------------------------------------------------------------------------
 | Author: 植成樑 <atzcl0310@gmail.com>  Blog：https://www.zcloop.com
 +-----------------------------------------------------------------------------------------------------------------------
-| 处理上传业务
+| 处理 socket.io 客户端的连接或者退出
 |
 */
 
-import BaseHandler from './base_handler'
+import { Application, Context } from 'egg'
 
-export default class Uploads extends BaseHandler {}
+module.exports = (app: Application) => {
+  return async (ctx: Context, next: Function) => {
+    ctx.socket.emit('res', 'packet received!')
+    console.log('packet:', app)
+    await next()
+  }
+}
+

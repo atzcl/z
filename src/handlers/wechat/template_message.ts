@@ -6,7 +6,7 @@
 |
 */
 
-import BaseHandler from '../../base_class/base_handler'
+import BaseHandler from '../base_handler'
 import { forOwn, isNull, isObject } from 'lodash'
 
 export default class TemplateMessage extends BaseHandler {

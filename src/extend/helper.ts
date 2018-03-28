@@ -8,7 +8,7 @@
 
 import { Context } from 'egg'
 
-module.exports = {
+const helper = {
   /**
    * 响应返回
    *
@@ -26,6 +26,21 @@ module.exports = {
     ctx.response.body = response
   },
   /**
+   * Socket 的响应数据格式
+   *
+   * @param {number} code 状态
+   * @param {any} data 数据
+   * @param {string} msg 消息
+   */
+  toSocketResponse (code: number = 200, data: any = '', msg: string = 'success') {
+    return {
+      code: code,
+      data: data,
+      msg: msg,
+      time: Math.floor(new Date().getTime() / 1000)
+    }
+  },
+  /**
    * 获取 result 的 dataValues 值
    */
   getDataValues (result: any) {
@@ -34,5 +49,20 @@ module.exports = {
     } catch (error) {
       return null
     }
+  },
+  parseMsg (action: string, payload: object = {}, metadata: object = {}) {
+    const meta = Object.assign({}, {
+      timestamp: Date.now()
+    }, metadata)
+
+    return {
+      data: {
+        action,
+        payload
+      },
+      meta
+    }
   }
 }
+
+export default helper

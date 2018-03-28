@@ -7,7 +7,7 @@
 */
 
 import { isNull } from 'lodash'
-import BaseHandler from '../base_class/base_handler'
+import BaseHandler from './base_handler'
 
 export default class CacheManager extends BaseHandler {
   // 使用缓存类型 [ 以后拓展 ]

@@ -7,8 +7,26 @@
 */
 
 const bcryptjs = require('bcryptjs')
+import { Application } from 'egg'
+const ModulesSymbol = Symbol('Application#modules')
 
-module.exports = {
+const Application = {
+  /**
+   * 创建 modules 对象，并挂载到 app 对象中
+   *
+   * @returns void
+   */
+  get modules (): Application {
+    if (!(this as any)[ModulesSymbol]) {
+      (this as any)[ModulesSymbol] = {
+        config: {},
+        controller: {},
+        middleware: {}
+      }
+    }
+
+    return (this as any)[ModulesSymbol]
+  },
   /**
    * bcryptjs 加密
    *
@@ -30,3 +48,5 @@ module.exports = {
     return bcryptjs.compareSync(value, hash)
   }
 }
+
+export default Application

@@ -6,7 +6,7 @@
 |
 */
 
-import BaseHandler from '../base_class/base_handler'
+import BaseHandler from './base_handler'
 
 const mailer = require('nodemailer')
 

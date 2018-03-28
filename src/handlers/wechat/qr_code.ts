@@ -6,8 +6,8 @@
 |
 */
 
-import BaseHandler from '../../base_class/base_handler'
 import { isInteger } from 'lodash'
+import BaseHandler from '../base_handler'
 
 export default class QrCode extends BaseHandler {
   // 一天的秒值
