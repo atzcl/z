@@ -13,9 +13,5 @@
   },
   "include": [
     "src/**/*.ts", // 监听的目录
-  ],
-  "exclude": [
-    "app/public",
-    "app/views"
   ]
 }

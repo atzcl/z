@@ -10,7 +10,8 @@
     "@types/lodash": "^4.14.106",
     "@types/node": "^9.6.0",
     "@types/nodemailer": "^4.6.0",
-    "@types/sequelize": "^4.27.11",
+    "@types/sequelize": "^4.27.12",
+    "@types/socket.io": "^1.4.32",
     "@types/xml2js": "^0.4.2",
     "bcryptjs": "^2.4.3",
     "egg": "^2.5.0",
@@ -23,6 +24,7 @@
     "egg-session-redis": "^1.0.0",
     "egg-socket.io": "^4.0.7",
     "egg-validate": "^1.0.0",
+    "egg-view-ejs": "^2.0.0",
     "ip2region": "^1.1.0",
     "lodash": "^4.17.5",
     "mysql2": "^1.5.3",
@@ -36,10 +38,9 @@
   "devDependencies": {
     "autod": "^3.0.1",
     "autod-egg": "^1.1.0",
-    "egg-bin": "^4.3.7",
+    "egg-bin": "^4.5.0",
     "egg-ci": "^1.8.0",
-    "egg-mock": "^3.15.1",
-    "egg-ts-helper": "^1.0.0",
+    "egg-mock": "^3.16.0",
     "eslint": "^4.19.1",
     "eslint-config-egg": "^7.0.0",
     "webstorm-disable-index": "^1.2.0"
@@ -48,9 +49,9 @@
     "node": ">=8.9.0"
   },
   "scripts": {
-    "start": "egg-scripts start --daemon --title=egg-server-monster",
+    "start": "egg-scripts start --daemon --title=egg-server-monster --sticky",
     "stop": "egg-scripts stop --title=egg-server-monster",
-    "dev": "egg-bin dev",
+    "dev": "egg-bin dev --sticky",
     "debug": "egg-bin debug",
     "test": "npm run lint -- --fix && npm run test-local",
     "test-local": "egg-bin test",
