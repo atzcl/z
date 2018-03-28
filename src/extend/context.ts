@@ -6,7 +6,7 @@
 |
 */
 
-module.exports = {
+const extendContext = {
   /**
    * 抛出自定义异常
    *
@@ -29,8 +29,8 @@ module.exports = {
    * errors: [ { message: 'required', field: 'name', code: 'missing_field' }, { message: 'required', field: 'password', code: 'missing_field' } ]
    */
   validate (rules: object, data?: object) {
-    data = data || this.request.body
-    const errors = this.app.validator.validate(rules, data)
+    data = data || (this as any).request.body
+    const errors = (this as any).app.validator.validate(rules, data)
     if (errors) {
       let error: any = new Error(`Validation Exception: [${errors[0].field}] ${errors[0].message}`)
       error.status = 422
@@ -40,3 +40,5 @@ module.exports = {
     }
   }
 }
+
+export default extendContext

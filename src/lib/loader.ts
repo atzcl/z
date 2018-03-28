@@ -1,6 +1,6 @@
-import { Application } from 'egg'
-
 const path = require('path')
+import { forEach } from 'lodash'
+import { Application } from 'egg'
 
 /**
  * 自定义 Loader 加载拓展目录
@@ -8,51 +8,96 @@ const path = require('path')
  * @desc https://eggjs.org/zh-cn/advanced/loader.html
  */
 module.exports = (app: Application) => {
+  // 目录公共路径
+  let unitBaseDir = `${app.config.baseDir}/app`
+
+  // 加载自定义模块
+  loadModules(app)
   // 加载所有处理第三方业务
-  loadCustomizeCtx('handlers', app)
-  // 加载工具类文件，并挂载在 app 上
-  loadCustomizeApp('extend/utils', app, 'utils')
+  loadCustomizeFile(app, `${unitBaseDir}/handlers`, 'handlers')
   // 加载所有验证文件
-  loadCustomizeCtx('validates', app, 'validateRule')
+  loadCustomizeFile(app, `${unitBaseDir}/validates`, 'validateRule')
   // 加载所有 Repository 层文件
-  loadCustomizeCtx('repositories', app, 'repository')
+  loadCustomizeFile(app, `${unitBaseDir}/repositories`, 'repository')
 }
 
 /**
  * 加载指定目录的所有 js，并注入 ctx 中 （懒加载）
  *
- * @param {string} loadPath 加载文件路径
  * @param {Application} app Application 对象
- * @param {sting} customizeCtx 挂载的名称
+ * @param {string|string[]} loadPath 加载文件路径
+ * @param {sting} target 挂载的名称
+ * @param {string} method 加载的 loader 方法
  */
-function loadCustomizeCtx (loadPath: string, app: Application, customizeCtx: string = '') {
-  // 载入配置
-  const opt = {
-    call: true,
-    override: true, // 遇到已经存在的文件，直接覆盖
-    caseStyle: 'lower',
-    directory: app.loader.getLoadUnits().map((unit: any) => path.join(unit.path, `app/${loadPath}`))
-  }
-
-  app.loader.loadToContext(opt.directory, customizeCtx === '' ? loadPath : customizeCtx, opt)
+function loadCustomizeFile (
+  app: Application, loadPath: string | string[], target: string, method: string = 'loadToContext'
+) {
+  app.loader[method](loadPath, target)
 }
 
 /**
- * 加载指定目录的所有 js，并注入 app 中
+ * 加载所有功能模块
  *
- * @param {string} loadPath 加载文件路径
- * @param {Application} app Application 对象
- * @param {sting} customizeCtx 挂载的名称
+ * @param {Application} app egg Application 对象
  */
-async function loadCustomizeApp(loadPath: string, app: Application, customizeCtx: string = '') {
-  // 加载配置
-  const opt = {
-    call: true,
-    override: true,
-    caseStyle: 'lower',
-    directory: app.loader.getLoadUnits().map((unit: any) => path.join(unit.path, `app/${loadPath}`))
-  }
+function loadModules (app: Application) {
+  // let servicesPath: string[] = []
+  // let repositoryPath: string[] = []
+  // let validatesPath: string[] = []
 
-  // 挂载在 app 对象中
-  app.loader.loadToApp(opt.directory, customizeCtx === '' ? loadPath : customizeCtx, opt)
+  // 目录公共路径
+  let unitBaseDir = `${app.config.baseDir}/app`
+
+  // 加载 modules 下的所有功能模块
+  forEach(app.config.myApps.modules_list, value => {
+    // Config
+    loadModuleConfig(app, value)
+    // Controller
+    loadModuleController(app, value)
+    // Middleware
+    loadModuleMiddleware(app, value)
+    // Service
+    loadCustomizeFile(app, `${unitBaseDir}/modules/${value}/services`, `${value}Service`)
+    // Repository
+    loadCustomizeFile(app, `${unitBaseDir}/modules/${value}/modulesRepository`, `${value}Repository`)
+    // Validate
+    loadCustomizeFile(app, `${unitBaseDir}/modules/${value}/modulesValidateRule`, `${value}ValidateRule`)
+  })
+}
+
+/**
+ * 加载单个模块的 controller
+ *
+ * @param {Application} app egg 的 Application 对象
+ * @param {string} name 模块名称
+ * @returns {void}
+ */
+function loadModuleController (app: Application, name: string) {
+  (app as any).modules.controller[name] = {}
+  app.loader.loadController({
+    directory: app.loader.getLoadUnits().map((unit: any) => path.join(
+      unit.path, `app/modules/${name}/controllers`)
+    ),
+    target: (app as any).modules.controller[name]
+  })
+}
+
+/**
+ * 加载单个模块的 middleware
+ *
+ * @param {Application} app egg 的 Application 对象
+ * @param {string} name 模块名称
+ * @returns {void}
+ */
+function loadModuleMiddleware (app: Application, name: string) {
+  (app as any).modules.middleware[name] = {}
+  new app.loader.FileLoader({
+    directory: app.loader.getLoadUnits().map((unit: any) => path.join(unit.path, `app/modules/${name}/middleware`)),
+    target: (app as any).modules.middleware[name],
+    inject: app
+  }).load()
+}
+
+function loadModuleConfig (app: Application, name: string) {
+  (app as any).modules.config[name] = app.loader.loadFile(`${app.config.baseDir}/app/modules/${name}/config/app.js`)
 }
