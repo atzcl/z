@@ -2,6 +2,7 @@ app/
 config/config.local.js
 config/env
 logs/
+migration_tmp.js
 npm-debug.log
 yarn-error.log
 node_modules/
