@@ -21,7 +21,7 @@ module.exports = {
         },
         comment: '关联 users 表 id',
       },
-      groupid: {
+      group_id: {
         type: BIGINT(20),
         allowNull: true,
         comment: '分组ID',
@@ -44,11 +44,16 @@ module.exports = {
         defaultValue: 1,
         comment: '用户是否订阅该公众号，0：未关注，1：已关注',
       },
-      openid: {
+      open_id: {
         type: STRING(150),
         allowNull: false,
         unique: true,
         comment: '用户的标识，对当前公众号唯一',
+      },
+      app_id: {
+        type: STRING(200),
+        allowNull: true,
+        comment: '该微信用户所属公众号的 app_id'
       },
       nickname: {
         type: STRING(255),

@@ -43,7 +43,7 @@ module.exports = {
         allowNull: true,
         comment: '签名',
       },
-      notification_count: {
+      notify_count: {
         type: INTEGER,
         allowNull: false,
         defaultValue: 0,
@@ -60,8 +60,8 @@ module.exports = {
         allowNull: false, // not null
         comment: '密码',
       },
-      deleted_at: DATE, // 软删除时间
       last_actived_at: DATE, // 最后活跃时间
+      deleted_at: DATE, // 软删除时间
       created_at: DATE, // 创建时间
       updated_at: DATE, // 更新时间
     });
