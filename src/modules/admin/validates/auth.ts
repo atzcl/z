@@ -23,7 +23,7 @@ export default class Auth {
       }
     }
   }
-
+  // 登录验证
   login (): object {
     return {
       name: {

@@ -9,15 +9,13 @@
 import { Application } from 'egg'
 
 module.exports = (app: Application) => {
-  // 我也不想弄这么多层，，，知识有限，暂时找不到其他方法 [ 为了智能提示 ]
-  const { modules, router, middleware } = app
-  const { controller } = modules
-  const { admin } = controller
+  const { router, middleware } = app
+  const { admin } = app.modules.controller
 
   // 定义路由前缀并设置使用的中间件
-  const adminV1Router = router.namespace(`/v1/${app.config.myApps.adminRouter}`, (middleware as any).authJwt(app))
+  const adminV1Router = router.namespace(`/v1/${app.config.myApps.adminRouter}/`, (middleware as any).authJwt(app))
   // 登录
-  adminV1Router.post('admin.login', '/login', admin.login.login)
+  adminV1Router.post('admin.login', 'login', admin.userAdmin.login)
   // 注册
-  adminV1Router.post('admin.register', '/register', admin.register.register)
+  // adminV1Router.post('admin.register', 'register', admin.userAdmin)
 }

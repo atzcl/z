@@ -17,7 +17,10 @@ export default class ExceptionService extends Service {
    * 处理异常通知
    */
   public async handler (error: any) {
-    const { config } = this
+    const { ctx, config } = this
+
+    // 不管什么错误，都应该记录错误到 log 中
+    ctx.logger.error(error)
 
     // 判断是否开启
     if (config.myApps.exception_notify.is_open !== 1) {

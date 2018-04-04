@@ -1,25 +1,23 @@
-import LoginController from "../admin/controllers/auth/login";
-import RegisterController from "../admin/controllers/auth/register";
-import LoginRepository from "../admin/repositories/auth/login";
-import RegisterRepository from "../admin/repositories/auth/register";
 import Auth from "../admin/validates/auth";
+import UserAdminController from "../admin/controllers/user_admin";
+import AuthService from "../admin/services/auth";
+import UserAdminRepository from "../admin/repositories/user_admin";
 
 
 // Admin 模块
 declare namespace Admin {
   interface Controller {
-    login: LoginController;
-    register: RegisterController;
+    userAdmin: UserAdminController
   }
 
   interface Config {}
 
   interface Service {
+    auth: AuthService
   }
 
   interface Repository {
-    login: LoginRepository;
-    register: RegisterRepository;
+    userAdmin: UserAdminRepository
   }
 
   interface Middleware {
