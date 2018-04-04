@@ -1,7 +1,9 @@
 import IndexController from "../wechat/controllers";
 import LoginController from "../wechat/controllers/login";
 import { WechatConfig } from "../wechat/config/app";
-import LoginService from "../wechat/services/login";
+import WechatUserService from "../wechat/services/wechat_user";
+import WeChatUserRepository from "../wechat/repositories/wechat_user";
+import WechatService from "../wechat/services/wechat";
 
 
 
@@ -17,13 +19,15 @@ declare namespace WeChat {
   }
 
   interface Service {
-    login: LoginService
+    wechat: WechatService;
+    wechatUser: WechatUserService
   }
 
   interface Middleware {
   }
 
   interface Repository {
+    wechatUser: WeChatUserRepository
   }
 
   interface ValidateRule {

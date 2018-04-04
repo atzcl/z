@@ -22,6 +22,9 @@ module.exports = (app: Application) => {
   // wechat 模块
   require(`${moduleBaseDir}/wechat/routes`)(app)
 
+  // user 模块
+  require(`${moduleBaseDir}/user/routes`)(app)
+
   // admin 模块
   require(`${moduleBaseDir}/admin/routes`)(app)
 
