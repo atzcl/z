@@ -19,8 +19,10 @@ export default class Jwt extends BaseHandler {
    * @param {object} sub token 的标识（默认为用户标识）
    */
   public async create (sub: object): Promise<string> {
-    return this.app.jwt.sign({ sub: sub }, this.app.config.jwt.secret, {
-      expiresIn: this.app.config.jwt_extra.ttl * 60 * 60 // token 过期时间, 单位: 小时
+    const { app, config } = this
+
+    return app.jwt.sign({ sub: sub }, config.jwt.secret, {
+      expiresIn: config.jwt_extra.ttl * 60 * 60 // token 过期时间, 单位: 小时
     })
   }
 

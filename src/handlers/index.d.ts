@@ -11,6 +11,8 @@ import Message from './wechat/message';
 import WeChatRequest from './wechat/request';
 import AccessToken from './wechat/access_token';
 import TemplateMessage from './wechat/template_message';
+import User from './wechat/user';
+import SocketIO from './socket_io';
 
 declare module 'egg' {
   // 拓展 egg 的 Application
@@ -20,16 +22,18 @@ declare module 'egg' {
       jwt: Jwt;
       mail: Mail;
       uploads: Uploads;
+      socketIo: SocketIO;
       cache: CacheManager;
       wechat: {
-        server: Server,
-        qrCode: QrCode,
-        message: Message,
-        request: WeChatRequest
-        accessToken: AccessToken,
-        templateMessage: TemplateMessage
+        user: User;
+        server: Server;
+        qrCode: QrCode;
+        message: Message;
+        request: WeChatRequest;
+        accessToken: AccessToken;
+        templateMessage: TemplateMessage;
       },
-      ipToRegion: IpToRegion
+      ipToRegion: IpToRegion;
     }
   }
 }

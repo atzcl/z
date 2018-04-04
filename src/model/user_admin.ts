@@ -5,7 +5,7 @@ module.exports = (app: Application) => {
   const { STRING, BOOLEAN } = app.Sequelize
 
   // 创建模型
-  const modelSchema = BaseModel(app, 'user_admin', {
+  const modelSchema = BaseModel(app, 'user_admins', {
     name: { type: STRING(32), unique: true, allowNull: false, comment: '用户名' },
     email: { type: STRING(64), unique: true, allowNull: true, comment: '邮箱地址' },
     phone: { type: STRING(20), unique: true, allowNull: true, comment: '手机号码' },
@@ -17,7 +17,7 @@ module.exports = (app: Application) => {
   })
 
   /**
-   * @returns {array} 可批量赋值的数组
+   * @returns {array} 可批量赋值的数组,当为空时，会自动遍历 model 定义的字段属性来进行过滤
    */
   modelSchema.fillable = (): string[] => {
     return [
@@ -49,7 +49,7 @@ module.exports = (app: Application) => {
 
   // 监听 Sequelize 的创建之前的 hook 钩子行为 [ 即事件 ]
   modelSchema.beforeCreate(async (columns: any, options: Object) => {
-    // 加密密码
+    // 加密密码 [ 或者可以使用 set 修改器来执行该业务 ]
     columns.password = await app.createBcrypt(columns.password)
   })
 

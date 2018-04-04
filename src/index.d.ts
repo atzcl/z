@@ -3,6 +3,7 @@ import ExtendHelper from './extend/helper'
 import ExtendContext from './extend/context'
 import ExtendApplication from './extend/application'
 import { VerifyOptions, Secret, SignOptions, DecodeOptions } from 'jsonwebtoken'
+
 import IndexController from './controller';
 
 declare module 'egg' {
@@ -38,7 +39,7 @@ declare module 'egg' {
   // 拓展 egg 的 Context 对象
   export interface Context {
     // egg-validate 拓展的 validate 方法声明
-    validate: typeof ExtendContext.abort;
+    validate: typeof ExtendContext.validate;
     abort: typeof ExtendContext.abort;
   }
 
@@ -102,7 +103,8 @@ declare module 'egg' {
             to: string
           },
         },
-        modules_list: string[]
+        modules_list: string[],
+        admin_jwt_secret: string,
       };
       wechat: {
         base_uri: string

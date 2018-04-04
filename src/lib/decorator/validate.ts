@@ -13,8 +13,9 @@ export function validateBody (path: string) {
   // key 成员的名字，其实就是函数名字
   // descriptor 成员的属性描述符
   return function (target: any, key: string, descriptor: PropertyDescriptor) {
-    // 被装饰的函数被保存在 value 中
+    // 被装饰的函数被保存在 value 中 [ 保存原有方法 ]
     const originFun = descriptor.value
+    // 重写原有方法
     descriptor.value = async function () {
       const { ctx } = (this as any)
 

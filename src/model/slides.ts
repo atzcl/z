@@ -12,7 +12,7 @@ module.exports = (app: Application) => {
   })
 
   /**
-   * @returns {array} 可批量赋值的数组
+   * @returns {array} 可批量赋值的数组,当为空时，会自动遍历 model 定义的字段属性来进行过滤
    */
   modelSchema.fillable = (): string[] => {
     return [

@@ -37,7 +37,7 @@ module.exports = () => {
       }
 
       // 应用异常通知, 异步调用，不需要等待，避免阻塞
-      ctx.service.extend.exceptions.handler(error)
+      ctx.service.exceptions.handler(error)
 
       // 响应返回
       ctx.body = {

@@ -8,7 +8,7 @@
 
 import BaseHandler from './base_handler'
 
-const mailer = require('nodemailer')
+import * as mailer from 'nodemailer'
 
 /**
  * @description https://nodemailer.com/message/
@@ -19,16 +19,11 @@ export default class Mail extends BaseHandler {
    *
    * @param {object} data 发送邮件的内容
    */
-  public async sendMail (data: object) {
+  public async sendMail (data: SendMailData) {
     const { app, ctx } = this
 
-    // 如果是本地开发环境，就不需要发送邮件
-    if (app.config.myApps.debug) {
-      return false
-    }
-
     // 创建邮件发送对象
-    const transporter = mailer.createTransport(app.config.myApps.mail_options)
+    const transporter = await mailer.createTransport(app.config.myApps.mail_options)
 
     // 发送失败后，重试 5 次
     for (let i = 0; i < 5; i++) {
@@ -38,9 +33,20 @@ export default class Mail extends BaseHandler {
       } catch (e) {
         // 当重试发送到第 5 次的时候，就抛出异常
         if (i === 4) {
-          ctx.abort(500, '邮件发送失败')
+          return ctx.abort(500, `【邮件发送失败】${e}`)
         }
       }
     }
   }
+}
+
+interface SendMailData {
+  from?: string
+  to?: string,
+  subject?: string,
+  html?: string | Buffer,
+  text?: string | Buffer,
+  replyTo?: string,
+  cc?: string | Array<string>,
+  bcc?: string | Array<string>,
 }
