@@ -23,10 +23,6 @@ module.exports = {
         type: INTEGER,
         allowNull: false,
         defaultValue: 0,
-        references: {
-          model: 'users',
-          key: 'id',
-        },
         comment: '关联 users 表 id, 创建用户的 id',
       },
       cdn_enabled: {

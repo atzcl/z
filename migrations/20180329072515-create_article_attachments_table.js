@@ -13,10 +13,6 @@ module.exports = {
         type: INTEGER,
         allowNull: false,
         defaultValue: 0,
-        references: {
-          model: 'articles',
-          key: 'id',
-        },
         comment: '关联 articles 表 id',
       },
       type: {

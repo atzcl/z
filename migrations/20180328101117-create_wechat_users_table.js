@@ -13,12 +13,6 @@ module.exports = {
         type: INTEGER,
         allowNull: false,
         defaultValue: 0,
-        references: {
-          // 关联表
-          model: 'users',
-          // 关联外键
-          key: 'id',
-        },
         comment: '关联 users 表 id',
       },
       group_id: {
@@ -28,8 +22,7 @@ module.exports = {
       },
       tagid_list: {
         type: STRING(100),
-        allowNull: false,
-        defaultValue: '',
+        allowNull: true,
         comment: '标签 id',
       },
       is_back: {
@@ -53,11 +46,11 @@ module.exports = {
       app_id: {
         type: STRING(200),
         allowNull: true,
-        comment: '该微信用户所属公众号的 app_id'
+        comment: '该微信用户所属公众号的 app_id',
       },
       nickname: {
         type: STRING(255),
-        allowNull: false,
+        allowNull: true,
         defaultValue: '',
         comment: '用户的昵称',
       },
@@ -84,11 +77,11 @@ module.exports = {
       },
       language: {
         type: STRING(30),
-        allowNull: false,
+        allowNull: true,
         defaultValue: 'zh_CN',
         comment: '用户的语言，简体中文为 zh_CN',
       },
-      headimgurl: {
+      avatar: {
         type: STRING(500),
         allowNull: true,
         comment: '用户头像',
@@ -100,7 +93,7 @@ module.exports = {
       },
       unionid: {
         type: STRING(150),
-        allowNull: false,
+        allowNull: true,
         defaultValue: '',
         comment: '只有在用户将公众号绑定到微信开放平台帐号后，才会出现该字段。',
       },

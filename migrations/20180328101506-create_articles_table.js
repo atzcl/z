@@ -13,24 +13,12 @@ module.exports = {
         type: INTEGER,
         allowNull: false,
         defaultValue: 0,
-        references: {
-          // 关联表
-          model: 'article_categories',
-          // 关联外键
-          key: 'id',
-        },
         comment: '关联 article_category 表 id',
       },
       user_id: {
         type: INTEGER,
         allowNull: false,
         defaultValue: 0,
-        references: {
-          // 关联表
-          model: 'users',
-          // 关联外键
-          key: 'id',
-        },
         comment: '关联 users 表 id, 作者 id',
       },
       is_show: {
@@ -103,10 +91,6 @@ module.exports = {
         type: INTEGER,
         allowNull: false,
         defaultValue: 0,
-        references: {
-          model: 'users',
-          key: 'id',
-        },
         comment: '关联 users 表 id, 最后回复的 user id',
       },
       last_reply_at: DATE, // 最后回复的时间
