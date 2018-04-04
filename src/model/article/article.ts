@@ -1,11 +1,11 @@
 import { Application } from 'egg'
-import { BaseModel } from './model'
+import { BaseModel } from '../model'
 
 module.exports = (app: Application) => {
   // const { INTEGER, STRING, BOOLEAN } = app.Sequelize
 
   // 创建模型
-  const modelSchema = BaseModel(app, 'users', {
+  const modelSchema = BaseModel(app, 'articles', {
   }, {
     // 开启软删除
     paranoid: true
@@ -32,5 +32,5 @@ module.exports = (app: Application) => {
   return modelSchema
 }
 
-export interface Users {
+export interface Articles {
 }
