@@ -5,40 +5,52 @@
 </head>
 <body>
     socket testsss
+    <img style="width: 200px; height: 200px" id="loginQrCode" />
+    <button id="getLoginQrCodeUrl">测试</button>
     <script src="https://cdn.bootcss.com/socket.io/2.0.4/socket.io.js"></script>
     <script>
       const log = console.log;
-      window.onload = function () {
-        // init
-        const socket = io(`${window.location.href}loginQrCode`, {
-          // 实际使用中可以在这里传递参数
-          query: {
-            room: 'demo',
-            userId: `client_${Math.random()}`,
-          },
 
-          transports: ['websocket']
+      document.querySelector('#getLoginQrCodeUrl').onclick = () => {
+        socket.emit('getLoginQrCode', 'ttt');
+      }
+
+      /* eslint-disable no-undef */
+      window.onload = function() {
+        // init
+        const socket = io(window.location.href, {
+          transports: [ 'websocket' ],
+          // 传递参数
+          query: {},
         });
 
         socket.on('connect', () => {
           const id = socket.id;
-          socket.emit('loginQrCode', 'hello socket!')
+          // 链接成功后,往服务端的 getLoginQrCode 事件发送获取微信登录二维码的需求
+          socket.emit('getLoginQrCode', 'success');
 
-          log('连接成功,', id, socket);
-
-          /************************   监听自定义事件  ****************************/
-
-          // 监听登录事件
-          socket.on('online', msg => {
-            log('#online,', msg);
-          });
+          /* ***********************   监听自定义事件  *************************** */
 
           // 监听自身 id 以实现 p2p 通讯
           socket.on(id, msg => {
-            log('#receive,', msg);
+            if ('type' in msg) {
+              console.log(111);
+            }
           });
 
-          /***************************   监听系统事件  ****************************/
+          // 监听返回微信二维码的事件
+          socket.on('getLoginQrCodeUrl', res => {
+            if (res.code === 200) {
+              document.querySelector('#loginQrCode').src = res.data
+            }
+          });
+
+          // 监听通过微信二维码扫码登录成功事件
+          socket.on('loginQrCodeSuccess', res => {
+            console.log(res);
+          });
+
+          /* **************************   监听系统事件  *************************** */
 
           // 监听断开连接事件 [ 断开连接时触发 ]
           socket.on('disconnect', msg => {
@@ -55,8 +67,8 @@
           *
           * @param {number} latency 自发送 ping 数据包后，到接收到 pong 事件的毫秒数（即：等待时间）
           */
-          socket.on('pong', (latency) => {
-            log('收到服务器的回应了~')
+          socket.on('pong', latency => {
+            log('收到服务器的回应了~', latency);
           });
 
           // 监听重连失败事件 [ 重连失败时触发 ]
@@ -64,19 +76,19 @@
             log('重连失败~');
           });
 
-           // 监听重连成功事件 [ 重连成功时触发 ]
-           socket.on('reconnect', (attemptNumber) => {
-            log('重连成功~');
+          // 监听重连成功事件 [ 重连成功时触发 ]
+          socket.on('reconnect', attemptNumber => {
+            log('重连成功~', attemptNumber);
           });
 
           // 监听连接超 [ 连接超时后触发 ]
-          socket.on('connect_timeout', (timeout) => {
-            log('连接超时了~');
+          socket.on('connect_timeout', timeout => {
+            log('连接超时了~', timeout);
           });
 
           // 监听错误事件 [ 发生错误时触发 ]
-          socket.on('error', (error) => {
-            log('发生了错误事件~');
+          socket.on('error', error => {
+            log('发生了错误事件~', error);
           });
 
         });

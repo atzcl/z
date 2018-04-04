@@ -58,10 +58,10 @@ function loadModules (app: Application) {
     loadModuleMiddleware(app, value)
     // Service
     loadCustomizeFile(app, `${unitBaseDir}/modules/${value}/services`, `${value}Service`)
-    // Repository
-    loadCustomizeFile(app, `${unitBaseDir}/modules/${value}/modulesRepository`, `${value}Repository`)
     // Validate
-    loadCustomizeFile(app, `${unitBaseDir}/modules/${value}/modulesValidateRule`, `${value}ValidateRule`)
+    loadCustomizeFile(app, `${unitBaseDir}/modules/${value}/validates`, `${value}ValidateRule`)
+    // Repository
+    loadCustomizeFile(app, `${unitBaseDir}/modules/${value}/repositories`, `${value}Repository`)
   })
 }
 

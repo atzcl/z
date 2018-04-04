@@ -45,7 +45,9 @@ module.exports = () => {
 
     // 当用户加入时
     adapter.clients(rooms, (err: any, clients: any) => {
-      console.log(err)
+      if (err) {
+        return
+      }
        // 追加当前 socket 信息到clients
       clients[id] = query
 

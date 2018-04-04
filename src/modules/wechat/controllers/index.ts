@@ -12,6 +12,7 @@ export default class IndexController extends Controller {
       return ctx.handlers.wechat.server.server()
     }
 
+    // await ctx.wechatService.wechat.test()
     // 微信消息处理
     await this.parseMessage()
   }
@@ -58,17 +59,15 @@ export default class IndexController extends Controller {
     switch (ctx.request.body.Event.toLowerCase()) {
       case 'subscribe':
         if (ctx.request.body.EventKey) {
-          return this.sendTextMessage(`感谢您通过扫描带参数二维码的订阅, scene_id: ${this.ctx.request.body.EventKey}`)
+          return this.sendTextMessage(
+            `感谢您通过扫描带参数二维码的订阅, ${await ctx.wechatService.wechatUser.login()}`
+          )
         }
         return this.sendTextMessage('感谢您的订阅')
       case 'unsubscribe':
         return this.sendTextMessage('你居然取消订阅，太可怕了')
       case 'scan':
-        let result = '登录失败或者已失效'
-        if (await ctx.wechatService.login.login(ctx.request.body)) {
-          result = '登录成功'
-        }
-        return this.sendTextMessage(result)
+        return this.sendTextMessage(await ctx.wechatService.wechatUser.login())
       case 'latitude':
         return this.sendTextMessage('上报地理位置事件')
       case 'click':
