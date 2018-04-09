@@ -1,8 +1,8 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
-    "target": "es2017",
-    "module": "commonjs",
+    "target": "es2017", // 目标代码类型
+    "module": "commonjs", // 指定生成哪个模块系统代码
     "strict": true,
     "noImplicitAny": false,
     "experimentalDecorators": true,

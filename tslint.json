@@ -34,7 +34,7 @@
     "align": [true, "statements"],
     "no-object-literal-type-assertion": false,
     "no-implicit-dependencies": false,
-    "max-line-length": [false, {"limit": 120, "ignore-pattern": "^`` |^import |^export {(.*?)}"}],
+    "max-line-length": [false, {"limit": 120, "ignore-pattern": "^import |^export {(.*?)}"}],
     "no-this-assignment": [true, {"allowed-names": ["^self$"], "allow-destructuring": true}]
   }
 }

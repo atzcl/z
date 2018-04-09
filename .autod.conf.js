@@ -20,8 +20,7 @@ module.exports = {
     'tslib',
     'typescript',
   ],
-  keep: [
-  ],
+  keep: [],
   semver: [
   ],
   test: 'scripts',

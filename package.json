@@ -63,7 +63,7 @@
     "egg-ci": "^1.8.0",
     "egg-bin": "^4.6.3",
     "egg-mock": "^3.17.0",
-    "egg-ts-helper": "^1.5.1",
+    "egg-ts-helper": "^1.5.2",
     "tslib": "^1.9.0",
     "tslint": "^5.9.1",
     "typescript": "^2.8.1"
