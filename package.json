@@ -1,20 +1,31 @@
 {
-  "name": "monster",
+  "name": "z",
   "version": "1.0.0",
-  "description": "",
+  "description": "基于 EggJS + TypeScript 的应用",
   "private": true,
+  "egg": {
+    "typescript": true
+  },
+  "scripts": {
+    "start": "egg-scripts start --daemon --title=egg-server-z --sticky",
+    "stop": "egg-scripts stop --title=egg-server-z",
+    "dev": "egg-bin dev -r egg-ts-helper/register --sticky",
+    "debug": "egg-bin debug -r egg-ts-helper/register",
+    "test-local": "egg-bin test -r egg-ts-helper/register",
+    "test": "npm run lint -- --fix && npm run test-local",
+    "cov": "egg-bin cov -r egg-ts-helper/register",
+    "tsc": "ets && tsc -p tsconfig.json",
+    "ci": "npm run lint && npm run cov && npm run tsc",
+    "autod": "autod",
+    "lint": "tslint .",
+    "clean": "ets clean",
+    "migrate:new": "egg-sequelize migration:create --name",
+    "migrate:up": "egg-sequelize db:migrate",
+    "migrate:down": "egg-sequelize db:migrate:undo"
+  },
   "dependencies": {
-    "@types/bcryptjs": "^2.4.1",
-    "@types/ioredis": "^3.2.7",
-    "@types/jsonwebtoken": "^7.2.6",
-    "@types/lodash": "^4.14.106",
-    "@types/node": "^9.6.2",
-    "@types/nodemailer": "^4.6.0",
-    "@types/sequelize": "^4.27.13",
-    "@types/socket.io": "^1.4.33",
-    "@types/xml2js": "^0.4.2",
     "bcryptjs": "^2.4.3",
-    "egg": "^2.5.0",
+    "egg": "^2.6.0",
     "egg-graphql": "^2.1.0",
     "egg-jwt": "^3.0.0",
     "egg-redis": "^2.0.0",
@@ -32,38 +43,33 @@
     "nodemailer": "^4.6.4",
     "raw-body": "^2.3.2",
     "rd": "^1.1.2",
-    "sharp": "^0.20.1",
     "uuid": "^3.2.1",
     "xml2js": "^0.4.19"
   },
   "devDependencies": {
+    "@types/mocha": "^5.0.0",
+    "@types/node": "^9.6.2",
+    "@types/supertest": "^2.0.4",
+    "@types/bcryptjs": "^2.4.1",
+    "@types/ioredis": "^3.2.7",
+    "@types/jsonwebtoken": "^7.2.6",
+    "@types/lodash": "^4.14.106",
+    "@types/nodemailer": "^4.6.0",
+    "@types/sequelize": "^4.27.14",
+    "@types/socket.io": "^1.4.33",
+    "@types/xml2js": "^0.4.2",
     "autod": "^3.0.1",
     "autod-egg": "^1.1.0",
-    "egg-bin": "^4.6.2",
     "egg-ci": "^1.8.0",
+    "egg-bin": "^4.6.3",
     "egg-mock": "^3.17.0",
-    "eslint": "^4.19.1",
-    "eslint-config-egg": "^7.0.0",
-    "webstorm-disable-index": "^1.2.0"
+    "egg-ts-helper": "^1.5.1",
+    "tslib": "^1.9.0",
+    "tslint": "^5.9.1",
+    "typescript": "^2.8.1"
   },
   "engines": {
     "node": ">=8.9.0"
-  },
-  "scripts": {
-    "start": "egg-scripts start --daemon --title=egg-server-monster --sticky",
-    "stop": "egg-scripts stop --title=egg-server-monster",
-    "dev": "egg-bin dev --sticky",
-    "debug": "egg-bin debug",
-    "test": "npm run lint -- --fix && npm run test-local",
-    "test-local": "egg-bin test",
-    "cov": "egg-bin cov",
-    "lint": "eslint .",
-    "ci": "npm run lint && npm run cov",
-    "autod": "autod",
-    "tsc:w": "tsc -p tsconfig.json -w",
-    "migrate:new": "egg-sequelize migration:create --name",
-    "migrate:up": "egg-sequelize db:migrate",
-    "migrate:down": "egg-sequelize db:migrate:undo"
   },
   "ci": {
     "version": "8"
@@ -72,6 +78,9 @@
     "type": "git",
     "url": ""
   },
+  "eslintIgnore": [
+    "coverage"
+  ],
   "author": "",
   "license": "MIT"
 }
