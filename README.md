@@ -18,7 +18,7 @@
 yarn install
 ```
 
-**2、更改 config 信息**
+**2、根据需要更改 config 信息**
 ```bash
 // config.default.ts
 ```
