@@ -10,7 +10,7 @@ logs/
 .vscode
 *.swp
 *.lock
-*.js
+
 
 config/env
 config/config.local.ts
