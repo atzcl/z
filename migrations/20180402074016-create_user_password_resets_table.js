@@ -2,12 +2,14 @@
 
 module.exports = {
   up: async (db, Sequelize) => {
-    const { INTEGER, STRING, DATE } = Sequelize;
+    const { STRING, DATE, UUID, UUIDV4 } = Sequelize;
     await db.createTable('user_password_resets', {
       id: {
-        type: INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
+        type: UUID, // 类型: 整型
+        primaryKey: true, // 主键
+        unique: true,
+        allowNull: false,
+        defaultValue: UUIDV4
       },
       email: {
         type: STRING(64),

@@ -2,15 +2,17 @@
 
 module.exports = {
   up: async (db, Sequelize) => {
-    const { INTEGER, JSON, BOOLEAN, DATE } = Sequelize;
+    const { INTEGER, JSON, BOOLEAN, DATE, UUID, UUIDV4 } = Sequelize;
     await db.createTable('article_categories', {
       id: {
-        type: INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
+        type: UUID, // 类型: 整型
+        primaryKey: true, // 主键
+        unique: true,
+        allowNull: false,
+        defaultValue: UUIDV4
       },
       parent_id: {
-        type: INTEGER,
+        type: UUID,
         allowNull: false,
         defaultValue: 0,
         comment: '父级 id',

@@ -2,21 +2,23 @@
 
 module.exports = {
   up: async (db, Sequelize) => {
-    const { INTEGER, DATE, BOOLEAN } = Sequelize;
+    const { INTEGER, DATE, BOOLEAN, UUID, UUIDV4 } = Sequelize;
     await db.createTable('articles', {
       id: {
-        type: INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
+        type: UUID, // 类型: 整型
+        primaryKey: true, // 主键
+        unique: true,
+        allowNull: false,
+        defaultValue: UUIDV4
       },
       article_category_id: {
-        type: INTEGER,
+        type: UUID,
         allowNull: false,
         defaultValue: 0,
         comment: '关联 article_category 表 id',
       },
       user_id: {
-        type: INTEGER,
+        type: UUID,
         allowNull: false,
         defaultValue: 0,
         comment: '关联 users 表 id, 作者 id',
@@ -88,7 +90,7 @@ module.exports = {
         comment: '排序',
       },
       last_reply_user_id: {
-        type: INTEGER,
+        type: UUID,
         allowNull: false,
         defaultValue: 0,
         comment: '关联 users 表 id, 最后回复的 user id',

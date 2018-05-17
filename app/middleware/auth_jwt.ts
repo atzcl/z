@@ -1,6 +1,6 @@
 /*
 +-----------------------------------------------------------------------------------------------------------------------
-| Author: 植成樑 <atzcl0310@gmail.com>  Blog：https://www.zcloop.com
+| Author: atzcl <atzcl0310@gmail.com>  Blog：https://www.atzcl.cn
 +-----------------------------------------------------------------------------------------------------------------------
 | 处理使用 jwt 验证
 |
@@ -20,7 +20,6 @@ export default function authJWTMiddleware (app: Application) {
   return async (ctx: Context, next: () => Promise<any>) => {
     // 判断当前访问路径是否是无须验证的路由数组
     if (except.includes(ctx.path)) {
-
       // 放行
       return next();
     }

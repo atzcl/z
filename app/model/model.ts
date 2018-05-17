@@ -17,14 +17,16 @@ export default function BaseModel (
   attributes: DefineAttributes,
   options: object = {},
 ) {
-  const { INTEGER, Op } = app.Sequelize;
+  const { Op, UUID, UUIDV4 } = app.Sequelize;
 
   // 设置默认数据
   const modelSchema = app.model.define(table, {
     id: {
-      type: INTEGER, // 类型: 整型
+      type: UUID, // UUID : mysql --- >chat(36); PostgreSQL --- > UUID
+      unique: true, // 唯一索引
       primaryKey: true, // 主键
-      autoIncrement: true, // 自增
+      allowNull: false,
+      defaultValue: UUIDV4, // Sequelize 自动生成 v4 UUID
     },
     ...attributes,
     ...getDefaultAttributes(options, app.Sequelize),
@@ -120,19 +122,12 @@ function getDefaultAttributes (options: object, sequelize: SequelizeStatic): obj
   // 遍历传入的属性是否符合过滤条件
   Object.keys(options).forEach((value: string) => {
     // 判断是否存在过滤条件、设置的属性是否为关闭 [false]
-    // 比如关闭了 updatedAt 的自动维护更新，那么就应该把预设 updated_at 给过滤掉，不然在查询的时候，依然会带上给条件
+    // 比如关闭了 updatedAt 的自动维护更新，那么就应该把预设 updated_at 给过滤掉，不然在查询的时候，依然会带上该条件
     if (attributes.includes(value) && (options as any)[value] === false) {
-      // 删除该预设字段睡醒
+      // 删除该预设字段
       delete (defaultAttributes as any)[snakeCase(value)];
     }
   });
 
   return defaultAttributes || {};
 }
-
-// 导出 ts 声明
-// export interface BaseModel {
-//   id: number;
-//   created_at: number;
-//   updated_at: number;
-// }

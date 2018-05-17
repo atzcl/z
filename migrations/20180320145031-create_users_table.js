@@ -2,13 +2,15 @@
 
 module.exports = {
   up: async (db, Sequelize) => {
-    const { INTEGER, BOOLEAN, DATE, STRING } = Sequelize;
+    const { INTEGER, BOOLEAN, DATE, STRING, UUID, UUIDV4 } = Sequelize;
 
     await db.createTable('users', {
       id: {
-        type: INTEGER, // 类型: 整型
+        type: UUID, // 类型: 整型
         primaryKey: true, // 主键
-        autoIncrement: true, // 自增
+        unique: true,
+        allowNull: false,
+        defaultValue: UUIDV4
       },
       name: {
         type: STRING(32), // varchar

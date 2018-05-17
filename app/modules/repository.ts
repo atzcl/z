@@ -1,6 +1,6 @@
 /*
 +-----------------------------------------------------------------------------------------------------------------------
-| Author: 植成樑 <atzcl0310@gmail.com>  Blog：https://www.zcloop.com
+| Author: atzcl <atzcl0310@gmail.com>  Blog：https://www.atzcl.cn
 +-----------------------------------------------------------------------------------------------------------------------
 | 模块 Repository 基类
 |
@@ -171,6 +171,10 @@ export default abstract class BaseRepository extends BaseContextClass {
         order: this.order,
       }),
     );
+  }
+
+  public async updateOrCreate () {
+    //
   }
 
   /**

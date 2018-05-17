@@ -1,6 +1,6 @@
 /*
 +-----------------------------------------------------------------------------------------------------------------------
-| Author: 植成樑 <atzcl0310@gmail.com>  Blog：https://www.zcloop.com
+| Author: atzcl <atzcl0310@gmail.com>  Blog：https://www.atzcl.cn
 +-----------------------------------------------------------------------------------------------------------------------
 | User 模块路由
 |
@@ -13,7 +13,7 @@ module.exports = (app: Application) => {
   const { user } = app.modules.controller;
 
   // 定义路由前缀并设置使用的中间件
-  const userRouter = router.namespace('/v1/user/');
+  const userRouter = router.namespace('/v1/users/');
 
   // 登录
   userRouter.post('user.login', 'login', user.user.login);

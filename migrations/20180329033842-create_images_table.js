@@ -2,12 +2,14 @@
 
 module.exports = {
   up: async (db, Sequelize) => {
-    const { INTEGER, STRING, BOOLEAN, DATE } = Sequelize;
+    const { STRING, BOOLEAN, DATE, UUID, UUIDV4 } = Sequelize;
     await db.createTable('images', {
       id: {
-        type: INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
+        type: UUID, // 类型: 整型
+        primaryKey: true, // 主键
+        unique: true,
+        allowNull: false,
+        defaultValue: UUIDV4
       },
       path: {
         type: STRING(255),
@@ -20,7 +22,7 @@ module.exports = {
         comment: '文件名',
       },
       user_id: {
-        type: INTEGER,
+        type: UUID,
         allowNull: false,
         defaultValue: 0,
         comment: '关联 users 表 id, 创建用户的 id',

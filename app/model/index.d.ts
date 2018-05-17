@@ -5,7 +5,6 @@ import { Model, SequelizeStatic, Sequelize } from 'sequelize'
 import { UserPasswordResets } from './user_password_reset';
 
 declare module 'egg' {
-
     interface Application {
         Sequelize: SequelizeStatic
         model: Sequelize

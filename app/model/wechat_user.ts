@@ -2,12 +2,12 @@ import { Application } from 'egg';
 import BaseModel from './model';
 
 export default function WechatUser (app: Application) {
-  const { INTEGER, BIGINT, STRING, BOOLEAN } = app.Sequelize;
+  const { BIGINT, STRING, BOOLEAN, UUID } = app.Sequelize;
 
   // 创建模型
   const modelSchema = BaseModel(app, 'wechat_users', {
     user_id: {
-      type: INTEGER,
+      type: UUID,
       allowNull: false,
       defaultValue: 0,
       comment: '关联 users 表 id',

@@ -2,15 +2,17 @@
 
 module.exports = {
   up: async (db, Sequelize) => {
-    const { INTEGER, BOOLEAN, DATE, STRING, BIGINT } = Sequelize;
+    const { BOOLEAN, DATE, STRING, BIGINT, UUID, UUIDV4 } = Sequelize;
     await db.createTable('wechat_users', {
       id: {
-        type: INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
+        type: UUID, // 类型: 整型
+        primaryKey: true, // 主键
+        unique: true,
+        allowNull: false,
+        defaultValue: UUIDV4
       },
       user_id: {
-        type: INTEGER,
+        type: UUID,
         allowNull: false,
         defaultValue: 0,
         comment: '关联 users 表 id',
