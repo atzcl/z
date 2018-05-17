@@ -3,11 +3,11 @@
 
 - Node.js & EggJS
 - TypeScript
-- Redis 4
+- Redis
 - MySQL 5.7 以上
 - Sequelize
 - Socket.io
-- GraphQL API
+- GraphQL
 - ...
 
 ## 快速开始
@@ -24,6 +24,7 @@ yarn install
 ```
 
 **3、执行数据库迁移**
+>因为 egg-sequelize 并不读取 .ts 的配置文件，所以在执行迁移命令的时候会报错，另：又因为 egg-ts-helper 在开发期内，会自动清除命名一致的 .js 的配置文件，所以当你在执行迁移命令之前，先把 config.default.ts.bak 文件的 .bak 去掉
 ```bash
 yarn migrate:up
 ```
