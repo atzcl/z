@@ -26,7 +26,7 @@ export default class UserController extends Controller {
     this.succeed({
       name: result.name,
       status: result.status,
-      token: await this.handlers.jwt.create(result),
+      token: await this.foundation.jwt.create(result),
     });
   }
 

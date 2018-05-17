@@ -7,9 +7,9 @@
 */
 
 import { isNull } from 'lodash';
-import BaseHandler from './base_handler';
+import BaseFoundation from './base_foundation';
 
-export default class CacheManager extends BaseHandler {
+export default class CacheManager extends BaseFoundation {
   // 使用缓存类型 [ 以后拓展 ]
   private get store () {
     // return this.app['redis']

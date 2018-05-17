@@ -7,7 +7,6 @@
 |
 */
 
-import { createHash } from 'crypto';
 import { Service } from 'egg';
 import * as moment from 'moment';
 
@@ -157,9 +156,9 @@ export default abstract class AuthService extends Service {
    * @param {string} value 加密内容
    */
   public async createRestPasswordToken (value: string) {
-    return createHash('md5')
-          .update(value + moment().unix() + this.config.keys)
-          .digest('hex');
+    return this.ctx.helper.generateMD5(
+      value + moment().unix() + this.config.keys,
+    );
   }
 
   /**

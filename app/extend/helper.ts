@@ -7,6 +7,7 @@
 */
 
 import { Context } from 'egg';
+import { createHash } from 'crypto';
 
 const xtendHelper = {
   /**
@@ -25,6 +26,7 @@ const xtendHelper = {
     // 响应返回
     ctx.response.body = response;
   },
+
   /**
    * Socket 的响应数据格式
    *
@@ -40,16 +42,16 @@ const xtendHelper = {
       time: Math.floor(new Date().getTime() / 1000),
     };
   },
+
   /**
-   * 获取 result 的 dataValues 值
+   * 生成 MD5
+   *
+   * @param value 加密的值
    */
-  getDataValues (result: any) {
-    try {
-      return result.dataValues;
-    } catch (error) {
-      return null;
-    }
+  generateMD5 (value: string | Buffer | DataView) {
+    return createHash('md5').update(value).digest('hex');
   },
+
   parseMsg (action: string, payload: object = {}, metadata: object = {}) {
     const meta = { timestamp: Date.now(), ...metadata };
 

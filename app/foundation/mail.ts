@@ -6,14 +6,14 @@
 |
 */
 
-import BaseHandler from './base_handler';
+import BaseFoundation from './base_foundation';
 
 import * as mailer from 'nodemailer';
 
 /**
  * @description https://nodemailer.com/message/
  */
-export default class Mail extends BaseHandler {
+export default class Mail extends BaseFoundation {
   /**
    * 发送邮件
    *

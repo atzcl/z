@@ -6,10 +6,9 @@
 |
 */
 
-import { createHash } from 'crypto';
-import BaseHandler from './base_handler';
+import BaseFoundation from './base_foundation';
 
-export default class Jwt extends BaseHandler {
+export default class Jwt extends BaseFoundation {
   // 储存到缓存的前缀
   private cachePrefix: string = 'jwt.';
 
@@ -73,7 +72,7 @@ export default class Jwt extends BaseHandler {
    */
   public async blackToken (token: string) {
     // 使用 MD5 加密下，防止 key 过长
-    const key = createHash('md5').update(token).digest('hex');
+    const key = this.ctx.helper.generateMD5(token);
 
     // 解密 token
     const jwtData = await this.decode(token);
@@ -90,7 +89,7 @@ export default class Jwt extends BaseHandler {
     }
 
     // 储存到缓存黑名单中去
-    return this.ctx.handlers.cache.set(this.cachePrefix + key, 'black_success', refreshTtlTime);
+    return this.ctx.foundation.cache.set(this.cachePrefix + key, 'black_success', refreshTtlTime);
   }
 
   /**
@@ -100,10 +99,10 @@ export default class Jwt extends BaseHandler {
    */
   public async verifyBlack (token: string): Promise<boolean> {
     // 使用 MD5 加密下，防止 key 过长
-    const key = createHash('md5').update(token).digest('hex');
+    const key = this.ctx.helper.generateMD5(token);
 
     // 返回获取该缓存
-    return this.ctx.handlers.cache.has(this.cachePrefix + key);
+    return this.ctx.foundation.cache.has(this.cachePrefix + key);
   }
 
   /**

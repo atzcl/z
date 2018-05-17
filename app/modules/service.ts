@@ -38,9 +38,9 @@ export default class BaseService extends Service {
   }
 
   /**
-   * @var {Handlers} Context#handlers
+   * @var {Foundation} Context#foundation
    */
-  get handlers () {
-    return this.ctx.handlers;
+  get foundation () {
+    return this.ctx.foundation;
   }
 }

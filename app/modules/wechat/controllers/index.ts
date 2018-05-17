@@ -9,7 +9,7 @@ export default class IndexController extends Controller {
 
     // 微信验证处理
     if (ctx.request.method === 'GET') {
-      return ctx.handlers.wechat.server.server();
+      return ctx.foundation.wechat.server.server();
     }
 
     // await ctx.wechatService.wechat.test()
@@ -81,6 +81,6 @@ export default class IndexController extends Controller {
    * @param {string} content 消息内容
    */
   public async sendTextMessage (content: string) {
-    await this.ctx.handlers.wechat.message.text(content);
+    await this.ctx.foundation.wechat.message.text(content);
   }
 }

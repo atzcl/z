@@ -30,7 +30,7 @@ export default function authJWTMiddleware (app: Application) {
     if (getToken) {
       try {
         // 验证 token 是否合法有效，并将解密后的 sub 数据挂载到 request 的 body 的 jwt_sub 中，方便后续使用
-        ctx.request.body.jwt_sub = await ctx.handlers.jwt.getSub(getToken.split(' ')[1]);
+        ctx.request.body.jwt_sub = await ctx.foundation.jwt.getSub(getToken.split(' ')[1]);
 
         // 放行
         return next();

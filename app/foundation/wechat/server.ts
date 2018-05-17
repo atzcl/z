@@ -7,9 +7,9 @@
 */
 
 import { createHash } from 'crypto';
-import BaseHandler from '../base_handler';
+import BaseFoundation from '../base_foundation';
 
-export default class Server extends BaseHandler {
+export default class Server extends BaseFoundation {
 
   /**
    * 验证消息的确来自微信服务器

@@ -33,7 +33,7 @@ export default class WechatUserService extends Service {
    * @returns {object}
    */
   public async getWeChatUserInfo (openID: string) {
-    return this.ctx.handlers.wechat.user.get(openID);
+    return this.ctx.foundation.wechat.user.get(openID);
   }
 
   /**
@@ -70,17 +70,17 @@ export default class WechatUserService extends Service {
     // 获取 scene_id
     const { event_key } = await this.getEventKey(this.getRequestBody.EventKey);
 
-    if (await this.handlers.socketIo.isOnline(event_key)) {
+    if (await this.foundation.socketIo.isOnline(event_key)) {
       // 定义返回数据
       const sendData = {
         id: result.id,
         avatar: result.avatar,
         nickname: result.nickname,
-        token: await this.handlers.jwt.create(result), // 创建 token
+        token: await this.foundation.jwt.create(result), // 创建 token
       };
 
       // 响应返回
-      this.handlers.socketIo.sendToClient(
+      this.foundation.socketIo.sendToClient(
         event_key,
         'loginQrCodeSuccess',
         ctx.helper.toSocketResponse(200, sendData, '登录成功'),

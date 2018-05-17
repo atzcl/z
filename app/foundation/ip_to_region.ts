@@ -6,12 +6,12 @@
 |
 */
 
-import BaseHandler from './base_handler';
+import BaseFoundation from './base_foundation';
 
 // ip2region 地址库
 import * as IP2Region from 'ip2region';
 
-export default class IpToRegion extends BaseHandler {
+export default class IpToRegion extends BaseFoundation {
   /**
    * 传入 ip 查询地址信息
    *

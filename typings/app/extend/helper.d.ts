@@ -6,7 +6,7 @@ declare module 'egg' {
   interface IHelper {
     toResponse: typeof ExtendObject.toResponse;
     toSocketResponse: typeof ExtendObject.toSocketResponse;
-    getDataValues: typeof ExtendObject.getDataValues;
+    generateMD5: typeof ExtendObject.generateMD5;
     parseMsg: typeof ExtendObject.parseMsg;
   }
 }

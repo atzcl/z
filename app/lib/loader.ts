@@ -15,7 +15,7 @@ module.exports = (app: Application) => {
   // 加载自定义模块
   loadModules(app);
   // 加载所有处理第三方业务
-  loadCustomizeFile(app, `${unitBaseDir}/handlers`, 'handlers');
+  loadCustomizeFile(app, `${unitBaseDir}/foundation`, 'foundation');
   // 加载所有验证文件
   loadCustomizeFile(app, `${unitBaseDir}/validates`, 'validateRule');
   // 加载所有 Repository 层文件

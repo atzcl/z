@@ -7,9 +7,9 @@
 */
 
 import { isInteger } from 'lodash';
-import BaseHandler from '../base_handler';
+import BaseFoundation from '../base_foundation';
 
-export default class QrCode extends BaseHandler {
+export default class QrCode extends BaseFoundation {
   // 一天的秒值
   private DAY = 86400;
   // 用于限制永久二维码的 value, 永久二维码时最大值为 100000（目前参数只支持1 --100000）
@@ -113,6 +113,6 @@ export default class QrCode extends BaseHandler {
       params.expire_seconds = Math.min(expireSeconds, 30 * this.DAY);
     }
 
-    return this.ctx.handlers.wechat.request.post('qrcode/create', { data: params });
+    return this.ctx.foundation.wechat.request.post('qrcode/create', { data: params });
   }
 }

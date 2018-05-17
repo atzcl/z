@@ -30,7 +30,7 @@ export default class UserAdminController extends Controller {
     this.succeed({
       name: result.name,
       status: result.status,
-      token: await this.handlers.jwt.create(result), // 创建 token
+      token: await this.foundation.jwt.create(result), // 创建 token
     });
   }
 }

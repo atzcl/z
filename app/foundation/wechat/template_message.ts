@@ -7,9 +7,9 @@
 */
 
 import { forOwn, isNull, isObject  } from 'lodash';
-import BaseHandler from '../base_handler';
+import BaseFoundation from '../base_foundation';
 
-export default class TemplateMessage extends BaseHandler {
+export default class TemplateMessage extends BaseFoundation {
   /**
    * @var {object} 模板消息数据结构
    */
@@ -31,7 +31,7 @@ export default class TemplateMessage extends BaseHandler {
    * @returns {object}
    */
   public async getPrivateTemplates () {
-    return this.ctx.handlers.wechat.request.get('template/get_all_private_template');
+    return this.ctx.foundation.wechat.request.get('template/get_all_private_template');
   }
 
   /**
@@ -39,7 +39,7 @@ export default class TemplateMessage extends BaseHandler {
    * @param {object} data 模板内容
    */
   public async send (data: object) {
-    return this.ctx.handlers.wechat.request.post(
+    return this.ctx.foundation.wechat.request.post(
       'message/template/send', { data: await this.formatMessage(data) },
     );
   }

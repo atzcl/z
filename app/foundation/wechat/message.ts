@@ -6,9 +6,9 @@
 |
 */
 
-import BaseHandler from '../base_handler';
+import BaseFoundation from '../base_foundation';
 
-export default class Message extends BaseHandler {
+export default class Message extends BaseFoundation {
   /**
    * 组装响应微信服务器的 text 消息的 xml
    *

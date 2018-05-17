@@ -6,9 +6,9 @@
 |
 */
 
-import BaseHandler from '../base_handler';
+import BaseFoundation from '../base_foundation';
 
-export default class WeChatRequest extends BaseHandler {
+export default class WeChatRequest extends BaseFoundation {
   /**
    * get 请求
    *
@@ -58,7 +58,7 @@ export default class WeChatRequest extends BaseHandler {
    */
   private async requestUrl (url: string) {
     // 获取 access_token
-    const token: any = await this.ctx.handlers.wechat.accessToken.getToken();
+    const token: any = await this.ctx.foundation.wechat.accessToken.getToken();
     // 返回完整的请求 url
     return `${this.app.config.wechat.base_uri}${url}?access_token=${token.access_token}`;
   }

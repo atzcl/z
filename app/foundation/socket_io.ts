@@ -6,9 +6,9 @@
 |
 */
 
-import BaseHandler from './base_handler';
+import BaseFoundation from './base_foundation';
 
-export default class SocketIO extends BaseHandler {
+export default class SocketIO extends BaseFoundation {
   /**
    * 返回挂载在 app 对象上的 io 实例
    *

@@ -6,6 +6,6 @@
 |
 */
 
-import BaseHandler from './base_handler';
+import BaseFoundation from './base_foundation';
 
-export default class Uploads extends BaseHandler {}
+export default class Uploads extends BaseFoundation {}

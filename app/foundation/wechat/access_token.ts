@@ -6,9 +6,9 @@
 |
 */
 
-import BaseHandler from '../base_handler';
+import BaseFoundation from '../base_foundation';
 
-export default class AccessToken extends BaseHandler {
+export default class AccessToken extends BaseFoundation {
   /**
    * @var {string} access_token 的类型
    */
@@ -62,9 +62,9 @@ export default class AccessToken extends BaseHandler {
     const { ctx } = this;
 
     // 如果不是指定需要刷新 token,并且存在缓存
-    if (!refresh && await ctx.handlers.cache.has(this.getCacheKey)) {
+    if (!refresh && await ctx.foundation.cache.has(this.getCacheKey)) {
       // 那么就返回缓存的 token
-      return ctx.handlers.cache.get(this.getCacheKey);
+      return ctx.foundation.cache.get(this.getCacheKey);
     }
 
     // 请求新的 token
@@ -84,7 +84,7 @@ export default class AccessToken extends BaseHandler {
    * @param lifetime 过期时间
    */
   public async setToken (token: any, lifetime: number = 7200) {
-    this.ctx.handlers.cache.set(
+    this.ctx.foundation.cache.set(
       this.getCacheKey, // 标识
       token, // 值
       lifetime - this.safeSeconds, // 过期时间
