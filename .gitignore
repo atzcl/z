@@ -15,7 +15,6 @@ logs/
 config/env
 config/config.local.ts
 
-app/**/*.js
 test/**/*.js
 config/**/*.js
 app/**/*.map
