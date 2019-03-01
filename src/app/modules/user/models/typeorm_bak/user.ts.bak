@@ -1,0 +1,46 @@
+/*
++-----------------------------------------------------------------------------------------------------------------------
+| Author: atzcl <atzcl0310@gmail.com>  https://github.com/atzcl
++-----------------------------------------------------------------------------------------------------------------------
+| UserModel
+|
+*/
+
+import { Entity, Column } from 'typeorm';
+import { BaseModel } from '@/app/foundation/bases/typeorm_bak/base_model';
+
+import Helper from '@app/extend/helper';
+
+@Entity('users')
+export class UserModel extends BaseModel {
+  @Column()
+  name: string;
+
+  @Column({ unique: true, nullable: true })
+  username: string;
+
+  @Column({
+    transformer: {
+      // setter
+      to: (value) => Helper.createBcrypt(value),
+      // getter
+      from: (value) => value,
+    },
+  })
+  password: string;
+
+  /**
+   * 获取指定用户数据
+   *
+   * @static
+   *
+   * @param {object} where
+   *
+   * @returns
+   *
+   * @memberof UserModel
+   */
+  static getUser(where: object) {
+    return this.findOne(where);
+  }
+}

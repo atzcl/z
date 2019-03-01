@@ -1,0 +1,18 @@
+/*
++-----------------------------------------------------------------------------------------------------------------------
+| Author: atzcl <atzcl0310@gmail.com>  https://github.com/atzcl
++-----------------------------------------------------------------------------------------------------------------------
+| <%= name %>
+|
+*/
+
+import { controller, get, provide } from 'midway';
+
+@provide()
+@controller('/<%= routerName %>')
+export class <%= name %>Controller {
+  @get('/')
+  async index(ctx) {
+    //
+  }
+}

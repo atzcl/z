@@ -1,0 +1,73 @@
+/*
++-----------------------------------------------------------------------------------------------------------------------
+| Author: atzcl <atzcl0310@gmail.com>  https://github.com/atzcl
++-----------------------------------------------------------------------------------------------------------------------
+| UserModel
+|
+*/
+
+import { Entity, Column } from 'typeorm';
+import { BaseModel } from '@/app/foundation/bases/typeorm_bak/base_model';
+
+import Helper from '@app/extend/helper';
+
+@Entity('user_admins')
+export class UserAdminModel extends BaseModel {
+  @Column({ unique: true, nullable: true })
+  username: string;
+
+  @Column({ unique: true, nullable: true })
+  email: string;
+
+  @Column({ unique: true, nullable: true })
+  phone: string;
+
+  @Column({
+    transformer: {
+      // setter
+      to: (value) => Helper.createBcrypt(value),
+      // getter
+      from: (value) => value,
+    },
+  })
+  password: string;
+
+  @Column({ nullable: true })
+  name: string;
+
+  @Column({ nullable: true })
+  nickname: string;
+
+  @Column({ nullable: true })
+  avatar: string;
+
+  @Column({ nullable: true })
+  bio: string;
+
+  @Column({ default: 0 })
+  sex: number;
+
+  @Column({ nullable: true })
+  varchar: string;
+
+  @Column({ nullable: true })
+  birthdate: string;
+
+  @Column({ nullable: true })
+  emailVerifiedAt: string;
+
+  @Column({ nullable: true })
+  phoneVerifiedAt: string;
+
+  @Column({ nullable: true })
+  userLevelId: number;
+
+  @Column({ nullable: true })
+  status: number;
+
+  @Column({ nullable: true })
+  onlineStatus: number;
+
+  @Column({ nullable: true })
+  userToken: string;
+}

@@ -1,29 +1,39 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
-    "target": "es2017", // 目标代码类型
-    "module": "commonjs", // 指定生成哪个模块系统代码
-    "strict": true,
-    "noImplicitAny": false,
+    "target": "ES2017",
+    "module": "commonjs",
+    "moduleResolution": "node",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "charset": "utf8",
-    "allowJs": false,
-    "pretty": true,
-    "noEmitOnError": false,
+    "inlineSourceMap":true,
+    "noImplicitThis": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "allowUnreachableCode": false,
-    "allowUnusedLabels": false,
-    "strictPropertyInitialization": false,
-    "noFallthroughCasesInSwitch": true,
-    "skipLibCheck": true,
-    "skipDefaultLibCheck": true,
-    "inlineSourceMap": true,
-    "importHelpers": true
+    "stripInternal": true,
+    "pretty": true,
+    "declaration": true,
+    "outDir": "dist",
+    "baseUrl": "./",
+    "paths": {
+      "@/*": [ "src/*" ],
+      "@app/*": [ "src/app/*" ],
+      "@my_modules/*": [ "src/app/modules/*" ],
+      "@my_types/*": [ "src/typings/*" ],
+      "@my_foundation/*": [ "src/app/foundation/*" ],
+      "@my_migration/*": [ "src/app/foundation/migrations/*" ],
+      "@my_console/*": [ "src/console/*" ],
+      "@my_decorator/*": [ "src/foundation/decorators/*" ],
+    },
+    "lib": ["es2017", "dom"],
   },
+  "include": [
+    "src/**/*"
+  ],
   "exclude": [
     "app/public",
-    "app/views"
+    "app/views",
+    "dist",
+    "node_modules",
+    "test"
   ]
 }

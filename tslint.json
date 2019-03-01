@@ -6,11 +6,20 @@
       "single",
       "jsx-double"
     ],
-    "no-console": false,
+    "no-submodule-imports": false,
+    "no-implicit-dependencies": false,
+    "no-console": [
+      false,
+      "dir",
+      "log",
+      "error",
+      "warn"
+    ],
+    "prefer-for-of": false,
     "space-before-function-paren": false,
     "interface-name": [
       true,
-      "never-prefix"
+      "no-prefix"
     ],
     "adjacent-overload-signatures": true,
     "member-access": [
@@ -31,11 +40,10 @@
       true,
       "allow-leading-underscore"
     ],
-    "align": [true, "statements"],
-    "no-object-literal-type-assertion": false,
-    "no-implicit-dependencies": false,
-    "max-line-length": [false, {"limit": 120, "ignore-pattern": "^import |^export {(.*?)}"}],
-    "no-this-assignment": [true, {"allowed-names": ["^self$"], "allow-destructuring": true}]
+    "align": [
+      true,
+      "statements"
+    ],
+    "ordered-imports": false
   }
 }
-
