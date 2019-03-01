@@ -10,5 +10,6 @@ run/
 .DS_Store
 *.sw*
 *.un~
+ormconfig.js
 src/app/public/uploads
 src/config/config.default.ts
