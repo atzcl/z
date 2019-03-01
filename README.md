@@ -10,7 +10,11 @@
 - <del>GraphQL<del>
 - ...
 
-因为 `midwayjs` 使用了 `IoC` 容器进行依赖解耦，所以开发方式会跟 `eggjs` 有些不一样，建议先阅读 [midwayjs 官方文档](https://midwayjs.org/midway/)、[Injection 文档](https://midwayjs.org/injection/guide.html)
+## 注意事项
+**因为 `midwayjs` 使用了 `IoC` 容器进行依赖解耦，所以开发方式会跟 `eggjs` 有些不一样，建议先阅读 [midwayjs 官方文档](https://midwayjs.org/midway/)、[Injection 文档](https://midwayjs.org/injection/guide.html)**
+
+**验证码模块使用了 `node-canvas` 库, 所以请先根据 [node-canvas 文档](https://github.com/Automattic/node-canvas) 安装好相应的依赖**
+
 
 ## 模块开发目录
 开发目录为：`src/app/modules/*`
