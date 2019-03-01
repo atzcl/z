@@ -1,33 +1,52 @@
-# _s_server
+# z
+> 基于以下技术构建
+- Node.js & MidwayJS(EggJS)
+- TypeScript
+- Redis
+- MySQL 5.7 以上
+- Sequelize
+- <del> TypeORM 底层还在进行大重构，暂时不适应用于生产环境</del>
+- Socket.io
+- <del>GraphQL<del>
+- ...
 
+## 模块开发目录
+开发目录为：`src/app/modules/*`
 
+## 快速开始
+> 请确保已经拉取项目到本地环境,并且安装配置好 Node/yarn
 
-## QuickStart
-
-<!-- add docs here for user -->
-
-see [midway docs][midway] for more detail.
-
-### Development
-
+**1、安装依赖**
 ```bash
-$ npm i
-$ npm run dev
-$ open http://localhost:7001/
+yarn install
 ```
 
-### Deploy
-
+**2、copy `config` 配置**
 ```bash
-$ npm start
-$ npm stop
+cp src/config/config.example src/config/config.default.ts
+```
+然后修改对应的配置信息
+
+**3、copy `ormconfig` 配置**
+```bash
+cp ormconfig.example ormconfig.js
+```
+然后修改对应的配置, 用于下方执行数据库迁移
+
+**4、执行数据库迁移**
+>sequelize-cli 的数据库迁移并不好用，主要是它没办法定义多目录的 migration, 所以当前使用的是 typeorm 的数据库迁移功能
+```bash
+yarn typeorm migration:run
 ```
 
-### npm scripts
+**5、运行**
+```bash
+yarn dev
+```
 
-- Use `npm run lint` to check code style.
-- Use `npm test` to run unit test.
-- Use `npm run autod` to auto detect dependencies upgrade, see [autod](https://www.npmjs.com/package/autod) for more detail.
+## 辅助开发的 Cli 命令
+> 对应代码目录: src/console
 
-
-[midway]: https://midwayjs.org
+```bash
+// 待补充
+```
