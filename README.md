@@ -5,10 +5,12 @@
 - Redis
 - MySQL 5.7 以上
 - Sequelize
-- <del> TypeORM 底层还在进行大重构，暂时不适应用于生产环境</del>
+- <del> TypeORM 底层还在进行大重构，暂时不适宜用于生产环境</del>
 - Socket.io
 - <del>GraphQL<del>
 - ...
+
+因为 `midwayjs` 使用了 `IoC` 容器进行依赖解耦，所以开发方式会跟 `eggjs` 有些不一样，建议先阅读 [midwayjs 官方文档](https://midwayjs.org/midway/)、[Injection 文档](https://midwayjs.org/injection/guide.html)
 
 ## 模块开发目录
 开发目录为：`src/app/modules/*`
