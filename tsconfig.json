@@ -3,7 +3,13 @@
   "compilerOptions": {
     "target": "ES2017",
     "module": "commonjs",
-    "moduleResolution": "node",
+    "charset": "utf8",
+    "newLine": "lf",
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "skipLibCheck": true,
+    "alwaysStrict": true,
+    // "strict": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "inlineSourceMap":true,
@@ -11,7 +17,7 @@
     "noUnusedLocals": true,
     "stripInternal": true,
     "pretty": true,
-    "declaration": true,
+    "declaration": false,
     "outDir": "dist",
     "baseUrl": "./",
     "paths": {
@@ -20,20 +26,21 @@
       "@my_modules/*": [ "src/app/modules/*" ],
       "@my_types/*": [ "src/typings/*" ],
       "@my_foundation/*": [ "src/app/foundation/*" ],
-      "@my_migration/*": [ "src/app/foundation/migrations/*" ],
+      "@my_migration/*": [ "src/app/foundation/Migrations/*" ],
       "@my_console/*": [ "src/console/*" ],
       "@my_decorator/*": [ "src/foundation/decorators/*" ],
     },
-    "lib": ["es2017", "dom"],
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
   ],
   "exclude": [
     "app/public",
     "app/views",
     "dist",
     "node_modules",
-    "test"
+    "test",
+    // "**/*.d.ts",
+    "**/*.spec.ts"
   ]
 }
