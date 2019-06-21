@@ -8,7 +8,7 @@
 
 import { EggAppConfig } from 'midway';
 import Helper from '@app/extend/helper';
-import CacheManager from '@/app/foundation/support/cache';
+import CacheManager from '@/app/foundation/Support/Cache';
 
 interface IJwt {
   /**

@@ -44,20 +44,20 @@ export default class CreateControllerCommand implements yargs.CommandModule {
     // todo: 如果后面要抽离为单独的 cli 工具，那么这部分可以放到 config 里面去
     const needCreateDirs = {
       module: {},
-      controllers: {
+      Controllers: {
         initFile: createControllerHandler, // 创建默认模块
       },
-      models: {},
-      services: {},
-      validates: {},
-      configs: {},
-      middlewares: {},
-      resources: {},
-      migrations: {},
+      Models: {},
+      Services: {},
+      Validates: {},
+      // Configs: {},
+      Middlewares: {},
+      // Resources: {},
+      Migrations: {},
     };
 
     // 创建目录
-    Object.keys(needCreateDirs).forEach((attr) => {
+    Object.keys(needCreateDirs).forEach((attr: keyof typeof needCreateDirs) => {
       // 为了方便，创建模块根目录的处理也放在一起了
       const isModule = attr === 'module';
 
@@ -79,8 +79,8 @@ export default class CreateControllerCommand implements yargs.CommandModule {
           const templateRootPath = config.templateRootPath;
 
           // 生成初始文件
-          if (value.initFile && typeof value.initFile === 'function') {
-            value.initFile(moduleName, moduleName, filePath, templateRootPath);
+          if ((value as any).initFile && typeof (value as any).initFile === 'function') {
+            (value as any).initFile(moduleName, moduleName, filePath, templateRootPath);
           }
         });
     });

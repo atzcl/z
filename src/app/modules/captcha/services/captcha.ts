@@ -7,13 +7,14 @@
 */
 
 import { provide, inject, Context } from 'midway';
-import Captcha from '@/app/foundation/support/captcha';
-import * as moment from 'moment';
+import { Service } from '@/app/foundation/Bases/BaseService';
+import Captcha from '@/app/foundation/Support/Captcha';
+import * as dayjs from 'dayjs';
 
-export const captchaCaptchaServiceProvideName = 'captchaCaptchaService';
+export const SERVICE_PROVIDE = 'captchaService';
 
-@provide(captchaCaptchaServiceProvideName)
-export class CaptchaCaptchaService {
+@provide(SERVICE_PROVIDE)
+export class CaptchaService extends Service {
   @inject()
   ctx: Context;
 
@@ -27,8 +28,10 @@ export class CaptchaCaptchaService {
    *
    * @returns {Buffer}
    */
-  createCaptcha(code: string) {
-    return (new Captcha()).captchaBuilder(code).captchaData;
+  async createCaptcha(code: string) {
+    const captchaBuilder = await (new Captcha()).captchaBuilder(code);
+
+    return captchaBuilder.captchaData;
   }
 
   /**
@@ -46,7 +49,7 @@ export class CaptchaCaptchaService {
    * @param token
    */
   async getCacheCaptchaValue(token: string) {
-    return this.ctx.helper.cache().get(this.tokenCachePrefix + token) || '已失效';
+    return this.ctx.helper.cache.get(this.tokenCachePrefix + token, '已失效');
   }
 
   /**
@@ -72,10 +75,10 @@ export class CaptchaCaptchaService {
     const helper = this.ctx.helper;
 
     // 后面还可以增加毫秒时间戳来保证唯一
-    const cacheTokenKey = helper.strRandom() + moment().valueOf();
+    const cacheTokenKey = helper.strRandom() + dayjs().valueOf();
 
     // 将验证码保存到缓存中
-    helper.cache().set(this.getFillFullCaptchaTokenKey(cacheTokenKey), value, expiredAt, 'm');
+    helper.cache.set(this.getFillFullCaptchaTokenKey(cacheTokenKey), value, expiredAt, 'm');
 
     return cacheTokenKey;
   }
@@ -89,7 +92,7 @@ export class CaptchaCaptchaService {
    * @throws
    */
   async checkCaptcha(token: string, value: string) {
-    const cache = this.ctx.helper.cache();
+    const cache = this.ctx.helper.cache;
     // 获取完整的 key 名称
     const fullCaptchaTokenKey = this.getFillFullCaptchaTokenKey(token);
 

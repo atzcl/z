@@ -12,10 +12,13 @@ import { random } from 'lodash';
 import * as Moment from 'moment';
 import * as bcryptjs from 'bcryptjs';
 import * as path from 'path';
-import * as UUID from 'uuid';
+import * as UUIDV4 from 'uuid/v4';
 
-import CacheManager from '@/app/foundation/support/cache';
-import JwtManager from '@/app/foundation/support/jwt';
+import CacheManager from '@/app/foundation/Support/Cache';
+import JwtManager from '@/app/foundation/Support/Jwt';
+import * as dayjs from 'dayjs';
+
+const CACHE_SYMBOL = Symbol('my_app#cache');
 
 export default {
   /**
@@ -82,10 +85,29 @@ export default {
   },
 
   /**
+   * 转化为分
+   */
+  amountToPoints(amount: number) {
+    return Number(amount) * 100;
+  },
+
+  // 转化为真实金额
+  getAmountByPoints(amount: number) {
+    return Number(amount) / 100;
+  },
+
+  /**
    * 生成唯一随机字符串
    */
   generateUniqId() {
-    return this.generateMD5(UUID.v4());
+    return this.generateMD5(UUIDV4());
+  },
+
+  /**
+   * 生成唯一订单号
+   */
+  generateOrderNo() {
+    return dayjs().format('YYYYMMDDHHmmssSSS') + this.strRandom(13, 'number');
   },
 
   /**
@@ -145,14 +167,18 @@ export default {
    * todo: 当前只简单地返回缓存实例
    * todo: 待实现缓存底层的类型切换、快捷的缓存操作
    */
-  cache() {
-    const { app, config } = this.getContext();
+  get cache(): CacheManager {
+    if (! (this as any)[CACHE_SYMBOL]) {
+      const { app, config } = this.getContext();
 
-    // 给 app 加上 any, 避免在使用 typeorm cli 时出错
-    return new CacheManager(
-      (app as any).redis,
-      config.myApp.appName || 'atzcl',
-    );
+      // 给 app 加上 any, 避免在使用 typeorm cli 时出错
+      return new CacheManager(
+        app.redis,
+        config.myApp.appName || 'atzcl',
+      );
+    }
+
+    return (this as any)[CACHE_SYMBOL];
   },
 
   /**
@@ -164,7 +190,33 @@ export default {
     return new JwtManager(
       (app as any).jwt,
       { ...config.jwt, ...options },
-      this.cache(),
+      this.cache,
     );
+  },
+
+  getElChildren(
+    data: any[] = [],
+    pid = 0,
+    name = 'name',
+    key = 'parent_id',
+    pk = 'id',
+    children = 'children',
+  ) {
+    // 创建数据
+    const tree = [];
+
+    for (const item of data) {
+      if (item[key] === pid) {
+          item[children] = this.getElChildren(data, item[pk], name, key, pk, children);
+
+          item.value = item[pk];
+          item.label = item[name];
+          console.log(item);
+          // 储存到数组
+          tree.push(item);
+      }
+    }
+
+    return tree;
   },
 };

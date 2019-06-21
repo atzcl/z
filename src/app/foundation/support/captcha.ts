@@ -41,7 +41,7 @@ export default class Captcha {
     fontSize: 25,
     imageW: 0,
     imageH: 0,
-    length: 5,
+    length: 4,
     fontFamily: '"Microsoft YaHei"',
     bgColor: 'rgb(243, 251, 254)',
     useCurve: true,
@@ -50,10 +50,10 @@ export default class Captcha {
   }
 
   // node-canvas 实例
-  canvasInstance;
-  canvasContext;
+  canvasInstance: any;
+  canvasContext: any;
 
-  constructor(options: IConfig | any = {}) {
+  constructor(options: IConfig = {} as IConfig) {
     const tempConfig = {
       ...this.config,
       ...options
@@ -96,7 +96,7 @@ export default class Captcha {
    *
    * @returns {object}
    */
-  captchaBuilder(code = null, isBase64 = false) {
+  async captchaBuilder(code: number | string = null, isBase64 = false) {
     // 绘制验证码
     const captchaText = this.drawText(code);
     const { noiseType, useCurve, useNoise } = this.config;
@@ -178,12 +178,12 @@ export default class Captcha {
    *
    * @returns {string}
    */
-  drawText(code) {
+  drawText(code: string | number) {
     const { bgColor, imageW, imageH, fontSize, fontFamily, length } = this.config;
     const ctx = this.canvasContext;
 
     // 获取需要绘制的验证码
-    const captchaCode = code || this.randomChars();
+    const captchaCode = String(code || this.randomChars());
 
     // 设置背景色
     ctx.fillStyle = bgColor;

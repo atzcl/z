@@ -8,7 +8,7 @@
 
 import { Context, provide, inject } from 'midway';
 import { IValidationInterface } from '@app/interfaces/Validation.interface';
-import PhoneRule from '@app/rules/phone';
+import PhoneRule from '@/app/rules/Phone';
 
 @provide()
 export class UserLoginValidate implements IValidationInterface {

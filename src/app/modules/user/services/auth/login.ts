@@ -8,7 +8,7 @@
 
 import { provide } from 'midway';
 
-import { BaseAuthService } from './base_auth';
+import { BaseAuthService } from './BaseAuth';
 
 @provide()
 export class UserLoginService extends BaseAuthService {

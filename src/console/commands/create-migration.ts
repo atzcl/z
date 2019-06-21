@@ -83,7 +83,9 @@ export default class CreateMigrationCommand implements yargs.CommandModule {
  * @param {string} filePath 生成的文件路径
  * @param {string} templateRootPath // 生成文件对应的模板路径
  */
-export const createControllerHandler = (millisecondUnix, moduleName, fileName, filePath, templateRootPath) => {
+export const createControllerHandler = (
+  millisecondUnix: number, moduleName: string, fileName: string, filePath: string, templateRootPath: string,
+  ) => {
   // 转换为大驼峰
   // todo: 因为当前框架尚没有对重命名的类进行相关处理，所以这里加上模块名称来尽可能地避免
   const studlyCaseName = studlyCase(`${moduleName}-${fileName}${millisecondUnix}`);

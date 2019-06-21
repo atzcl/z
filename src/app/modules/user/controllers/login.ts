@@ -1,8 +1,8 @@
-import { controller, post, provide, inject } from 'midway';
+import { provide, inject, controller, post  } from 'midway';
 
-import { UserLoginService } from '@/app/modules/user/services/auth/login';
-import { Controller } from '@/app/foundation/bases/base_controller';
-import { validate } from '@/app/foundation/decorators/validate';
+import { UserLoginService } from '@/app/modules/User/Services/Auth/Login';
+import { Controller } from '@/app/foundation/Bases/BaseController';
+import { validate } from '@/app/foundation/Decorators/Validate';
 
 @provide()
 @controller('/users')
@@ -12,7 +12,9 @@ export class LoginController extends Controller {
 
   @post('/login')
   @validate('userLoginValidate')
-  async login(): Promise<void> {
-    // this.userLoginService.login(ctx);
+  async login() {
+    const result = await this.userLoginService.handleLogin();
+
+    this.setStatusData(result).setStatusMessage('登录成功').succeed();
   }
 }

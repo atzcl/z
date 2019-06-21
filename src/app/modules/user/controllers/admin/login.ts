@@ -1,11 +1,12 @@
 import { controller, post, provide, inject, Context } from 'midway';
 
-import { Controller } from '@/app/foundation/bases/base_controller';
-import { validate } from '@/app/foundation/decorators/validate';
-import { UserAdminLoginService } from '../../services/auth/admin_login';
+import { Controller } from '@/app/foundation/Bases/BaseController';
+import { validate } from '@/app/foundation/Decorators/Validate';
+import { UserAdminLoginService } from '../../Services/Auth/AdminLogin';
+import { adminPrefix } from '@/config/config.default';
 
 @provide()
-@controller('/users/admin')
+@controller(`/users/${adminPrefix}`)
 export class AdminLoginController extends Controller {
   @inject()
   userAdminLoginService: UserAdminLoginService;
@@ -13,8 +14,8 @@ export class AdminLoginController extends Controller {
   @post('/login')
   @validate('userLoginValidate')
   async login(ctx: Context) {
-    this.setStatusData(
-      await this.userAdminLoginService.handleLogin(),
-    ).succeed('登录成功');
+    const result = await this.userAdminLoginService.handleLogin();
+
+    this.setStatusData(result).setStatusMessage('登录成功').succeed();
   }
 }

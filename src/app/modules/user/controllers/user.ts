@@ -1,6 +1,6 @@
-import { controller, get, provide, inject } from 'midway';
+import { controller, provide, inject, get, Context } from 'midway';
 
-import { UserService } from '@my_modules/user/services/user';
+import { UserService } from '@/app/modules/User/Services/user';
 
 import * as plural from 'plural';
 
@@ -8,10 +8,10 @@ import * as plural from 'plural';
 @controller('/users')
 export class UserController {
   @inject()
-  userService: UserService;
+  userService!: UserService;
 
   @get('/')
-  async getUser(ctx): Promise<void> {
+  async getUser(ctx: Context): Promise<void> {
     ctx.body = plural('validate');
   }
 }

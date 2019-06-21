@@ -8,6 +8,7 @@
 import * as yargs from 'yargs';
 import * as fs from 'fs-extra';
 import { getCommandConfig } from '@my_console/utils/config';
+import { snakeCase } from 'lodash';
 import {
   notEmpty, resolve, abort, makeFileSuccess, templateCompile, studlyCase, upperFirst,
   plural,
@@ -87,12 +88,17 @@ export default class CreateControllerCommand implements yargs.CommandModule {
  * @param {string} filePath 生成的文件路径
  * @param {string} templateRootPath // 生成文件对应的模板路径
  */
-export const createHandler = (moduleName, fileName, filePath, templateRootPath) => {
+export const createHandler = (
+  moduleName: string, fileName: string, filePath: string, templateRootPath: string,
+) => {
   // 转换为大驼峰
   // todo: 因为当前框架尚没有对重命名的类进行相关处理，所以这里加上模块名称来尽可能地避免
   const studlyCaseName = studlyCase(`${moduleName}-${fileName}`);
-  // 转化为复数
-  const pluralName = plural(fileName);
+
+  // 可能存在的目录分割
+  const fileNameArray = fileName.split('/');
+  // 将最后的字符转化为复数并转为下划线格式
+  fileNameArray[fileNameArray.length - 1] = snakeCase(plural(fileNameArray[fileNameArray.length - 1]));
 
   // 获取生成的模板文件内容
   const templateString = fs.readFileSync(resolve(templateRootPath, MAKE_TYPE)).toString();
@@ -101,7 +107,7 @@ export const createHandler = (moduleName, fileName, filePath, templateRootPath) 
       filePath,
       templateCompile(
         templateString,
-        { name: studlyCaseName, routerName: pluralName },
+        { name: studlyCaseName, routerName: fileNameArray.join('/') },
       ),
     )
       .then(() => makeFileSuccess(`${studlyCaseName}${upperFirst(MAKE_TYPE)}`))

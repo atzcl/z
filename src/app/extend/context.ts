@@ -60,7 +60,7 @@ const extendContext = {
       .validate(
         verifyData || (this as any).request.body,
         options,
-        (errors, fields) => {
+        (errors: any, fields: any) => {
           if (errors) {
             this.customException('ValidationException', 400, errors[0].message);
           }

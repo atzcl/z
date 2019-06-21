@@ -9,7 +9,7 @@
 import { Context } from 'midway';
 import * as path from 'path';
 import * as fs from 'fs-extra';
-import * as Moment from 'moment';
+import * as dayjs from 'dayjs';
 import * as pump from 'mz-modules/pump';
 
 interface IUploadOptions {
@@ -26,7 +26,7 @@ interface IUploadOptions {
     parts?: number;
     headerPairs?: number;
   };
-  checkFile?: (fieldname, fileStream, filename) => void | Error;
+  checkFile?: (fieldname: string, fileStream: any, filename: string) => void | Error;
 }
 
 export class Upload {
@@ -71,7 +71,7 @@ export class Upload {
    *
    * @returns {object}
    */
-  async handle (uploadType: string = 'images') {
+  async handle(uploadType: string = 'images') {
     const { helper, app } = this.ctx;
     const { whitelist, limits } = this.options;
 
@@ -121,7 +121,7 @@ export class Upload {
    */
   private ensureUploadDirHnadler(baseDirName: string) {
     // 相对地址
-    const relativeDir = `/public/uploads/${baseDirName}/${Moment().format('YYYY/MM/DD')}`;
+    const relativeDir = `/public/uploads/${baseDirName}/${dayjs().format('YYYY/MM/DD')}`;
     // 上传的目录绝对地址
     const uploadDir = path.join(this.ctx.app.baseDir, `app/${relativeDir}`);
 

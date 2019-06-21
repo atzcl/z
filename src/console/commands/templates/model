@@ -1,0 +1,41 @@
+/*
++-----------------------------------------------------------------------------------------------------------------------
+| Author: atzcl <atzcl0310@gmail.com>  https://github.com/atzcl
++-----------------------------------------------------------------------------------------------------------------------
+| <%= name %>Model
+|
+*/
+
+import {
+  DataType, Table, Column, CreatedAt, UpdatedAt, DeletedAt,
+} from 'sequelize-typescript';
+import { UUIDV4 } from 'sequelize';
+import { BaseModel, FormatTimestamp } from '@/app/foundation/bases/BaseModel';
+
+const { STRING } = DataType;
+
+@Table({
+  modelName: '<%= pluralName %>',
+})
+export class <%= name %>Model extends BaseModel<<%= name %>Model> {
+  // tslint:disable:variable-name
+  @Column({ type: STRING, primaryKey: true, unique: true, defaultValue: UUIDV4 })
+  id: string;
+
+  // more...
+
+  @Column({ defaultValue: 'cn' })
+  lang_type: string;
+
+  @CreatedAt
+  @FormatTimestamp
+  created_at: Date;
+
+  @UpdatedAt
+  @FormatTimestamp
+  updated_at: Date;
+
+  @DeletedAt
+  @FormatTimestamp
+  deleted_at: Date;
+}

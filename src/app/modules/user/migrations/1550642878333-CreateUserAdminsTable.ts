@@ -1,8 +1,8 @@
 import { MigrationInterface, QueryRunner, Table, TableIndex } from 'typeorm';
 
-import uuidPrimary from '@/app/foundation/migrations/uuid-primary';
-import timestamps from '@/app/foundation/migrations/timestamps';
-import softDeletes from '@/app/foundation/migrations/soft-deletes';
+import uuidPrimary from '@/app/foundation/Migrations/UuidPrimary';
+import timestamps from '@/app/foundation/Migrations/Timestamps';
+import softDeletes from '@/app/foundation/Migrations/SoftDeletes';
 
 // 表名
 const TABLE_NAME = 'user_admins';

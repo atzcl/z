@@ -1,6 +1,6 @@
 import { provide, scope, ScopeEnum, init } from 'midway';
 import { createConnection, Connection, getConnectionOptions } from 'typeorm';
-import SnakeNamingStrategy from '@my_foundation/libs/my_table_column';
+import SnakeNamingStrategy from '@/lib/Other/SnakeNamingStrategy';
 
 /**
  * 创建 typeorm 链接

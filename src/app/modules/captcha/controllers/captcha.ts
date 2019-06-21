@@ -1,11 +1,19 @@
+/*
++-----------------------------------------------------------------------------------------------------------------------
+| Author: atzcl <atzcl0310@gmail.com>  https://github.com/atzcl
++-----------------------------------------------------------------------------------------------------------------------
+| CaptchaController
+|
+*/
+
 import { controller, get, provide, inject, Context, post } from 'midway';
-import { CaptchaCaptchaService, captchaCaptchaServiceProvideName } from '@my_modules/captcha/services/captcha';
+import { CaptchaService, SERVICE_PROVIDE } from '@/app/modules/Captcha/Services/Captcha';
 
 @provide()
 @controller('/captchas')
 export class CaptchaController {
-  @inject(captchaCaptchaServiceProvideName)
-  service: CaptchaCaptchaService;
+  @inject(SERVICE_PROVIDE)
+  service: CaptchaService;
 
   // 根据传入的验证码 token，来获取缓存的验证码，然后生成图片，以流的方式输出
   @get('/:token')

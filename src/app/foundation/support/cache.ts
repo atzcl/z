@@ -6,14 +6,17 @@
 |
 */
 
+import { Redis } from 'ioredis';
 import { isNull } from 'lodash';
+
+type unitType = 'h' | 'm' | 's' | 'ms';
 
 export default class CacheManager {
   // 使用缓存类型
-  private readonly store;
-  private readonly prefixName;
+  private readonly store: Redis;
+  private readonly prefixName: string;
 
-  constructor(storeInstance, prefixName) {
+  constructor(storeInstance: Redis, prefixName: string) {
     this.store = storeInstance;
     this.prefixName = prefixName;
   }
@@ -22,9 +25,10 @@ export default class CacheManager {
    * 给缓存标识添加 prefix 前缀
    *
    * @param {string} key 缓存标识
+   *
    * @returns {string}
    */
-  public getPrefixKey (key: string): string {
+  getPrefixKey(key: string): string {
     return `${this.prefixName}.${key}`;
   }
 
@@ -36,11 +40,11 @@ export default class CacheManager {
    * @param {number} time 缓存过期时间
    * @param {string} unit 指定时间单位 （h/m/s/ms）默认为 s
    */
-  public async set (
+  async set (
     key: string,
     value: any,
     time: number = 0,
-    unit: string = 's',
+    unit: unitType = 's',
   ) {
     if (isNull(key) || isNull(value)) {
       return this.abortError('请传入正确参数');
@@ -51,7 +55,7 @@ export default class CacheManager {
 
     if (! isNull(time)) {
       // 转换为小写
-      unit = unit.toLowerCase();
+      unit = unit.toLowerCase() as unitType;
 
       // 判断时间单位
       switch (unit) {
@@ -83,14 +87,18 @@ export default class CacheManager {
    * 获取缓存
    *
    * @param {string} key 缓存标识
+   * @param {any} def 当缓存不存在的时候, 返回的默认值
    */
-  public async get (key: string) {
+  async get(key: string, def: any = null) {
     if (isNull(key)) {
       return this.abortError('请传入需要获取的缓存名称');
     }
 
     try {
-      return JSON.parse(await this.store.get(this.getPrefixKey(key))); // 因为上面加储存值转换为 json, 所以这里需要把它转换回来
+      const result = await this.store.get(this.getPrefixKey(key));
+
+      // 因为上面加储存值转换为 json, 所以这里需要把它转换回来
+      return result ? JSON.parse(result) : def;
     } catch (error) {
       await this.abortError('get 方法只能获取 string 类型缓存');
     }
@@ -102,7 +110,7 @@ export default class CacheManager {
    * @param {string} key
    * @returns {boolean} tue 存在；false 不存在
    */
-  public async has (key: string): Promise<boolean> {
+  async has(key: string): Promise<boolean> {
     return ! isNull(await this.get(key));
   }
 
@@ -111,7 +119,7 @@ export default class CacheManager {
    *
    * @param {string} key 缓存标识
    */
-  public async del (key: string) {
+  async del(key: string) {
     if (isNull(key)) {
       return this.abortError('请传入需要删除的缓存名称');
     }
@@ -125,7 +133,7 @@ export default class CacheManager {
    * @param key
    * @param value
    */
-  public async pushListAfter (key: string, value: any) {
+  async pushListAfter(key: string, value: any) {
     return this.store.rpush(this.getPrefixKey(key), value);
   }
 
@@ -135,7 +143,7 @@ export default class CacheManager {
    * @param key
    * @param value
    */
-  public async pushListTop (key: string, value: any) {
+  async pushListTop(key: string, value: any) {
     return this.store.lpush(this.getPrefixKey(key), value);
   }
 
@@ -145,7 +153,7 @@ export default class CacheManager {
    * @param key
    * @param value
    */
-  public async rPushX (key: string, value: any) {
+  async rPushX(key: string, value: any) {
     return this.store.rpushx(this.getPrefixKey(key), value);
   }
 
@@ -154,7 +162,7 @@ export default class CacheManager {
    *
    * @param key
    */
-  public async rmListTop (key: string) {
+  async rmListTop(key: string) {
     return this.store.lpop(this.getPrefixKey(key));
   }
 
@@ -163,7 +171,7 @@ export default class CacheManager {
    *
    * @param key
    */
-  public async rmListAfter (key: string) {
+  async rmListAfter(key: string) {
     return this.store.rpop(this.getPrefixKey(key));
   }
 
@@ -172,7 +180,7 @@ export default class CacheManager {
    *
    * @param key
    */
-  public async getListLen (key: string) {
+  async getListLen(key: string) {
     return this.store.llen(this.getPrefixKey(key));
   }
 
@@ -182,7 +190,7 @@ export default class CacheManager {
    * @param key
    * @param index 索引值
    */
-  public async getListIndex (key: string, index: number) {
+  async getListIndex(key: string, index: number) {
     return this.store.lindex(key, index);
   }
 
@@ -193,7 +201,7 @@ export default class CacheManager {
    * @param index
    * @param value
    */
-  public async setListValue (key: string, index: number, value: any) {
+  async setListValue(key: string, index: number, value: any) {
     return this.store.lset(key, index, value);
   }
 
@@ -202,9 +210,10 @@ export default class CacheManager {
    *
    * @param {number} code 错误状态码
    * @param {string} message 错误提示
+   *
    * @throws {Error}
    */
-  public async abortError (message: string = 'error', code: number = 422) {
+  async abortError(message: string = 'error', code: number = 422) {
     const error: any = new Error(`[cache]: ${message}`);
     error.status = code;
     error.name = 'CacheException';

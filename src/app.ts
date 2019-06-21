@@ -16,5 +16,7 @@ export default (app: Application) => {
 
     // 提前创建 sequelize 链接
     await app.applicationContext.getAsync('sequelizeSingleton');
+    // 创建微信相关服务
+    await app.applicationContext.getAsync('wechat');
   });
 };

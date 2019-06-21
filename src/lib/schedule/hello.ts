@@ -1,4 +1,4 @@
-import { provide, schedule } from 'midway';
+import { provide, schedule, Context } from 'midway';
 
 @provide()
 @schedule({
@@ -9,7 +9,7 @@ import { provide, schedule } from 'midway';
 })
 export class HelloCron {
   // 定时执行的具体任务
-  async exec(ctx) {
+  async exec(ctx: Context) {
     ctx.logger.info(process.pid, 'hello');
     // (this as any).closed = true;
   }

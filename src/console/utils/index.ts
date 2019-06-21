@@ -29,7 +29,7 @@ export const echoMessage = (message: string) => {
  *
  * @param {string} message
  */
-export const abort = (message: string, code = null) => {
+export const abort = (message: string, code: number = null) => {
   echoMessage(`${chalk.red('😣 ')}${chalk.red(message)}`);
 
   // 中断后续执行
@@ -100,7 +100,7 @@ export const resolve = (root: string, to: string): string => path.resolve(root, 
 export const notEmpty = (value: object) => {
   const keys = Object.keys(value);
   for (let index = 0; index < keys.length; index++) {
-    if (! value[keys[index]]) {
+    if (! (value as any)[keys[index]]) {
       abort(`${keys[index]} 不能为空`);
       break;
     }

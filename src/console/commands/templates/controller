@@ -6,13 +6,34 @@
 |
 */
 
-import { controller, get, provide } from 'midway';
+import { controller, provide, inject, get, post, put, del } from 'midway';
+import { Controller } from '@/app/foundation/bases/BaseController';
 
 @provide()
 @controller('/<%= routerName %>')
-export class <%= name %>Controller {
+export class <%= name %>Controller extends Controller {
+  @inject('Service')
+  service: Service;
+
   @get('/')
-  async index(ctx) {
-    //
+  async index() {
+    const result = await this.service.getPaginate();
+
+    return this.setStatusData(result.data).setStatusTotal(result.count).succeed();
+  }
+
+  @post('/')
+  async store() {
+    return this.setStatusData(await this.service.store()).succeed();
+  }
+
+  @put('/:id')
+  async update() {
+    return this.setStatusData(await this.service.update(this.ctx.params.id)).succeed();
+  }
+
+  @del('/:id')
+  async destroy() {
+    return this.setStatusData(await this.service.delete(this.ctx.params.id)).succeed();
   }
 }

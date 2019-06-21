@@ -1,14 +1,21 @@
-import {
-  DataType, Table, Model, Column,
-} from 'sequelize-typescript';
+/*
++-----------------------------------------------------------------------------------------------------------------------
+| Author: atzcl <atzcl0310@gmail.com>  https://github.com/atzcl
++-----------------------------------------------------------------------------------------------------------------------
+| 客户端 user 用户表
+|
+*/
+
+import { DataType, Table, Column } from 'sequelize-typescript';
 import Helper from '@app/extend/helper';
+import { BaseModel } from '@/app/foundation/Bases/Model/BaseModel';
 
 const { STRING } = DataType;
 
 @Table({
   modelName: 'users',
 })
-export class UserModel extends Model<UserModel> {
+export class UserModel extends BaseModel<UserModel> {
   @Column({ type: STRING, primaryKey: true, unique: true })
   id: string;
 
