@@ -25,7 +25,7 @@ export class BaseClient extends BaseRequest {
   /**
    * 微信 api 基础 url 前缀
    */
-  baseUri;
+  baseUri: string;
 
   app: PaymentApplication;
 
@@ -108,7 +108,7 @@ export class BaseClient extends BaseRequest {
   /**
    * 解析请求响应回来的数据，判断是否存在异常
    */
-  private async handleResponse(response) {
+  private async handleResponse(response: { status: number, data: string }) {
     if (response.status !== 200) {
       this.abort(500, '请求异常');
     }

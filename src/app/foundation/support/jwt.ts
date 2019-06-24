@@ -8,7 +8,7 @@
 
 import { EggAppConfig } from 'midway';
 import Helper from '@app/extend/helper';
-import CacheManager from '@/app/foundation/Support/Cache';
+import CacheManager from '@/app/foundation/support/cache';
 
 interface IJwt {
   /**
@@ -109,7 +109,7 @@ export default class JwtManager {
    * @returns {string}
    */
   public async create(data: any): Promise<string> {
-    return this.jwtInstance.sign({ sub: data }, this.secret, {
+    return this.jwtInstance.sign({ customClaims: data }, this.secret, {
       expiresIn: this.ttl, // token 过期时间, 单位: 小时
     });
   }
@@ -134,14 +134,14 @@ export default class JwtManager {
   }
 
   /**
-   * 快速获取 sub 数据
+   * 快速获取 payload 数据
    *
    * @param {string} $token JWT token
    */
-  public async getSub(token: string) {
+  public async getCustomClaims(token: string) {
     const jwtData: any = await this.verify(token);
 
-    return jwtData.sub;
+    return jwtData.customClaims;
   }
 
   /**
@@ -213,6 +213,6 @@ export default class JwtManager {
     }
 
     // 签发新 token
-    return this.create(jwtData.payload.sub);
+    return this.create(jwtData.payload.customClaims);
   }
 }

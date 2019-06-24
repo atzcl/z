@@ -7,7 +7,7 @@
 */
 
 import { createHash, createHmac } from 'crypto';
-import { Builder, parseString } from 'xml2js';
+import { Builder, parseString, OptionsV2 } from 'xml2js';
 import * as UUIDV4 from 'uuid/v4';
 
 /**
@@ -18,14 +18,14 @@ import * as UUIDV4 from 'uuid/v4';
 export const md5 = (value: string | Buffer | DataView) => createHash('md5').update(value).digest('hex');
 
 export const sha256 = (
-  str, key, encoding: 'utf8' | 'ascii' | 'latin1' = 'utf8',
+  str: string, key: string, encoding: 'utf8' | 'ascii' | 'latin1' = 'utf8',
 ) => createHmac('sha256', key).update(str, encoding).digest('hex');
 
 export const toQueryString = (obj: object) => (
   Object.keys(obj)
-    .filter((key: string) => key !== 'sign' && obj[key] !== undefined && obj[key] !== '')
+    .filter((key: string) => key !== 'sign' && (obj as any)[key] !== undefined && (obj as any)[key] !== '')
     .sort()
-    .map((key: string) => key + '=' + obj[key])
+    .map((key: string) => key + '=' + (obj as any)[key])
     .join('&')
 );
 
@@ -34,7 +34,9 @@ export const uniqId = () => UUIDV4().replace(/-/g, '');
 export const checkXML = (str: string) => (/^(<\?xml.*\?>)?(\r?\n)*<xml>(.|\r?\n)*<\/xml>$/i).test(str.trim());
 
 export const buildXML = (obj: any, rootName = 'xml') => {
-  const opt = { xmldec: null, rootName, allowSurrogateChars: true, cdata: true };
+  const opt: OptionsV2 & { allowSurrogateChars: boolean } = {
+    xmldec: null, rootName, allowSurrogateChars: true, cdata: true,
+  };
 
   return new Builder(opt).buildObject(obj);
 };

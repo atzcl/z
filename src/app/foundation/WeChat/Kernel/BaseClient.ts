@@ -16,7 +16,7 @@ export default class BaseClient extends BaseRequest {
   /**
    * 微信 api 基础 url 前缀
    */
-  baseUri;
+  baseUri: string;
 
   /**
    * accessToken 实例

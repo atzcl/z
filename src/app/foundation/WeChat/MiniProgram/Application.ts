@@ -6,7 +6,7 @@
 |
 */
 
-import { BaseApplication } from '../Kernel/BaseApplication';
+import { BaseApplication, IWeChatRequestAndAccessTokenOptions } from '../Kernel/BaseApplication';
 import { IWeChatRequestOptions } from '../Kernel/Request';
 
 import { AccessToken } from './Auth/AccessToken';
@@ -23,7 +23,7 @@ export class MiniProgramApplication extends BaseApplication {
     super(options, new AccessToken(options));
   }
 
-  async init(appOptions) {
+  async init(appOptions: IWeChatRequestAndAccessTokenOptions) {
     this.auth = new AuthClient(appOptions);
     this.encryptor = new Encryptor();
     this.appCode = new AppCodeClient(appOptions);

@@ -9,6 +9,8 @@
 import { AccessToken } from './AccessToken';
 import { IWeChatRequestOptions } from './Request';
 
+export type IWeChatRequestAndAccessTokenOptions = IWeChatRequestOptions & { accessToken: AccessToken };
+
 export class BaseApplication {
   accessToken: AccessToken;
 
@@ -25,7 +27,7 @@ export class BaseApplication {
     this.init(appOptions);
   }
 
-  async init(options: IWeChatRequestOptions & { accessToken: AccessToken }) {
+  async init(options: IWeChatRequestAndAccessTokenOptions) {
     //
   }
 }

@@ -16,8 +16,8 @@ const extendApplication = {
    *
    * @returns void
    */
-  get modules (): Application {
-    if (! this[modulesSymbol]) {
+  get modules(): Application {
+    if (! (this as any)[modulesSymbol]) {
       Object.defineProperty(this, modulesSymbol, {
         value: {
           config: {},
@@ -29,7 +29,7 @@ const extendApplication = {
       });
     }
 
-    return this[modulesSymbol];
+    return (this as any)[modulesSymbol];
   },
 };
 

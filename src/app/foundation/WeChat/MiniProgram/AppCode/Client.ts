@@ -81,7 +81,7 @@ export class Client extends BaseClient {
    *
    * @param {any} result 请求返回
    */
-  async hasError(result) {
+  async hasError(result: { headers: any, data: any }) {
     const contentType = result.headers['content-type'];
 
     if (! contentType.includes('image')) {

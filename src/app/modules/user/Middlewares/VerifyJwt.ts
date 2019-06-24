@@ -13,14 +13,14 @@ export class VerifyJWTMiddleware implements WebMiddleware {
   resolve() {
     return async (ctx: Context, next: () => Promise<any>) => {
       const { jwt, myApp } = ctx.app.config;
-      const { adminRouter } = myApp;
+      const { adminPrefix } = myApp;
 
       /**
        * 该中间件无须验证的路由数组
        */
       const except: string[] = [
-        `/v1/${adminRouter}/login`, // 后端登录
-        `/v1/${adminRouter}/register`, // 后端注册
+        `/v1/${adminPrefix}/login`, // 后端登录
+        `/v1/${adminPrefix}/register`, // 后端注册
       ];
 
       // 判断当前访问路径是否是无须验证的路由数组
@@ -48,7 +48,7 @@ export class VerifyJWTMiddleware implements WebMiddleware {
           // 默认为初始化的 secret, 用于正常客户端入口
           let entryJwtSecret = jwt.secret;
           // 判断是否是后台用户
-          if (ctx.path.split('/').includes(adminRouter)) {
+          if (ctx.path.split('/').includes(adminPrefix)) {
             entryJwtSecret = jwt.adminSecret;
           }
 

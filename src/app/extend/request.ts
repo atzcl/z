@@ -23,7 +23,7 @@ export default {
    */
   all(keys?: string[]) {
     const { request } = this.getContext();
-    const body = [ 'GET', 'HEAD' ].includes(request.method) ? this.query() : this.input();
+    const body = [ 'GET', 'HEAD' ].includes(request.method) ? this._query() : this._body();
     if (! keys || ! keys.length) {
       return body;
     }
@@ -46,7 +46,7 @@ export default {
    *
    * @returns {any | null}
    */
-  input(key?: string, def: any = null) {
+  _body(key?: string, def: any = null) {
     const { request } = this.getContext();
 
     return key
@@ -71,7 +71,7 @@ export default {
    *
    * @returns {any | null}
    */
-  query(key?: string, def: any = null) {
+  _query(key?: string, def: any = null) {
     /**
      * 这里默认使用 queries 而不是 query, 原因具体可以查看文档
      *
@@ -174,7 +174,7 @@ export default {
     this.getContext()
       .validator(rules)
         .validate(
-          verifyData || this.input(),
+          verifyData || this._body(),
           options,
           (errors: any[], fields: any[]) => {
             if (errors) {

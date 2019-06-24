@@ -39,8 +39,13 @@ export class BaseRequest {
    * @param {string?} key
    */
   getJwtUserClaims(key?: string) {
-    const jwtUserClaims = this.request.input('jwtUserClaims', {});
+    const jwtUserClaims = this.request._body('jwtUserClaims', {});
 
     return key ? (jwtUserClaims[key] || null) : jwtUserClaims;
+  }
+
+  // 抛出异常
+  abort(code: number, message: string = 'error') {
+    this.ctx.abort(code, message);
   }
 }

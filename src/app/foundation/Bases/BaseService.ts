@@ -31,11 +31,11 @@ export class Service extends BaseRequest {
     // 检测 model 数据存在
     this.detectionModel();
 
-    const current = this.getRequest(currentPage, 1);
+    const current = this.request._query(currentPage, 1);
     // 单次最大查询次数
     const maxLimit = 100;
     // 获取查询条数
-    const limit = this.getRequest(pageSizeColumn, 15); // todo: 后面抽离到 config 配置中
+    const limit = this.request._query(pageSizeColumn, 15); // todo: 后面抽离到 config 配置中
 
     // 添加分页条件
     this.model.page(current, limit > maxLimit ? maxLimit : limit);
@@ -50,7 +50,7 @@ export class Service extends BaseRequest {
     // 检测 model 数据存在
     this.detectionModel();
 
-    const order = this.getRequest('order', '');
+    const order = this.request._query('order', '');
     if (order && isString(order)) {
       // 是否是以 _asc 或者 _desc 结尾
       const pregMatch = order.match(/^(.+)_(asc|desc)$/);
@@ -76,7 +76,7 @@ export class Service extends BaseRequest {
     // 检测 model 数据存在
     this.detectionModel();
 
-    const times = this.getRequest('time_between', []);
+    const times = this.request._query('time_between', []);
     if (times && Array.isArray(times) && times.length === 2) {
       const format = 'YYYY-MM-DD';
 
@@ -100,7 +100,7 @@ export class Service extends BaseRequest {
     // 检测 model 数据存在
     this.detectionModel();
 
-    const keyword = this.getRequest('keyword');
+    const keyword = this.request._query('keyword', '');
     if (keyword) {
       const like = `%${keyword}%`;
 
@@ -139,7 +139,7 @@ export class Service extends BaseRequest {
    * @param {object?} data 可选的创建数据
    */
   async store(data?: object) {
-    return this.model._create(data || this.requestBody);
+    return this.model._create(data || this.request._body());
   }
 
   /**
@@ -149,7 +149,7 @@ export class Service extends BaseRequest {
    * @param {object?} data 可选的更新数据
    */
   async update(id: string, data?: object) {
-    return this.model._updateById(data || this.requestBody, id);
+    return this.model._updateById(data || this.request._body(), id);
   }
 
   /**
@@ -160,9 +160,9 @@ export class Service extends BaseRequest {
    */
   async delete(id: string, isForce = false) {
     // 判断是否是多个删除
-    const ids = this.requestBody.ids;
+    const ids = this.request._body().ids;
     if (ids && Array.isArray(ids) && ids.length) {
-      id = this.requestBody.ids;
+      id = this.request._body().ids;
     }
 
     // 判断是否需要真实删除

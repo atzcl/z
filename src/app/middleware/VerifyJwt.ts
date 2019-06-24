@@ -13,7 +13,7 @@ import { Application, Context } from 'egg';
 export default function authJWTMiddleware (app: Application) {
   return async (ctx: Context, next: () => Promise<any>) => {
     const { jwt, myApp } = ctx.app.config;
-    const { adminRouter } = myApp;
+    const { adminPrefix } = myApp;
 
     /**
      * 该中间件无须验证的路由数组, 后面使用装饰器进行收集无需授权的路由
@@ -21,7 +21,7 @@ export default function authJWTMiddleware (app: Application) {
     const except: string[] = [
       '/',
       '/empty_placeholder',
-      `/users/${adminRouter}/login`, // 后端登录
+      `/users/${adminPrefix}/login`, // 后端登录
       '/users/mini_program/login',
       '/resources/uploads/mines',
       '/system_dashboard_app',
@@ -82,7 +82,7 @@ export default function authJWTMiddleware (app: Application) {
         // 默认为初始化的 secret, 用于正常客户端入口
         let entryJwtSecret = jwt.secret;
         // 判断是否是后台用户
-        if (ctx.path.split('/').includes(adminRouter)) {
+        if (ctx.path.split('/').includes(adminPrefix)) {
           entryJwtSecret = jwt.adminSecret;
         }
 

@@ -17,7 +17,7 @@ const extendContext = {
    *
    * @throws {Error}
    */
-  abort (code: number, message: string = 'error') {
+  abort(code: number, message: string = 'error') {
     this.customException('AppFlowException', code, message);
   },
 
