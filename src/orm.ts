@@ -1,3 +1,11 @@
+/*
++-----------------------------------------------------------------------------------------------------------------------
+| Author: atzcl <atzcl0310@gmail.com>  https://github.com/atzcl
++-----------------------------------------------------------------------------------------------------------------------
+| 创建 sequelize 实例
+|
+*/
+
 import { provide, scope, ScopeEnum, init, config, EggAppConfig } from 'midway';
 import { Sequelize } from 'sequelize-typescript';
 // import { camelCase, upperFirst } from 'lodash';

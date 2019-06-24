@@ -1,3 +1,11 @@
+/*
++-----------------------------------------------------------------------------------------------------------------------
+| Author: atzcl <atzcl0310@gmail.com>  https://github.com/atzcl
++-----------------------------------------------------------------------------------------------------------------------
+| 创建 wechat 相关实例
+|
+*/
+
 import {
   provide, init, plugin, config, scope, ScopeEnum, EggLogger, EggAppConfig, Application,
 } from 'midway';

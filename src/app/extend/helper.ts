@@ -9,14 +9,13 @@
 import { EggAppConfig, Context } from 'egg';
 import { createHash } from 'crypto';
 import { random } from 'lodash';
-import * as Moment from 'moment';
+import * as dayjs from 'dayjs';
 import * as bcryptjs from 'bcryptjs';
 import * as path from 'path';
 import * as UUIDV4 from 'uuid/v4';
 
 import CacheManager from '@/app/foundation/Support/Cache';
 import JwtManager from '@/app/foundation/Support/Jwt';
-import * as dayjs from 'dayjs';
 
 const CACHE_SYMBOL = Symbol('my_app#cache');
 
@@ -42,7 +41,7 @@ export default {
       code,
       data,
       msg,
-      time: Moment().unix(),
+      time: dayjs().unix(),
     };
 
     // 响应返回
@@ -173,7 +172,7 @@ export default {
 
       // 给 app 加上 any, 避免在使用 typeorm cli 时出错
       return new CacheManager(
-        app.redis,
+        (app as any).redis,
         config.myApp.appName || 'atzcl',
       );
     }

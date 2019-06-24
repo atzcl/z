@@ -21,6 +21,7 @@ export const customizeConfig = {
   middleware: [
     'exceptions',
   ],
+
   // redis 配置 [ 后面如果需要对某一业务进行缓存的时候，可以开启多实例来进行特定储存 ]
   redis: {
     client: {
@@ -31,11 +32,13 @@ export const customizeConfig = {
     },
     agent: true,
   },
+
   // log 配置
   logrotator: {
     maxFileSize: 2 * 1024 * 1024, // 当文件超过 2G 时进行切割
     maxDays: 31, // 日志保留最大天数
   },
+
   // sequelize 配置
   sequelize: {
     dialect: 'mysql', // support: mysql, mariadb, postgres, mssql
@@ -63,6 +66,7 @@ export const customizeConfig = {
     },
     timezone: '+08:00', // 东八时区
   },
+
   // egg-socket.io 配置
   io: {
     init: {
@@ -87,6 +91,7 @@ export const customizeConfig = {
       db: 6,
     },
   },
+
   // egg-jwt 配置
   jwt: {
     secret: 'your', // 密钥
@@ -106,6 +111,7 @@ export const customizeConfig = {
       // jti: 'jti', // 令牌的唯一标识符 （ sub 和 iat md5 加密后的字符）
     },
   },
+
   // app 应用设置
   myApp: {
     appName: 's', // 应用名称
@@ -118,6 +124,7 @@ export const customizeConfig = {
       cn: 0,
       en: 1,
     },
+
     mail: {
       host: 'smtp.qq.com', // 地址
       port: 465, // 端口
@@ -127,6 +134,7 @@ export const customizeConfig = {
         pass: 'your', // 密码
       },
     },
+
     exceptionNotify: {
       isOpen: 0, // 是否打开异常通知，0 关闭；1 开启
       type: 2, // 异常通知类型，1 微信； 2 邮件；更多...
@@ -138,6 +146,7 @@ export const customizeConfig = {
         to: 'xxxxx', // 接收通知的用户邮件地址
       },
     },
+
     modulesList: [ 'admin', 'user', 'wechat' ], // 当前挂载的模块列表
     uploadImageWhiteList,
     uploadTextWhiteList,
@@ -198,8 +207,10 @@ export const customizeConfig = {
 
   // 代理
   proxy: true,
+
   // egg-ejs 配置
   ejs: {},
+  
   // 上传设置
   multipart: {
     fileSize: '500mb',

@@ -7,7 +7,7 @@
 
 import * as yargs from 'yargs';
 import * as fs from 'fs-extra';
-import * as moment from 'moment';
+import * as dayjs from 'dayjs';
 import { getCommandConfig } from '@my_console/utils/config';
 import {
   notEmpty, resolve, abort, makeFileSuccess, templateCompile, studlyCase, upperFirst, camelCase,
@@ -60,7 +60,7 @@ export default class CreateMigrationCommand implements yargs.CommandModule {
     }
 
     // 毫秒时间戳
-    const millisecondUnix = moment().valueOf();
+    const millisecondUnix = dayjs().millisecond();
 
     // 完全模拟 typeorm 的格式
     if (fs.pathExistsSync(`${millisecondUnix}-${studlyCase(currentFilePath)}`)) {

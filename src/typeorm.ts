@@ -1,3 +1,11 @@
+/*
++-----------------------------------------------------------------------------------------------------------------------
+| Author: atzcl <atzcl0310@gmail.com>  https://github.com/atzcl
++-----------------------------------------------------------------------------------------------------------------------
+| 创建 typeorm 实例
+|
+*/
+
 import { provide, scope, ScopeEnum, init } from 'midway';
 import { createConnection, Connection, getConnectionOptions } from 'typeorm';
 import SnakeNamingStrategy from '@/lib/Other/SnakeNamingStrategy';
