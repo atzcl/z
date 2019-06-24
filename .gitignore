@@ -13,3 +13,6 @@ run/
 ormconfig.js
 src/app/public/uploads
 src/config/config.default.ts
+dist/
+src/app/public/cert/
+src/public/static/
