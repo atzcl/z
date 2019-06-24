@@ -9,7 +9,6 @@
     "noImplicitAny": true,
     "skipLibCheck": true,
     "alwaysStrict": true,
-    // "strict": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "inlineSourceMap":true,
@@ -28,11 +27,11 @@
       "@my_foundation/*": [ "src/app/foundation/*" ],
       "@my_migration/*": [ "src/app/foundation/Migrations/*" ],
       "@my_console/*": [ "src/console/*" ],
-      "@my_decorator/*": [ "src/foundation/decorators/*" ],
-    },
+      "@my_decorator/*": [ "src/foundation/decorators/*" ]
+    }
   },
   "include": [
-    "src/**/*",
+    "src/**/*"
   ],
   "exclude": [
     "app/public",
@@ -40,7 +39,6 @@
     "dist",
     "node_modules",
     "test",
-    // "**/*.d.ts",
     "**/*.spec.ts"
   ]
 }

@@ -25,7 +25,6 @@
     "ip2region": "^1.7.0",
     "lodash": "^4.17.11",
     "midway": "^1.6.3",
-    "moment": "^2.24.0",
     "mysql": "^2.17.1",
     "mysql2": "^1.6.5",
     "mz-modules": "^2.1.0",
@@ -60,8 +59,8 @@
     "node": ">=8.9.0"
   },
   "scripts": {
-    "start": "egg-scripts start --daemon --title=egg-server-_s_server --framework=midway",
-    "stop": "egg-scripts stop --title=egg-server-_s_server",
+    "start": "NODE_OPTIONS='-r ./tsconfig-paths-bootstrap.js' egg-scripts start --daemon --title=z --framework=midway",
+    "stop": "egg-scripts stop --title=z",
     "start_build": "npm run build && NODE_ENV=development midway-bin dev",
     "dev": "NODE_ENV=local midway-bin dev --ts",
     "debug": "NODE_ENV=local midway-bin debug --ts",
