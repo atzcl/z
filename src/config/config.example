@@ -4,6 +4,17 @@ import { uploadImageWhiteList, uploadTextWhiteList, uploadVideoWhiteList } from 
 // for config.{env}.ts
 export type DefaultConfig = PowerPartial<EggAppConfig>;
 
+// 后台路由前缀
+export const adminPrefix = 'system';
+
+// 应用的 url 前缀
+export const appUrl = 'https://xxx.com';
+
+// 静态资源的 url 集合配置，用于前端拼接完整的资源路径
+export const staticUrls = {
+  default: appUrl,
+};
+
 // 自定义配置/未提供 .d.ts 文件的拓展配置
 export const customizeConfig = {
   // 中间件配置
@@ -99,8 +110,9 @@ export const customizeConfig = {
   myApp: {
     appName: 's', // 应用名称
     debug: false, // 是否本地开发环境
-    appUrl: 'https://xxxx.com', // 应用的 url
-    adminRouter: 'system', // 后台路由名称
+    staticUrls, // 静态状态跟域名
+    appUrl, // 应用的 url
+    adminPrefix, // 后台路由前缀
     language: 'cn', // 当前语言
     languageType: { // 语言列表，配合 language 当前语言来用于后面查询时，可以判断应该输出何种语言的数据
       cn: 0,
@@ -140,20 +152,50 @@ export const customizeConfig = {
       '.gz', '.tgz', '.gzip',
     ],
   },
+
   // 微信相关配置
   wechat: {
-    app_id: 'xxxx', // AppID
-    secret: 'xxxxx', // AppSecret
-    token: 'atzcl.cn', // Token
-    aes_key: '', // EncodingAESKey
-    // 小程序
-    mini_app_id: '', // AppID
-    mini_secret: '', // AppSecret
-    mini_token: '', // Token
-    mini_aes_key: '', // EncodingAESKey
-    // 基础 url
-    base_uri: 'https://api.weixin.qq.com/cgi-bin/',
+    base_uri: 'https://api.weixin.qq.com/', // 基础 url
+    open_platform_base_uri: 'https://api.weixin.qq.com/', // 微信开放平台
+    payment_base_uri: 'https://api.mch.weixin.qq.com/', // 微信支付
+    open_work_base_uri: 'https://qyapi.weixin.qq.com/', // 企业微信服务商
+    work_base_uri: 'https://qyapi.weixin.qq.com/', // 企业微信
+
+    /**
+     * 公众号
+     */
+    official_account: {
+      app_id: '',
+      secret: '',
+      token: '',
+      aes_key: '',
+      oauth: {
+        scopes: 'snsapi_userinfo',
+        callback: '',
+      },
+    },
+
+    /**
+     * 小程序
+     */
+    mini_program: {
+      app_id: 'your',
+      secret: 'your',
+      token: '',
+      aes_key: '',
+    },
+
+    payment: {
+      sandbox: false, // 沙箱模式
+      app_id: 'your',
+      mch_id: 'your',
+      key: 'your', // API 密钥
+      pfx: '/public/cert/apiclient_cert.p12', // 相对路径
+      notify_url: `${appUrl}/orders/notify`, // 默认的订单回调地址
+      spbill_create_ip: '127.0.0.1', // IP 地址
+    },
   },
+
   // 代理
   proxy: true,
   // egg-ejs 配置
