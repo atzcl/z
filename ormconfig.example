@@ -1,17 +1,30 @@
-// 为了能使用 typeorm 的 cli
-module.exports = {
-  "type": "mysql",
-  "host": "127.0.0.1",
-  "port": 3306,
-  "username": "root",
-  "password": "your",
-  "database": "your",
-  "charset": "UTF8MB4_UNICODE_CI",
-  "logging": true,
-  "timezone": "+08:00",
-  "entities": [ "src/app/modules/**/models/*{.ts,.js}" ],
-  "migrations": [ "src/app/modules/**/migrations/*{.ts,.js}" ],
-  "cli": {
-    "migrationsDir": "src/migration"
-  }
+/*
++-----------------------------------------------------------------------------------------------------------------------
+| Author: atzcl <atzcl0310@gmail.com>  https://github.com/atzcl
++-----------------------------------------------------------------------------------------------------------------------
+| typeorm cli config
+|
+*/
+
+import { customizeConfig } from './src/config/config.default';
+
+const dbConfig = customizeConfig.sequelize;
+
+const typeormConfig = {
+  type: dbConfig.dialect,
+  host: dbConfig.host,
+  port: dbConfig.port,
+  username: dbConfig.username,
+  password: dbConfig.password,
+  database:  dbConfig.database,
+  timezone: dbConfig.timezone,
+  logging: dbConfig.logging,
+  charset: 'UTF8MB4_UNICODE_CI',
+  entities: [ 'src/app/modules/**/Models/*{.ts,.js}' ],
+  migrations: [ 'src/app/modules/**/Migrations/*{.ts,.js}' ],
+  cli: {
+    migrationsDir: 'src/migration',
+  },
 };
+
+export = typeormConfig;
