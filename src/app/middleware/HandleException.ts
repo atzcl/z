@@ -15,12 +15,7 @@ export default function exceptionsMiddleware() {
       await next();
 
       if (ctx.status === 404 && !ctx.body) {
-        ctx.body = {
-          code: 404,
-          data: null,
-          msg: '当前请求不存在',
-          time: Math.floor(new Date().getTime() / 1000),
-        };
+        ctx.helper.toResponse(404, null, '当前请求不存在');
       }
     } catch (error) {
       if (ctx.app.config.env === 'local') {
@@ -56,12 +51,7 @@ export default function exceptionsMiddleware() {
       // ctx.service.exceptions.handler(error);
 
       // 响应返回
-      ctx.body = {
-        code: statusCode,
-        data: null,
-        msg: statusMessage,
-        time: Math.floor(new Date().getTime() / 1000),
-      };
+      ctx.helper.toResponse(statusCode, null, statusMessage);
     }
   };
 }
