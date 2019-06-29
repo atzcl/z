@@ -1,13 +1,51 @@
-import { Context } from 'egg';
+/*
++-----------------------------------------------------------------------------------------------------------------------
+| Author: atzcl <atzcl0310@gmail.com>  https://github.com/atzcl
++-----------------------------------------------------------------------------------------------------------------------
+| 拓展 Request
+|
+*/
+
+import { Request } from 'egg';
+import { Validator, ValidatorLang, IValidateOptions } from '../foundation/Support/Validator';
+import { ValidationException } from '../exceptions/ValidationException';
+import { BaseException } from '../exceptions/BaseException';
 
 export default {
   /**
-   * 获取 egg loader 当前 helper 拓展时，注入的 BaseContextClass
+   * 当前 ctx 的 Request 对象, 主要是为了能避免使用 (this as any) 的写法
    *
-   * @param this
+   * @returns {Request}
    */
-  getContext(this: any): Context {
-    return this;
+  get self(): Request {
+    return this as any;
+  },
+
+  /**
+   * async-validator validate
+   *
+   * @param  {Object} rules  - validate rule object, see [async-validator](https://github.com/yiminghe/async-validator)
+   * @param  {Object} [data] - validate target, default to `this.request.body`
+   * @param {object} options 当验证到有一个不通过的验证规则，那么就停止继续校验
+   *
+   * erroe info: [ { message: 'username 必填', field: 'username' }, { message: 'password 必填', field: 'password' } ]
+   */
+  validate(
+    rules: object,
+    verifyData?: object,
+    options: IValidateOptions = { firstFields: true, first: true },
+    lang: ValidatorLang = 'cn',
+  ) {
+    (new Validator(rules, lang))
+      .validateSync(
+        verifyData || this.all(),
+        options,
+        (errors) => {
+          if (Array.isArray(errors)) {
+            throw new ValidationException(errors[0].message);
+          }
+        },
+      );
   },
 
   bearerToken() {
@@ -22,8 +60,7 @@ export default {
    * @returns {any}
    */
   all(keys?: string[]) {
-    const { request } = this.getContext();
-    const body = [ 'GET', 'HEAD' ].includes(request.method) ? this._query() : this._body();
+    const body = [ 'GET', 'HEAD' ].includes(this.self.method) ? this.formatQuery() : this._body();
     if (! keys || ! keys.length) {
       return body;
     }
@@ -47,11 +84,9 @@ export default {
    * @returns {any | null}
    */
   _body(key?: string, def: any = null) {
-    const { request } = this.getContext();
-
     return key
-      ? request.body[key] || def
-      : request.body;
+      ? this.self.body[key] || def
+      : this.self.body;
   },
 
   /**
@@ -60,7 +95,7 @@ export default {
    * @param body body payload
    */
   setBody(body: any) {
-    this.getContext().request.body = body;
+    this.self.body = body;
   },
 
   /**
@@ -83,6 +118,24 @@ export default {
     // 所以这里再判断一下，如果获取的值为数组并且长度为一，那么就返回数组的值就好了
     return key && Array.isArray(result) && result.length === 1
       ? result[0] : result;
+  },
+
+  /**
+   * 获取 _query 的所有结果并进行格式处理
+   *
+   * @returns {object}
+   */
+  formatQuery() {
+    const result = this._query();
+    for (const [ key, val ] of Object.entries(result)) {
+      // 因为 queries 会确保任何一个有值的 key, 都会是数组的形式，但是在真实的情况下，我们获取的 key 的值基本都是单一的
+      // 所以这里再判断一下，如果获取的值为数组并且长度为一，那么就返回数组的值就好了, 这样会更加自然、符合直觉
+      if (Array.isArray(val) && val.length === 1) {
+        result[key] = val[0];
+      }
+    }
+
+    return result;
   },
 
   /**
@@ -148,7 +201,7 @@ export default {
    * @return void
    */
   offsetSet(offset: string, value: any) {
-    this.getContext().request.body[offset] = value;
+    this.self.body[offset] = value;
   },
 
   /**
@@ -158,30 +211,7 @@ export default {
    * @return void
    */
   offsetUnset(offset: string) {
-    delete this.getContext().request.body[offset];
-  },
-
-  /**
-   * async-validator validate
-   *
-   * @param  {Object} rules  - validate rule object, see [async-validator](https://github.com/yiminghe/async-validator)
-   * @param  {Object} [data] - validate target, default to `this.request.body`
-   * @param {object} options 当验证到有一个不通过的验证规则，那么就停止继续校验
-   *
-   * erroe info: [ { message: 'username 必填', field: 'username' }, { message: 'password 必填', field: 'password' } ]
-   */
-  validate(rules: object, verifyData?: object, options = { firstFields: true, first: true }) {
-    this.getContext()
-      .validator(rules)
-        .validate(
-          verifyData || this._body(),
-          options,
-          (errors: any[], fields: any[]) => {
-            if (errors) {
-              this.getContext().customException('ValidationException', 400, errors[0].message);
-            }
-          },
-        );
+    delete this.self.body[offset];
   },
 
   /**
@@ -205,11 +235,19 @@ export default {
    * @returns {any}
    */
   retrieveItem(source: 'body' | 'queries', key: string, def: any) {
-    const { request } = this.getContext();
-    const payload = request[source];
+    const payload = this.self[source];
 
     return key
       ? payload[key] || def
       : payload;
+  },
+
+  /**
+   * 抛出自定义异常
+   *
+   * @throws {string} exceptionName
+   */
+  customException(exceptionName: string, exceptionCode: number, exceptionMessage: string) {
+    throw new BaseException(exceptionName, exceptionCode, exceptionMessage);
   },
 };

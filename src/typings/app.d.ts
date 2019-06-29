@@ -1,6 +1,7 @@
 import { Redis }  from 'ioredis';
 import { VerifyOptions, Secret, SignOptions, DecodeOptions } from 'jsonwebtoken';
 
+import ExtendApplication from '@app/extend/application';
 import ExtendContext from '@app/extend/context';
 import ExtendRequest from '@app/extend/request';
 import ExtendHelper from '@app/extend/helper';
@@ -9,7 +10,7 @@ import ExtendConfig, { customizeConfig } from '@/config/config.default';
 type NewExtendConfig = typeof ExtendConfig & typeof customizeConfig;
 
 declare module 'egg' {
-  interface Application {
+  interface Application extends ExtendInterface<typeof ExtendApplication> {
     // jwt
     // jwt: any;
     redis: Redis;

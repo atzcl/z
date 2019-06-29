@@ -25,8 +25,8 @@ export default {
    *
    * @param this
    */
-  getContext(this: any): Context {
-    return this;
+  get _context(): Context {
+    return (this as any).ctx;
   },
 
   /**
@@ -45,7 +45,7 @@ export default {
     };
 
     // 响应返回
-    this.getContext().ctx.response.body = response;
+    this._context.response.body = response;
   },
 
   /**
@@ -152,11 +152,11 @@ export default {
    */
   checkUploadFileExt(filename: string, whitelist: string[] = []) {
     if (whitelist.length === 0) {
-      whitelist = this.getContext().config.myApp.uploadExtWhiteList;
+      whitelist = this._context.config.myApp.uploadExtWhiteList;
     }
 
     if (! whitelist.includes(path.extname(filename).toLowerCase())) {
-      this.getContext().ctx.abort(400, `当前文件: ${filename} 的格式不符合要求`);
+      this._context.abort(400, `当前文件: ${filename} 的格式不符合要求`);
     }
   },
 
@@ -168,7 +168,7 @@ export default {
    */
   get cache(): CacheManager {
     if (! (this as any)[CACHE_SYMBOL]) {
-      const { app, config } = this.getContext();
+      const { app, config } = this._context;
 
       // 给 app 加上 any, 避免在使用 typeorm cli 时出错
       return new CacheManager(
@@ -184,7 +184,7 @@ export default {
    * jwt 辅助函数
    */
   jwt(options: EggAppConfig['jwt'] | any = {}) {
-    const { app, config } = this.getContext();
+    const { app, config } = this._context;
 
     return new JwtManager(
       (app as any).jwt,
