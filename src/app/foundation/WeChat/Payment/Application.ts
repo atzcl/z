@@ -39,7 +39,7 @@ export class PaymentApplication extends BaseApplication {
     super(options, null);
   }
 
-  async init(appOptions: IWeChatRequestOptions) {
+  protected async init(appOptions: IWeChatRequestOptions) {
     this.order = new OrderClient(appOptions);
     this.jssdk = new JssdkClient(appOptions);
   }

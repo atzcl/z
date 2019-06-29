@@ -21,7 +21,7 @@ export class WeChat {
   logger: EggLogger;
 
   @config('wechat')
-  config: EggAppConfig;
+  config: EggAppConfig['wechat'];
 
   @plugin('redis')
   redis: Application['redis'];

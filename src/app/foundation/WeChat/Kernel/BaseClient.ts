@@ -6,11 +6,9 @@
 |
 */
 
-import { RequestOptions } from 'urllib';
-import { BaseRequest, IWeChatRequestOptions } from './Request';
+import * as qs from 'qs';
+import { BaseRequest, IWeChatRequestOptions, RequestOptions } from './Request';
 import { AccessToken } from './AccessToken';
-
-type newRequestOptions = RequestOptions & { returnFullInfo?: boolean };
 
 export default class BaseClient extends BaseRequest {
   /**
@@ -38,22 +36,12 @@ export default class BaseClient extends BaseRequest {
    * @param {string} url 请求 url
    * @param {object} options curl 请求配置
    */
-  public async httpGet(url: string, data: any = {},  options?: newRequestOptions) {
-    const result = await this.baseRequest(
-      await this.requestUrl(url),
-      {
-        ...options,
-        data: {
-          access_token: await this.getAccessToken(),
-          ...data,
-        },
-      },
-    );
+  public async httpGet(url: string, options?: RequestOptions) {
+    const result = await this.baseRequest(await this.requestUrl(url, options.params));
 
-    // 判断是否返回错误
-    await this.isError(result.data);
+    await this.resolveBodyHasError(result);
 
-    return result.data;
+    return result;
   }
 
   /**
@@ -62,30 +50,24 @@ export default class BaseClient extends BaseRequest {
    * @param url 请求 url
    * @param options curl 请求配置
    */
-  public async httpPost(url: string, data: any = {}, options?: newRequestOptions) {
-    // tslint:disable-next-line:variable-name
-    const access_token = await this.getAccessToken();
-
+  public async httpPost(url: string, data: any = {}, options?: RequestOptions) {
     const result = await this.baseRequest(
-      `${await this.requestUrl(url)}?access_token=${access_token}`,
+      await this.requestUrl(url, options.params),
       {
         method: 'POST',
-        contentType: 'json',
         ...options,
-        data: {
-          ...data,
-        },
+        form: data,
       },
     );
 
-    // 判断是否返回错误
-    await this.isError(result.data);
+    await this.resolveBodyHasError(result);
 
-    return options && (options as any).returnFullInfo ? result : result.data;
+    return result;
   }
 
-  async httpUpload() {
-    //
+  async httpUpload(url: string, formData = {}, options?: RequestOptions) {
+    const result = await this.httpPost(url, {}, { ...(options || {}), formData });
+    console.log(result);
   }
 
   async getAccessToken() {
@@ -101,10 +83,15 @@ export default class BaseClient extends BaseRequest {
   /**
    * 获取基础 url
    */
-  private async requestUrl(url: string) {
+  protected async requestUrl(url: string, params?: object) {
     const baseUri = this.baseUri || this.config.base_uri;
 
+    // tslint:disable-next-line:variable-name
+    const access_token = await this.getAccessToken();
+
+    const query = qs.stringify({ access_token, ...(params || {}) });
+
     // 返回完整的请求 url
-    return `${baseUri}${url}`;
+    return `${baseUri}${url}?${query}`;
   }
 }

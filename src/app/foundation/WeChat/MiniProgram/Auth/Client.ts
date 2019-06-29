@@ -36,6 +36,6 @@ export class Client extends BaseClient {
       grant_type: 'authorization_code',
     };
 
-    return this.httpGet('sns/jscode2session', params);
+    return this.httpGet('sns/jscode2session', { params });
   }
 }

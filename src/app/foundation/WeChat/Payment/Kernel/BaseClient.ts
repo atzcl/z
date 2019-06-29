@@ -61,14 +61,14 @@ export class BaseClient extends BaseRequest {
     const requestOptions = {
       method,
       data: buildXML(params),
-      dataType: 'text',
+      json: false,
       ...options,
     };
 
     // 是否需要证书
     if (isUseCert) {
       requestOptions.pfx = fs.readFileSync(config.pfx);
-      requestOptions.passphrase = this.config.mch_id;
+      requestOptions.passphrase = config.mch_id;
     }
 
     const response = await this.baseRequest(await this.requestUrl(endpoint), requestOptions);

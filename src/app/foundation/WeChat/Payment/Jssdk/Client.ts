@@ -15,8 +15,9 @@ export class Client extends BaseClient {
    * 生成 WeixinJSBridge 支付配置
    */
   async bridgeConfig(prepayId: string) {
+    const { payment } = this.config;
     const params: any = {
-      appId: this.config.sub_appid || this.config.payment.app_id,
+      appId: payment.sub_appid || payment.app_id,
       timeStamp: '' + dayjs().unix(),
       nonceStr: uniqId(),
       package: `prepay_id=${prepayId}`,

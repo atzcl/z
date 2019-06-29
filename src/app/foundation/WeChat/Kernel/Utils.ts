@@ -21,6 +21,11 @@ export const sha256 = (
   str: string, key: string, encoding: 'utf8' | 'ascii' | 'latin1' = 'utf8',
 ) => createHmac('sha256', key).update(str, encoding).digest('hex');
 
+export const sha1 = (str: string) => createHash('sha1').update(str).digest('hex');
+
+/**
+ * 生成签名
+ */
 export const toQueryString = (obj: object) => (
   Object.keys(obj)
     .filter((key: string) => key !== 'sign' && (obj as any)[key] !== undefined && (obj as any)[key] !== '')
@@ -29,10 +34,26 @@ export const toQueryString = (obj: object) => (
     .join('&')
 );
 
+/**
+ * 生成唯一的字符串
+ *
+ * @returns {void}
+ */
 export const uniqId = () => UUIDV4().replace(/-/g, '');
 
+/**
+ * 判断是否是 xml
+ *
+ * @param {string} str 需要检查的 xml
+ */
 export const checkXML = (str: string) => (/^(<\?xml.*\?>)?(\r?\n)*<xml>(.|\r?\n)*<\/xml>$/i).test(str.trim());
 
+/**
+ * 生成 xml
+ *
+ * @param {object} obj 需要生成 xml 的字段
+ * @param {string} rootName 根名称
+ */
 export const buildXML = (obj: any, rootName = 'xml') => {
   const opt: OptionsV2 & { allowSurrogateChars: boolean } = {
     xmldec: null, rootName, allowSurrogateChars: true, cdata: true,
@@ -41,6 +62,11 @@ export const buildXML = (obj: any, rootName = 'xml') => {
   return new Builder(opt).buildObject(obj);
 };
 
+/**
+ * 解析 xml
+ *
+ * @param {any} xml 需要解析的 xml 数据
+ */
 export const parseXML = (xml: any) => (
   new Promise((resolve, reject) => {
     const opt = { trim: true, explicitArray: false, explicitRoot: false };
@@ -48,3 +74,5 @@ export const parseXML = (xml: any) => (
     parseString(xml, opt, (err, res) => err ? reject(new Error('XMLDataError')) : resolve(res || {}));
   })
 );
+
+export const isNumber = (val: any) => typeof val === 'number';

@@ -27,7 +27,7 @@ export class BaseApplication {
     this.init(appOptions);
   }
 
-  async init(options: IWeChatRequestAndAccessTokenOptions) {
+  protected async init(options: IWeChatRequestAndAccessTokenOptions) {
     //
   }
 }

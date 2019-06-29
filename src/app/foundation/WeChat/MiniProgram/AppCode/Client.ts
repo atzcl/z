@@ -18,11 +18,6 @@ interface IOptional {
   is_hyaline?: boolean;
 }
 
-const defaultOptions = {
-  dataType: '',
-  returnFullInfo: true,
-};
-
 export class Client extends BaseClient {
   /**
    * 获取小程序码，适用于需要的码数量较少的业务场景
@@ -33,11 +28,9 @@ export class Client extends BaseClient {
    * @return {Buffer}
    */
   async get(path: string, optional: IOptional = {}): Promise<Buffer> {
-    const result = await this.httpPost('wxa/getwxacode', { path, ...optional }, defaultOptions);
+    const result = await this.httpPost('wxa/getwxacode', { path, ...optional });
 
-    await this.hasError(result);
-
-    return result.data;
+    return result;
   }
 
   /**
@@ -51,11 +44,9 @@ export class Client extends BaseClient {
    * @return {Buffer}
    */
   async getUnlimit(scene: string, optional: IOptional & { page?: string } = {}): Promise<Buffer> {
-    const result = await this.httpPost('wxa/getwxacodeunlimit', { scene, ...optional }, defaultOptions);
+    const result = await this.httpPost('wxa/getwxacodeunlimit', { scene, ...optional });
 
-    await this.hasError(result);
-
-    return result.data;
+    return result;
   }
 
   /**
@@ -69,11 +60,9 @@ export class Client extends BaseClient {
    * @return {Buffer}
    */
   async getQrCode(path: string, width: number | null = null): Promise<Buffer> {
-    const result = await this.httpPost('cgi-bin/wxaapp/createwxaqrcode', { path, width }, defaultOptions);
+    const result = await this.httpPost('cgi-bin/wxaapp/createwxaqrcode', { path, width });
 
-    await this.hasError(result);
-
-    return result.data;
+    return result;
   }
 
   /**

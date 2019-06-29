@@ -23,7 +23,7 @@ export class MiniProgramApplication extends BaseApplication {
     super(options, new AccessToken(options));
   }
 
-  async init(appOptions: IWeChatRequestAndAccessTokenOptions) {
+  protected async init(appOptions: IWeChatRequestAndAccessTokenOptions) {
     this.auth = new AuthClient(appOptions);
     this.encryptor = new Encryptor();
     this.appCode = new AppCodeClient(appOptions);

@@ -15,6 +15,10 @@ export class BaseRequest {
   @inject()
   ctx: Context;
 
+  get app() {
+    return this.ctx.app;
+  }
+
   get config() {
     return this.ctx.app.config;
   }

@@ -6,6 +6,7 @@
 |
 */
 
+import * as qs from 'qs';
 import { BaseRequest } from './Request';
 import { md5 } from './Utils';
 
@@ -91,18 +92,11 @@ export class AccessToken extends BaseRequest {
    */
   async requestToken() {
     // 请求获取 access_token
-    const result = await this.baseRequest(
-      this.endpointToGetToken,
-      {
-        data: this.getCredentials,
-      },
-    );
+    const result = await this.baseRequest(`${this.endpointToGetToken}?${qs.stringify(this.getCredentials)}`);
 
     // 判断是否返回错误
-    if (result.data.errcode) {
-      await this.abort(422, `${result.data.errcode} ---> ${result.data.errmsg}`);
-    }
+    await this.resolveBodyHasError(result);
 
-    return result.data;
+    return result;
   }
 }

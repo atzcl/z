@@ -2,29 +2,76 @@
 +-----------------------------------------------------------------------------------------------------------------------
 | Author: atzcl <atzcl0310@gmail.com>  https://github.com/atzcl
 +-----------------------------------------------------------------------------------------------------------------------
-| 入口基类
+| 请求基类
+|
+| @see https://github.com/request/request
 |
 */
 
 import { EggLogger } from 'midway';
-import { RequestOptions, request as Request } from 'urllib';
+import * as Request from 'request';
 import CacheManager from '@my_foundation/support/cache';
+import { WeChatRequestException } from './Exceptions/WeChatRequestException';
+
+export type RequestOptions = Request.CoreOptions & { params?: object };
 
 export interface IWeChatRequestOptions {
   cache: CacheManager;
-  config: any;
+  config: {
+    base_uri: string; // 基础 url
+    open_platform_base_uri: string; // 微信开放平台
+    payment_base_uri: string; // 微信支付
+    open_work_base_uri: string; // 企业微信服务商
+    work_base_uri: string; // 企业微信
+
+    /**
+     * 公众号
+     */
+    official_account: {
+      app_id: string;
+      secret: string;
+      token: string;
+      aes_key: string;
+      oauth: {
+        scopes: string;
+        callback: string;
+      },
+    },
+
+    /**
+     * 小程序
+     */
+    mini_program: {
+      app_id: string;
+      secret: string;
+      token: string;
+      aes_key: string;
+    },
+
+    payment: {
+      sandbox: boolean, // 沙箱模式
+      app_id: string;
+      mch_id: string;
+      key: string; // API 密钥
+      pfx: string; // 绝对路径
+      notify_url: string; // 默认的订单回调地址
+      spbill_create_ip: string; // IP 地址
+      sub_mch_id: string;
+      sub_appid: string;
+    },
+  };
   logger: EggLogger;
 }
 
 export class BaseRequest {
   // 缓存实例
-  cache: CacheManager;
+  cache: IWeChatRequestOptions['cache'];
   // 配置
   // todo: 后面可以拓展内部维护
-  config: any;
+  config: IWeChatRequestOptions['config'];
   // 日志实例
   // todo: 后面可以拓展内部维护
-  logger: EggLogger;
+  logger: IWeChatRequestOptions['logger'];
 
   constructor(options: IWeChatRequestOptions) {
     const { config, cache, logger } = options;
@@ -37,21 +84,34 @@ export class BaseRequest {
   /**
    * 发送请求
    */
-  async baseRequest(url: string, opt: RequestOptions = {}) {
-    return Request(url, { dataType: 'json', ...opt });
+  baseRequest(url: string, opt: RequestOptions = {}, isAutoHandleError = true): Promise<any> {
+    const options = {
+      url,
+      method: 'GET',
+      headers: { Accept: 'application/json' },
+      timeout: 60000, // 60秒超时
+      json: true,
+      ...opt,
+    };
+
+    return new Promise((resolve, reject) => {
+      Request(options, (error, response, body) => {
+        if (error && Number(response.statusCode) !== 200) {
+          isAutoHandleError ? this.abort(500, String(error)) : reject(error);
+
+          return;
+        }
+
+        resolve(body);
+      });
+    });
   }
 
   /**
    * 抛出异常
    */
   abort(code: number, message: string = 'error') {
-    const error: any = new Error(message);
-    error.status = code;
-    error.name = 'WeChatException';
-    error.message = message;
-
-    // 抛出验证异常给全局异常处理接管处理
-    throw error;
+    throw new WeChatRequestException(code, message);
   }
 
   /**
@@ -59,11 +119,9 @@ export class BaseRequest {
    *
    * @param res  curl 的 data 结果
    */
-  async isError(res: any) {
-    if (! res.errcode) {
-      return;
+  resolveBodyHasError(res: any) {
+    if (res.errcode) {
+      this.abort(res.errcode, res.errmsg);
     }
-
-    await this.abort(422, `【 微信调用异常 】${res.errcode} ---> ${res.errmsg}`);
   }
 }
