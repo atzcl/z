@@ -8,8 +8,8 @@
 
 import { provide, scope, ScopeEnum, init, plugin, EggLogger } from 'midway';
 import { createConnection, Connection, getConnectionOptions } from 'typeorm';
-import SnakeNamingStrategy from '@/lib/Other/SnakeNamingStrategy';
-import { TypeORMLogger } from './lib/Other/TypeORMLogger';
+import { SnakeNamingStrategy } from '@/lib/Other/SnakeNamingStrategy';
+import { TypeORMLogger } from '@/lib/Other/TypeORMLogger';
 
 /**
  * 创建 typeorm 链接
