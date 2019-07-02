@@ -10,6 +10,7 @@ import { Request } from 'egg';
 import { Validator, ValidatorLang, IValidateOptions } from '../foundation/Support/Validator';
 import { ValidationException } from '../exceptions/ValidationException';
 import { BaseException } from '../exceptions/BaseException';
+import { AppFlowException } from '../exceptions/AppFlowException';
 
 export default {
   /**
@@ -48,8 +49,20 @@ export default {
       );
   },
 
+  /**
+   * 获取 authorization 的 bearer token
+   *
+   * @returns {string}
+   *
+   * @throws {AppFlowException}
+   */
   bearerToken() {
-    //
+    const getToken = this.self.get('authorization');
+    if (getToken && getToken.length > 10) {
+      return getToken.split(' ')[1];
+    }
+
+    throw new AppFlowException('authorization bearer token empty', 422);
   },
 
   /**
