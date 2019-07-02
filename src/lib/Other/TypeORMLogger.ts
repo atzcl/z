@@ -7,15 +7,13 @@
 | @see https://typeorm.io/#/logging/%E4%BD%BF%E7%94%A8%E8%87%AA%E5%AE%9A%E4%B9%89%E8%AE%B0%E5%BD%95%E5%99%A8
 */
 
-import { EggLogger } from 'midway';
+import { provide, plugin, EggLogger } from 'midway';
 import { Logger, QueryRunner } from 'typeorm';
 
+@provide('typeORMLogger')
 export class TypeORMLogger implements Logger {
+  @plugin('logger')
   logger: EggLogger;
-
-  constructor(logger: EggLogger) {
-    this.logger = logger;
-  }
 
   logQuery(query: string, parameters?: any[], queryRunner?: QueryRunner) {
     console.log(this.logger);
