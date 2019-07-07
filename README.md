@@ -35,7 +35,7 @@ cp src/config/config.example src/config/config.default.ts
 
 **3、copy `ormconfig` 配置**
 ```bash
-cp ormconfig.example ormconfig.js
+cp ormconfig.example ormconfig.ts
 ```
 然后修改对应的配置, 用于下方执行数据库迁移
 
