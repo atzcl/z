@@ -13,6 +13,6 @@ export class HomeController extends Controller {
   // 将路由交给前端页面接管
   @all('/dashboard(/.+)?')
   async system() {
-    await this.ctx.body.render('home/index.html');
+    await this.ctx.render('home/index.html');
   }
 }

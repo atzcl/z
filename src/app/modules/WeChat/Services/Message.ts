@@ -7,7 +7,7 @@
 */
 
 import { provide } from 'midway';
-import { Service } from '@/app/foundation/bases/BaseService';
+import { Service } from '@/app/foundation/Bases/BaseService';
 import { Text } from '@/app/foundation/WeChat/Kernel/Messages/Text';
 import {
   WeChatMessageEvent, WeChatMessageSubject,

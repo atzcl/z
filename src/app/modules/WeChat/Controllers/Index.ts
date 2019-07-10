@@ -7,7 +7,7 @@
 */
 
 import { controller, provide, inject, all, get } from 'midway';
-import { Controller } from '@/app/foundation/bases/BaseController';
+import { Controller } from '@/app/foundation/Bases/BaseController';
 import { WeChat } from '@/wechat';
 import { Image } from '@/app/foundation/WeChat/Kernel/Messages/Image';
 import { Text } from '@/app/foundation/WeChat/Kernel/Messages/Text';

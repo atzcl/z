@@ -10,7 +10,7 @@ import {
   DataType, Table, Column, CreatedAt, UpdatedAt, DeletedAt,
 } from 'sequelize-typescript';
 import { UUIDV4 } from 'sequelize';
-import { BaseModel, FormatTimestamp } from '@/app/foundation/bases/BaseModel';
+import { BaseModel, FormatTimestamp } from '@/app/foundation/Bases/BaseModel';
 
 const { STRING } = DataType;
 

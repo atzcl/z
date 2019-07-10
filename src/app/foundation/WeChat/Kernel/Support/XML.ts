@@ -28,6 +28,23 @@ export class XML {
   /**
    * 判断是否为 xml 格式
    *
+   * @see https://developer.mozilla.org/zh-CN/docs/Web/API/DOMParser
+   *
+   * @param {string} str
+   */
+  static parserCheck(str: string) {
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(str, 'text/xml');
+
+    // @see https://developer.mozilla.org/zh-CN/docs/Web/API/DOMParser#%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86
+    const error = xmlDoc.getElementsByTagName('parsererror');
+
+    return error.length > 0;
+  }
+
+  /**
+   * 判断是否为 xml 格式
+   *
    * @param {string} str
    */
   static check(str: string) {

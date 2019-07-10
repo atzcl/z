@@ -7,7 +7,7 @@
 */
 
 import { controller, provide, inject, get, post, put, del } from 'midway';
-import { Controller } from '@/app/foundation/bases/BaseController';
+import { Controller } from '@/app/foundation/Bases/BaseController';
 
 @provide()
 @controller('/<%= routerName %>')
