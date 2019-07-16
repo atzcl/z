@@ -19,7 +19,7 @@ const typeormConfig = {
   password: dbConfig.password,
   database: dbConfig.database,
   timezone: dbConfig.timezone,
-  logging: dbConfig.logging,
+  logging: true,
   charset: 'UTF8MB4_UNICODE_CI',
   entities: ['src/app/modules/**/Models/*{.ts,.js}'],
   migrations: ['src/app/modules/**/Migrations/*{.ts,.js}'],
