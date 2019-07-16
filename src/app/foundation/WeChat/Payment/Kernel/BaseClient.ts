@@ -6,15 +6,19 @@
 |
 */
 
-import { BaseRequest, IWeChatRequestOptions } from '../../Kernel/Request';
-import { uniqId, md5, sha256, toQueryString, buildXML, parseXML } from '../../Kernel/Utils';
-import { IConfig } from '../Application';
-import { PaymentApplication } from '../Payment';
-import { Client as SandboxClient } from '../Sandbox/Client';
 import { RequestOptions } from 'urllib';
 import * as fs from 'fs-extra';
 
-interface IResponse {
+import { BaseRequest, WeChatRequestOptions } from '../../Kernel/Request';
+import {
+  uniqId, md5, sha256, toQueryString, buildXML, parseXML,
+} from '../../Kernel/Utils';
+import { ConfigOptions } from '../Application';
+import { PaymentApplication } from '../Payment';
+import { Client as SandboxClient } from '../Sandbox/Client';
+
+
+interface Response {
   return_code: string;
   return_msg: string;
   result_code: string;
@@ -25,11 +29,11 @@ export class BaseClient extends BaseRequest {
   /**
    * 微信 api 基础 url 前缀
    */
-  baseUri: string;
+  baseUri: string | undefined;
 
   app: PaymentApplication;
 
-  constructor(options: IWeChatRequestOptions) {
+  constructor(options: WeChatRequestOptions) {
     super(options);
 
     const sandbox = new SandboxClient(this);
@@ -41,6 +45,7 @@ export class BaseClient extends BaseRequest {
     return {};
   }
 
+  // eslint-disable-next-line max-params
   async request(
     endpoint: string,
     params: any = {},
@@ -48,7 +53,7 @@ export class BaseClient extends BaseRequest {
     options: any = {},
     isUseCert?: false,
   ): Promise<any> {
-    const config: IConfig = this.config.payment;
+    const config: ConfigOptions = this.config.payment;
 
     // 获取密钥
     const secretKey = await this.app.getKey(endpoint);
@@ -108,12 +113,12 @@ export class BaseClient extends BaseRequest {
   /**
    * 解析请求响应回来的数据，判断是否存在异常
    */
-  private async handleResponse(response: { status: number, data: string }) {
+  private async handleResponse(response: { status: number, data: string, }) {
     if (response.status !== 200) {
       this.abort(500, '请求异常');
     }
 
-    const result = (await parseXML(response.data)) as IResponse;
+    const result = (await parseXML(response.data)) as Response;
     if (result.return_code === 'FAIL') {
       this.abort(500, `${result.return_msg}`);
     }

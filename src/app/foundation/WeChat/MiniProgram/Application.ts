@@ -6,24 +6,27 @@
 |
 */
 
-import { BaseApplication, IWeChatRequestAndAccessTokenOptions } from '../Kernel/BaseApplication';
-import { IWeChatRequestOptions } from '../Kernel/Request';
+import { BaseApplication, WeChatRequestAndAccessTokenOptions } from '../Kernel/BaseApplication';
+import { WeChatRequestOptions } from '../Kernel/Request';
 
 import { AccessToken } from './Auth/AccessToken';
 import { Client as AuthClient } from './Auth/Client';
 import { Client as AppCodeClient } from './AppCode/Client';
 import { Encryptor } from './Encryptor';
 
-export class MiniProgramApplication extends BaseApplication {
-  auth: AuthClient;
-  encryptor: Encryptor;
-  appCode: AppCodeClient;
 
-  constructor(options: IWeChatRequestOptions) {
+export class MiniProgramApplication extends BaseApplication {
+  auth!: AuthClient;
+
+  encryptor!: Encryptor;
+
+  appCode!: AppCodeClient;
+
+  constructor(options: WeChatRequestOptions) {
     super(options, new AccessToken(options));
   }
 
-  protected async init(appOptions: IWeChatRequestAndAccessTokenOptions) {
+  protected async init(appOptions: WeChatRequestAndAccessTokenOptions) {
     this.auth = new AuthClient(appOptions);
     this.encryptor = new Encryptor();
     this.appCode = new AppCodeClient(appOptions);

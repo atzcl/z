@@ -8,6 +8,7 @@
 
 import { XML } from '../Support/XML';
 
+
 export enum MessageEnum {
   All = 'all',
   TEXT = 'text',
@@ -27,22 +28,22 @@ export enum MessageEnum {
 }
 
 export type MessageMediaType = 'video' | 'voice'
-  | 'textcard' | 'shortvideo' | 'news' | 'music'
-  | 'miniprogrampage' | 'media_id' | 'image';
+| 'textcard' | 'shortvideo' | 'news' | 'music'
+| 'miniprogrampage' | 'media_id' | 'image';
 
 export type MessageAllType = 'text' | 'location' | 'link'
-  | 'file' | 'device_text' | 'device_event' | 'wxcard' | 'mpnews' | MessageMediaType;
+| 'file' | 'device_text' | 'device_event' | 'wxcard' | 'mpnews' | MessageMediaType;
 
 export class Message {
   protected attributes: any = {};
 
-  protected type: MessageAllType;
+  protected type: MessageAllType | undefined;
 
-  protected id: number;
+  protected id: number | undefined;
 
-  protected to: string;
+  protected to: string | undefined;
 
-  protected from: string;
+  protected from: string | undefined;
 
   protected properties: unknown;
 

@@ -8,9 +8,10 @@
 
 import { EggAppConfig } from 'midway';
 import Helper from '@app/extend/helper';
-import CacheManager from '@/app/foundation/support/cache';
+import { Cache } from '@app/foundation/Support/Cache';
 
-interface IJwt {
+
+interface JWTInstance {
   /**
    *
    * @param payload datas. datas to be signed
@@ -39,18 +40,20 @@ interface IJwt {
   ): string;
 }
 
-export default class JwtManager {
+export class JWT {
   // 储存到缓存的前缀
   private cachePrefix: string = 'jwt.';
 
   // jwt 实例
-  private jwtInstance: IJwt;
+  private jwtInstance: JWTInstance;
+
   // jwt 配置
   private jwtConfig: EggAppConfig['jwt'];
-  // 缓存实例
-  private cacheInstance: CacheManager;
 
-  constructor(jwt: IJwt, config: EggAppConfig['jwt'], cache: CacheManager) {
+  // 缓存实例
+  private cacheInstance: Cache;
+
+  constructor(jwt: JWTInstance, config: EggAppConfig['jwt'], cache: Cache) {
     this.cacheInstance = cache;
     this.jwtInstance = jwt;
     this.jwtConfig = config;
@@ -108,7 +111,7 @@ export default class JwtManager {
    *
    * @returns {string}
    */
-  public async create(data: any): Promise<string> {
+  async create(data: any): Promise<string> {
     return this.jwtInstance.sign({ customClaims: data }, this.secret, {
       expiresIn: this.ttl, // token 过期时间, 单位: 小时
     });
@@ -119,7 +122,7 @@ export default class JwtManager {
    *
    * @param token
    */
-  public async verify(token: string) {
+  async verify(token: string) {
     // 获取解密成功的数据
     const result = await this.jwtInstance.verify(token, this.secret, {
       clockTolerance: 30, // 检查 nbf (token 最早可用时间) 和 exp (token 过期时间) 声明时容忍的秒数，以处理不同服务器之间的小时钟差异
@@ -138,7 +141,7 @@ export default class JwtManager {
    *
    * @param {string} $token JWT token
    */
-  public async getCustomClaims(token: string) {
+  async getCustomClaims(token: string) {
     const jwtData: any = await this.verify(token);
 
     return jwtData.customClaims;
@@ -149,7 +152,7 @@ export default class JwtManager {
    *
    * @param {string} $token JWT token
    */
-  public async blackToken (token: string) {
+  async blackToken(token: string) {
     // 解密 token
     const jwtData: any = await this.verify(token);
 
@@ -176,7 +179,7 @@ export default class JwtManager {
    *
    * @param {string} $token JWT token
    */
-  public async verifyBlack (token: string): Promise<boolean> {
+  async verifyBlack(token: string): Promise<boolean> {
     // 使用 MD5 加密下，防止 key 过长
     const key = Helper.generateMD5(token);
 
@@ -189,7 +192,7 @@ export default class JwtManager {
    *
    * @param {string} $token JWT token
    */
-  public async refresh (token: string) {
+  async refresh(token: string) {
     // 先验证该 token 是否有效
     try {
       await this.verify(token);

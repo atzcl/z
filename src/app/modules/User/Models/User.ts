@@ -8,7 +8,9 @@
 
 import { DataType, Table, Column } from 'sequelize-typescript';
 import Helper from '@app/extend/helper';
+
 import { BaseModel } from '@/app/foundation/Bases/Model/BaseModel';
+
 
 const { STRING } = DataType;
 
@@ -17,61 +19,62 @@ const { STRING } = DataType;
 })
 export class UserModel extends BaseModel<UserModel> {
   @Column({ type: STRING, primaryKey: true, unique: true })
-  id: string;
+  id!: string;
 
   @Column({ unique: true, allowNull: true })
-  username: string;
+  username!: string;
 
   @Column({ unique: true, allowNull: true })
-  email: string;
+  email!: string;
 
   @Column({ unique: true, allowNull: true })
-  phone: string;
+  phone!: string;
 
   @Column
   get password(): string {
     return this.getDataValue('password');
   }
+
   set password(value: string) {
     this.setDataValue('password', Helper.createBcrypt(value));
   }
 
   @Column({ allowNull: true })
-  name: string;
+  name!: string;
 
   @Column({ allowNull: true })
-  nickname: string;
+  nickname!: string;
 
   @Column({ allowNull: true })
-  avatar: string;
+  avatar!: string;
 
   @Column({ allowNull: true })
-  bio: string;
+  bio!: string;
 
   @Column({ defaultValue: 0 })
-  sex: number;
+  sex!: number;
 
   @Column({ allowNull: true })
-  location: string;
+  location!: string;
 
   @Column({ allowNull: true })
-  birthdate: string;
+  birthdate!: string;
 
   @Column({ allowNull: true })
-  emailVerifiedAt: string;
+  emailVerifiedAt!: string;
 
   @Column({ allowNull: true })
-  phoneVerifiedAt: string;
+  phoneVerifiedAt!: string;
 
   @Column({ allowNull: true })
-  userLevelId: number;
+  userLevelId!: number;
 
   @Column({ allowNull: true })
-  status: number;
+  status!: number;
 
   @Column({ allowNull: true })
-  onlineStatus: number;
+  onlineStatus!: number;
 
   @Column({ allowNull: true })
-  userToken: string;
+  userToken!: string;
 }

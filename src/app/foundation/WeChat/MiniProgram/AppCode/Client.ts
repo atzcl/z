@@ -11,10 +11,10 @@ import BaseClient from '../../Kernel/BaseClient';
 /**
  * @see https://developers.weixin.qq.com/miniprogram/dev/api-backend/getWXACodeUnlimit.html
  */
-interface IOptional {
+interface Optional {
   width?: number;
   auto_color?: boolean;
-  line_color?: { r: number, g: number, b: number };
+  line_color?: { r: number, g: number, b: number, };
   is_hyaline?: boolean;
 }
 
@@ -23,11 +23,11 @@ export class Client extends BaseClient {
    * 获取小程序码，适用于需要的码数量较少的业务场景
    *
    * @param {string} path
-   * @param {IOptional}  optional
+   * @param {Optional}  optional
    *
    * @return {Buffer}
    */
-  async get(path: string, optional: IOptional = {}): Promise<Buffer> {
+  async get(path: string, optional: Optional = {}): Promise<Buffer> {
     const result = await this.httpPost('wxa/getwxacode', { path, ...optional });
 
     return result;
@@ -43,7 +43,7 @@ export class Client extends BaseClient {
    *
    * @return {Buffer}
    */
-  async getUnlimit(scene: string, optional: IOptional & { page?: string } = {}): Promise<Buffer> {
+  async getUnlimit(scene: string, optional: Optional & { page?: string, } = {}): Promise<Buffer> {
     const result = await this.httpPost('wxa/getwxacodeunlimit', { scene, ...optional });
 
     return result;
@@ -70,7 +70,7 @@ export class Client extends BaseClient {
    *
    * @param {any} result 请求返回
    */
-  async hasError(result: { headers: any, data: any }) {
+  async hasError(result: { headers: any, data: any, }) {
     const contentType = result.headers['content-type'];
 
     if (! contentType.includes('image')) {

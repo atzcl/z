@@ -1,4 +1,4 @@
-interface IOptions {
+interface ParserOptions {
   isUseHidden: boolean;
   tempHidden?: string[];
   hidden: string[];
@@ -9,40 +9,6 @@ interface IOptions {
 
 // 判断是否为空
 export const isEmpty = (value: any) => value === null || value === undefined;
-
-/**
- * 包装查询结果
- *
- * @param mixed $result
- *
- * @return mixed
- */
-export const parserResult = (modelResult: any, options: IOptions) => {
-  /**
-   * @desc 当结果是数组的时候，那么默认是更新操作后的结果, 而更新的成功返回都是影响条数的数组
-   */
-  if (! modelResult || typeof modelResult !== 'object' || Array.isArray(modelResult)) {
-    return modelResult;
-  }
-
-  // 获取查询值
-  let dataValues = modelResult.dataValues || modelResult;
-
-  // 处理 visible
-  if (options.isUseVisible) {
-    dataValues = makeHiddenColumn(dataValues, options.tempVisible || options.visible);
-  }
-
-  // 处理 hidden
-  if (options.isUseHidden) {
-    dataValues = makeVisibleColumn(dataValues, options.tempHidden || options.hidden);
-  }
-
-  // 重新赋值
-  modelResult.dataValues = dataValues;
-
-  return modelResult;
-};
 
 /**
  * 传入查询结果，过滤指定字段值
@@ -61,7 +27,7 @@ export const makeHiddenColumn = (dataValues: object, columns: string[] = []) => 
   // 当前先处理一层吧，后面有需求再拓展
   for (let i = 0; i < columns.length; i++) {
     const column = columns[i];
-    if (dataValues.hasOwnProperty(column)) {
+    if (Object.prototype.hasOwnProperty.call(dataValues, 'column')) {
       delete (dataValues as any)[column];
     }
   }
@@ -93,4 +59,38 @@ export const makeVisibleColumn = (dataValues: object, columns: string[] = []) =>
   }
 
   return dataValues;
+};
+
+/**
+ * 包装查询结果
+ *
+ * @param mixed $result
+ *
+ * @return mixed
+ */
+export const parserResult = (modelResult: any, options: ParserOptions) => {
+  /**
+   * @desc 当结果是数组的时候，那么默认是更新操作后的结果, 而更新的成功返回都是影响条数的数组
+   */
+  if (! modelResult || typeof modelResult !== 'object' || Array.isArray(modelResult)) {
+    return modelResult;
+  }
+
+  // 获取查询值
+  let dataValues = modelResult.dataValues || modelResult;
+
+  // 处理 visible
+  if (options.isUseVisible) {
+    dataValues = makeHiddenColumn(dataValues, options.tempVisible || options.visible);
+  }
+
+  // 处理 hidden
+  if (options.isUseHidden) {
+    dataValues = makeVisibleColumn(dataValues, options.tempHidden || options.hidden);
+  }
+
+  // 重新赋值
+  modelResult.dataValues = dataValues;
+
+  return modelResult;
 };

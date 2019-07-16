@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+
 /*
 +-----------------------------------------------------------------------------------------------------------------------
 | Author: atzcl <atzcl0310@gmail.com>  https://github.com/atzcl
@@ -6,8 +8,10 @@
 |
 */
 
-const tsConfig = require('./tsconfig.json');
 const tsConfigPaths = require('tsconfig-paths');
+
+const tsConfig = require('./tsconfig.json');
+
 
 const { outDir, baseUrl, paths } = tsConfig.compilerOptions;
 

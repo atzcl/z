@@ -6,12 +6,12 @@
 |
 */
 
-export interface IConfig {
+export interface ConfigOptions {
   appPath: string;
   modulePath: string;
   templateRootPath: string;
 }
 
 let commandConfig: any = {};
-export const getCommandConfig = (): IConfig => commandConfig;
+export const getCommandConfig = (): ConfigOptions => commandConfig;
 export const setCommandConfig = (config: any) => commandConfig = config;

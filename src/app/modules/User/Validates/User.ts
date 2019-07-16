@@ -7,13 +7,14 @@
 */
 
 import { Context, provide, inject } from 'midway';
-import { IValidationInterface } from '@app/interfaces/Validation.interface';
+
+import { ValidationInterface } from '@/app/interfaces/Validation';
 import PhoneRule from '@/app/rules/Phone';
 
 @provide()
-export class UserLoginValidate implements IValidationInterface {
+export class UserLoginValidate implements ValidationInterface {
   @inject()
-  ctx: Context;
+  ctx!: Context;
 
   /**
    * 验证规则
@@ -39,12 +40,12 @@ export class UserLoginValidate implements IValidationInterface {
         };
         break;
       case 'phone':
-      rules.phone = {
+        rules.phone = {
           required: true,
           type: 'string',
           ...PhoneRule,
         };
-      break;
+        break;
       default:
         rules.username = {
           required: true,

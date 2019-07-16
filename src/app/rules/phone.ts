@@ -1,3 +1,5 @@
+/* eslint-disable max-params */
+
 export default {
   validator(rule: any, value: any, callback: (message?: string) => void, source: any, options: any) {
     // 验证手机号码

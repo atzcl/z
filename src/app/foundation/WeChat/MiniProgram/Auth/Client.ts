@@ -12,7 +12,7 @@ import BaseClient from '../../Kernel/BaseClient';
  * @see https://developers.weixin.qq.com/miniprogram/dev/api-backend/auth.code2Session.html
  */
 
-interface IResponseResult {
+interface ResponseResult {
   session_key: string;
   openid: string;
   unionid?: string;
@@ -26,9 +26,9 @@ export class Client extends BaseClient {
    *
    * @param {string} code js code
    *
-   * @returns {IResponseResult}
+   * @returns {ResponseResult}
    */
-  async session(code: string): Promise<IResponseResult> {
+  async session(code: string): Promise<ResponseResult> {
     const params = {
       appid: this.config.mini_program.app_id,
       secret: this.config.mini_program.secret,

@@ -12,6 +12,7 @@ import {
 import Helper from '@app/extend/helper';
 import { BaseModel, FormatTimestamp } from '@app/foundation/Bases/Model/BaseModel';
 
+
 const { STRING } = DataType;
 
 @Table({
@@ -21,80 +22,79 @@ export class UserAdminModel extends BaseModel<UserAdminModel> {
   /**
    * @param {string[]} 输出数据时，隐藏字段数组 [ 黑名单 ]
    */
-  static hidden = [
-    'password',
-  ];
+  static hidden = ['password'];
 
   @Column
   get password(): string {
     return this.getDataValue('password');
   }
+
   set password(value: string) {
     this.setDataValue('password', Helper.createBcrypt(value));
   }
 
   @Column({ type: STRING, primaryKey: true, unique: true })
-  id: string;
+  id!: string;
 
   @Column({ unique: true, allowNull: true })
-  username: string;
+  username!: string;
 
   @Column({ unique: true, allowNull: true })
-  email: string;
+  email!: string;
 
   @Column({ unique: true, allowNull: true })
-  phone: string;
+  phone!: string;
 
   @Column({ allowNull: true })
-  name: string;
+  name!: string;
 
   @Column({ allowNull: true })
-  nickname: string;
+  nickname!: string;
 
   @Column({ allowNull: true })
-  avatar: string;
+  avatar!: string;
 
   @Column({ allowNull: true })
-  bio: string;
+  bio!: string;
 
   @Column({ defaultValue: 0 })
-  sex: number;
+  sex!: number;
 
   @Column({ allowNull: true })
-  location: string;
+  location!: string;
 
   @Column({ allowNull: true })
-  birthdate: string;
+  birthdate!: string;
 
   @Column({ allowNull: true })
-  emailVerifiedAt: string;
+  emailVerifiedAt!: string;
 
   @Column({ allowNull: true })
-  phoneVerifiedAt: string;
+  phoneVerifiedAt!: string;
 
   @Column({ allowNull: true })
-  userLevelId: number;
+  userLevelId!: number;
 
   @Column({ allowNull: true })
-  status: number;
+  status!: number;
 
   @Column({ allowNull: true })
-  onlineStatus: number;
+  onlineStatus!: number;
 
   @Column({ allowNull: true })
-  userToken: string;
+  userToken!: string;
 
   @CreatedAt
   @FormatTimestamp
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdatedAt
   @FormatTimestamp
-  updatedAt: Date;
+  updatedAt!: Date;
 
   @DeletedAt
   @FormatTimestamp
-  deletedAt: Date;
+  deletedAt!: Date;
 
   /**
    * 用 id 查询指定用户信息
@@ -103,7 +103,7 @@ export class UserAdminModel extends BaseModel<UserAdminModel> {
    */
   static async getUserById(id: string) {
     return this.where({ id })
-      .field([ 'id', 'avatar', 'sex', 'phone', 'name', 'username' ])
+      .field(['id', 'avatar', 'sex', 'phone', 'name', 'username'])
       ._findOne();
   }
 }

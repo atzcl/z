@@ -8,6 +8,7 @@
 
 import { customizeConfig } from './src/config/config.default';
 
+
 const dbConfig = customizeConfig.sequelize;
 
 const typeormConfig = {
@@ -16,12 +17,12 @@ const typeormConfig = {
   port: dbConfig.port,
   username: dbConfig.username,
   password: dbConfig.password,
-  database:  dbConfig.database,
+  database: dbConfig.database,
   timezone: dbConfig.timezone,
   logging: dbConfig.logging,
   charset: 'UTF8MB4_UNICODE_CI',
-  entities: [ 'src/app/modules/**/Models/*{.ts,.js}' ],
-  migrations: [ 'src/app/modules/**/Migrations/*{.ts,.js}' ],
+  entities: ['src/app/modules/**/Models/*{.ts,.js}'],
+  migrations: ['src/app/modules/**/Migrations/*{.ts,.js}'],
   cli: {
     migrationsDir: 'src/migration',
   },

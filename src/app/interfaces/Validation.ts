@@ -8,7 +8,8 @@
 
 import { Context } from 'midway';
 
-export interface IValidationInterface {
+
+export interface ValidationInterface {
   /**
    * 验证规则
    *

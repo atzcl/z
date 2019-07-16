@@ -8,6 +8,7 @@
 
 import { Message } from './Message';
 
+
 export class Text extends Message {
   type = 'text' as 'text';
 

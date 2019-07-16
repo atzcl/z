@@ -6,10 +6,11 @@
 |
 */
 
-import { controller, provide, post, get, Context } from 'midway';
-import { Upload } from '@/app/foundation/Support/Upload';
 import * as path from 'path';
+
+import { controller, provide, post, get, Context } from 'midway';
 import * as fs from 'fs-extra';
+import { Upload } from '@app/foundation/Support/Upload';
 
 @provide()
 @controller('/resources')
@@ -21,7 +22,7 @@ export class ManageResourceController {
   async image(ctx: Context) {
     ctx.body = await (new Upload(ctx))
       .setMaxSize(1)
-      .setWhiteList([ ...ctx.app.config.myApp.uploadImageWhiteList ])
+      .setWhiteList([...ctx.app.config.myApp.uploadImageWhiteList])
       .handle('images');
   }
 

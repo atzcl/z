@@ -7,11 +7,10 @@
 */
 
 import { provide } from 'midway';
+
 import { Service } from '@/app/foundation/Bases/BaseService';
 import { Text } from '@/app/foundation/WeChat/Kernel/Messages/Text';
-import {
-  WeChatMessageEvent, WeChatMessageSubject,
-} from '@/app/foundation/WeChat/OfficialAccount/Server/interceptors';
+import { WeChatMessageEvent, WeChatMessageSubject } from '@/app/foundation/WeChat/OfficialAccount/Server/Interceptors';
 
 // 在容器的 id 名称
 export const SERVICE_PROVIDE = 'weChatMessageService';
@@ -27,10 +26,11 @@ export class WeChatMessageService extends Service {
    */
   async handleAllMessage(message: WeChatMessageSubject) {
     switch (message.MsgType.toLowerCase()) {
-      case 'event':
+      case 'event': {
         const { Event, EventKey } = message as WeChatMessageEvent;
 
         return this.handleEvent(Event, EventKey);
+      }
       case 'text':
         return this.sendTextMessage('收到文字消息');
       case 'image':
@@ -54,11 +54,11 @@ export class WeChatMessageService extends Service {
    *
    * @returns {void}
    */
-  async handleEvent (event: string, eventKey?: string) {
+  async handleEvent(event: string, eventKey?: string) {
     // 判断事件类型 // 转化为小写
     switch (event.toLowerCase()) {
       case 'subscribe':
-        if (eventKey.toLowerCase()) {
+        if (eventKey && eventKey.toLowerCase()) {
           return this.sendTextMessage('扫描带参数二维码的订阅');
         }
 
@@ -80,7 +80,7 @@ export class WeChatMessageService extends Service {
    *
    * @param {string} content 消息内容
    */
-  async sendTextMessage (content: string) {
+  async sendTextMessage(content: string) {
     return new Text(content);
   }
 }

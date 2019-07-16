@@ -7,14 +7,15 @@
 */
 
 import { AccessToken } from './AccessToken';
-import { IWeChatRequestOptions } from './Request';
+import { WeChatRequestOptions } from './Request';
 
-export type IWeChatRequestAndAccessTokenOptions = IWeChatRequestOptions & { accessToken: AccessToken };
+
+export type WeChatRequestAndAccessTokenOptions = WeChatRequestOptions & { accessToken: AccessToken, };
 
 export class BaseApplication {
   accessToken: AccessToken;
 
-  constructor(options: IWeChatRequestOptions, accessTokenInstance: AccessToken) {
+  constructor(options: WeChatRequestOptions, accessTokenInstance: AccessToken) {
     // 挂载 access_token
     this.accessToken = accessTokenInstance;
 
@@ -27,7 +28,8 @@ export class BaseApplication {
     this.init(appOptions);
   }
 
-  protected async init(options: IWeChatRequestAndAccessTokenOptions) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  protected async init(options: WeChatRequestAndAccessTokenOptions) {
     //
   }
 }

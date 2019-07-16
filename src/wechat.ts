@@ -9,7 +9,8 @@
 import {
   provide, init, plugin, config, scope, ScopeEnum, EggLogger, EggAppConfig, Application,
 } from 'midway';
-import CacheManager from '@/app/foundation/support/cache';
+
+import { Cache as CacheClient } from '@/app/foundation/support/cache';
 import { MiniProgramApplication } from '@/app/foundation/WeChat/MiniProgram/Application';
 import { PaymentApplication } from '@/app/foundation/WeChat/Payment/Application';
 import { OfficialAccountApplication } from '@/app/foundation/WeChat/OfficialAccount/Application';
@@ -18,29 +19,32 @@ import { OfficialAccountApplication } from '@/app/foundation/WeChat/OfficialAcco
 @provide('wechat')
 export class WeChat {
   @plugin('logger')
-  logger: EggLogger;
+  logger!: EggLogger;
 
   @config('wechat')
-  config: EggAppConfig['wechat'];
+  config!: EggAppConfig['wechat'];
 
   @plugin('redis')
   redis: Application['redis'];
 
   // 公众号实例
-  officialAccount: OfficialAccountApplication;
+  // 公众号实例
+  officialAccount!: OfficialAccountApplication;
 
   // 小程序实例
-  miniProgram: MiniProgramApplication;
+  // 小程序实例
+  miniProgram!: MiniProgramApplication;
 
   // 支付实例
-  payment: PaymentApplication;
+  // 支付实例
+  payment!: PaymentApplication;
 
   @init()
   connect() {
     const options = {
       config: this.config,
       logger: this.logger,
-      cache: new CacheManager(this.redis, 'atzcl'),
+      cache: new CacheClient(this.redis, 'atzcl'),
     };
 
     // 公众号

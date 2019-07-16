@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 /*
 +-----------------------------------------------------------------------------------------------------------------------
 | Author: atzcl <atzcl0310@gmail.com>  https://github.com/atzcl
@@ -14,26 +15,31 @@ import {
   plural,
 } from '@my_console/utils';
 
+
 const MAKE_TYPE = 'migration';
 const MAKE_TYPE_DIR = 'migrations';
 const MAKE_TYPE_NAME = '数据库迁移';
 const MAKE_TYPE_EXTNAME = 'ts';
 
 export default class CreateMigrationCommand implements yargs.CommandModule {
-  command = `make:${MAKE_TYPE}`; // 定义的命令
-  describe = `生成${MAKE_TYPE_NAME}`; // 说明
+  command = `make:${MAKE_TYPE}`;
+
+  // 定义的命令
+  describe = `生成${MAKE_TYPE_NAME}`;
+
+  // 说明
   aliases = 'mi'; // 别名
 
   // 给当前命令添加额外的设置
   builder(args: yargs.Argv) {
     return args
       .option('name', {
-          alias: 'n',
-          describe: `${MAKE_TYPE_NAME}名称`,
+        alias: 'n',
+        describe: `${MAKE_TYPE_NAME}名称`,
       })
       .option('module', {
-          alias: 'm',
-          describe: '所在的模块',
+        alias: 'm',
+        describe: '所在的模块',
       });
   }
 
@@ -56,7 +62,7 @@ export default class CreateMigrationCommand implements yargs.CommandModule {
     const currentFilePath = resolve(currentModulePath, `${MAKE_TYPE_DIR}/${name}.${MAKE_TYPE_EXTNAME}`);
 
     if (! fs.existsSync(currentModulePath)) {
-      abort(`当前模块不存在，请先创建对应模块`);
+      abort('当前模块不存在，请先创建对应模块');
     }
 
     // 毫秒时间戳
@@ -84,8 +90,13 @@ export default class CreateMigrationCommand implements yargs.CommandModule {
  * @param {string} templateRootPath // 生成文件对应的模板路径
  */
 export const createControllerHandler = (
-  millisecondUnix: number, moduleName: string, fileName: string, filePath: string, templateRootPath: string,
-  ) => {
+  millisecondUnix: number,
+  moduleName: string,
+  fileName: string,
+  filePath: string,
+  templateRootPath: string,
+// eslint-disable-next-line max-params
+) => {
   // 转换为大驼峰
   // todo: 因为当前框架尚没有对重命名的类进行相关处理，所以这里加上模块名称来尽可能地避免
   const studlyCaseName = studlyCase(`${moduleName}-${fileName}${millisecondUnix}`);
@@ -98,12 +109,12 @@ export const createControllerHandler = (
   const templateString = fs.readFileSync(resolve(templateRootPath, MAKE_TYPE)).toString();
   // 生成真实文件
   fs.outputFile(
-      filePath,
-      templateCompile(
-        templateString,
-        { name: studlyCaseName, routerName: pluralName, camelCaseName: camelCase(fullStudlyCaseName) },
-      ),
-    )
-      .then(() => makeFileSuccess(fullStudlyCaseName))
-      .catch(() => abort('创建文件失败'));
+    filePath,
+    templateCompile(
+      templateString,
+      { name: studlyCaseName, routerName: pluralName, camelCaseName: camelCase(fullStudlyCaseName) },
+    ),
+  )
+    .then(() => makeFileSuccess(fullStudlyCaseName))
+    .catch(() => abort('创建文件失败'));
 };

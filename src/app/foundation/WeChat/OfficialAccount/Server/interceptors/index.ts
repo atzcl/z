@@ -1,5 +1,3 @@
-// tslint:disable:interface-name
-
 // 请求消息基本属性(以下所有消息都有的基本属性)
 export interface WeChatMessageSubject {
   ToUserName: string; // 接收方帐号（该公众号 ID）

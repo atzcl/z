@@ -7,11 +7,13 @@
 */
 
 import * as fs from 'fs-extra';
+
 import BaseClient from '../../Kernel/BaseClient';
 import { MaterialException } from '../../Kernel/Exceptions/MaterialException';
 
+
 export class Client extends BaseClient {
-  protected allowTypes = [ 'image', 'voice', 'video', 'thumb', 'news_image' ];
+  protected allowTypes = ['image', 'voice', 'video', 'thumb', 'news_image'];
 
   /**
    * 上传图片

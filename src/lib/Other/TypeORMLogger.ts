@@ -13,7 +13,7 @@ import { Logger, QueryRunner } from 'typeorm';
 @provide('typeORMLogger')
 export class TypeORMLogger implements Logger {
   @plugin('logger')
-  logger: EggLogger;
+  logger!: EggLogger;
 
   logQuery(query: string, parameters?: any[], queryRunner?: QueryRunner) {
     console.log(this.logger);

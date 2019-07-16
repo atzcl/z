@@ -1,4 +1,5 @@
 import { EggAppConfig, PowerPartial } from 'midway';
+
 import { uploadImageWhiteList, uploadTextWhiteList, uploadVideoWhiteList } from './upload.config';
 
 // for config.{env}.ts
@@ -18,9 +19,7 @@ export const staticUrls = {
 // 自定义配置/未提供 .d.ts 文件的拓展配置
 export const customizeConfig = {
   // 中间件配置
-  middleware: [
-    'handleException',
-  ],
+  middleware: ['handleException'],
 
   // redis 配置 [ 后面如果需要对某一业务进行缓存的时候，可以开启多实例来进行特定储存 ]
   redis: {
@@ -47,8 +46,8 @@ export const customizeConfig = {
     port: '3306', // 数据库端口
     username: 'root', // 用户名
     password: 'your', // 密码
-    // 禁用日志; 默认值: console.log
-    logging: false,
+    // 禁/使用日志; 默认值: console.log
+    logging: console.log,
     // 链接数据库时的可选参数
     dialectOptions: {
       charset: 'utf8mb4', // 字符集
@@ -69,10 +68,8 @@ export const customizeConfig = {
 
   // egg-socket.io 配置
   io: {
-    init: {
-      init: {
-        wsEngine: 'uws', // 使用 uws 来代替默认的 us
-      },
+    iinit: {
+      wsEngine: 'uws', // 使用 uws 来代替默认的 us
     },
     namespace: {
       '/': {
@@ -100,7 +97,7 @@ export const customizeConfig = {
     match: '/jwt', // 白名单
 
     // jwt 额外配置, 我自己拓展的
-    extras : {
+    extras: {
       ttl: 2 * 7 * 24, // token 过期时间,单位: 小时
       refresh_ttl: 4 * 7 * 24, // token 可刷新的时间 [失效时间] 单位: 小时
       // iss: 'atzcl', // 令牌的签发者
@@ -147,7 +144,6 @@ export const customizeConfig = {
       },
     },
 
-    modulesList: [ 'admin', 'user', 'wechat' ], // 当前挂载的模块列表
     uploadImageWhiteList,
     uploadTextWhiteList,
     uploadVideoWhiteList,
@@ -217,9 +213,7 @@ export const customizeConfig = {
   multipart: {
     fileSize: '500mb',
     // 添加到 whilelist 中
-    fileExtensions: [
-      '.apk',
-    ],
+    fileExtensions: ['.apk'],
     /**
      * @description 因为 egg 的 multipart 配置是在应用启动的时候就加载到 egg-multipart 插件的，并且判断格式的方法也是在这时加载到进程中。
      *              所以如果想要在业务代码里面动态限制上传的文件的话，那么只有两种方式可以做到:
@@ -227,7 +221,7 @@ export const customizeConfig = {
      *                 但是这样会有一点浪费，毕竟需要验证两次，并且还需要把所有需要上传的文件格式都硬编码到配置中
      *              2、直接把 whitelist 设置为 true, 即允许所有文件通行，然后再自行在业务代码里面做判断
      */
-    whitelist: (filename: string) => true,
+    whitelist: () => true,
     // 白名单
     // whitelist: [
     //   // images
@@ -265,8 +259,7 @@ export default (appInfo: EggAppConfig) => {
   config.keys = appInfo.name + '_1548739885768_3791';
 
   // add your config here
-  config.middleware = [
-  ];
+  config.middleware = [];
 
   config.baseDir = appInfo.baseDir;
 

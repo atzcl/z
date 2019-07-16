@@ -1,8 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
-
 import Helper from '@app/extend/helper';
 
-/* tslint:disable */
+/* eslint-disable */
 export class CreateUserAdminsData1550642892566 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<any> {

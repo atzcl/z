@@ -8,6 +8,7 @@
 
 import { AccessToken as BaseAccessToken } from '@/app/foundation/WeChat/Kernel/AccessToken';
 
+
 export class AccessToken extends BaseAccessToken {
   endpointToGetToken = 'https://api.weixin.qq.com/cgi-bin/token';
 

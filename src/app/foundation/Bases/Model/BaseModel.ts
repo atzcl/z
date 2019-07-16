@@ -6,6 +6,8 @@
 |
 */
 
+import { isObject } from 'util';
+
 import { Op } from 'sequelize';
 import { Model } from 'sequelize-typescript';
 import {
@@ -19,38 +21,39 @@ import {
   DestroyOptions,
   Includeable,
 } from 'sequelize/types/lib/model';
-import { parserResult, isEmpty } from './Utils';
 import { isString, cloneDeep, isPlainObject } from 'lodash';
+
+import { parserResult, isEmpty } from './Utils';
 
 import { FormatTimestamp } from '@/app/foundation/Decorators/Model/FormatTimestamp';
 
-export {
-  FormatTimestamp,
-};
+
+export { FormatTimestamp };
+
 const operatorTypes = {
-  'and':          Op.and,
-  'or':           Op.or,
+  and: Op.and,
+  or: Op.or,
 
-  '=':            Op.eq,
-  '<>':           Op.ne,
-  '>':            Op.gt,
-  '>=':           Op.gte,
-  '<':            Op.lt,
-  '<=':           Op.lte,
+  '=': Op.eq,
+  '<>': Op.ne,
+  '>': Op.gt,
+  '>=': Op.gte,
+  '<': Op.lt,
+  '<=': Op.lte,
 
-  'eq':           Op.eq,
-  'ne':           Op.ne,
-  'gt':           Op.gt,
-  'gte':          Op.gte,
-  'lt':           Op.lt,
-  'lte':          Op.lte,
+  eq: Op.eq,
+  ne: Op.ne,
+  gt: Op.gt,
+  gte: Op.gte,
+  lt: Op.lt,
+  lte: Op.lte,
 
-  'in':           Op.in,
-  'not in':       Op.notIn,
-  'like':         Op.like,
-  'not like':     Op.notLike,
-  'between':      Op.between,
-  'not between':  Op.notBetween,
+  in: Op.in,
+  'not in': Op.notIn,
+  like: Op.like,
+  'not like': Op.notLike,
+  between: Op.between,
+  'not between': Op.notBetween,
 };
 
 type OperatorTypeOfKeys = keyof typeof operatorTypes;
@@ -62,12 +65,9 @@ type OperatorTypeOfKeys = keyof typeof operatorTypes;
  *
  * @return {symbol}
  */
-export const getOperatorType = (type: OperatorTypeOfKeys) => {
-  return operatorTypes[type] || null;
-};
+export const getOperatorType = (type: OperatorTypeOfKeys) => operatorTypes[type] || null;
 
 export class BaseModel<T = any> extends Model<T> {
-
   // 是否使用隐藏
   static isUseHidden = false;
 
@@ -213,9 +213,9 @@ export class BaseModel<T = any> extends Model<T> {
    *
    * @param {FindOptions['include']} include
    */
-  static setInclude(include: Includeable[] | Includeable) {
+  static setInclude(include: Includeable | Includeable[]) {
     if (this.bindings.include) {
-      this.bindings.include = this.bindings.include.concat(this.bindings.include);
+      this.bindings.include = this.bindings.include.concat(include);
     }
 
     return this;
@@ -279,7 +279,7 @@ export class BaseModel<T = any> extends Model<T> {
    * @returns {this}
    */
   static orderBy(column: string, values: 'DESC' | 'ASC') {
-    this.bindings.order = [ [ column, values ] ];
+    this.bindings.order = [ [column, values] ];
 
     return this;
   }
@@ -362,11 +362,13 @@ export class BaseModel<T = any> extends Model<T> {
      */
     if (isString(column) && isString(operator) && getOperator && values && ! Array.isArray(values)) {
       return this.where({
-        [Op.or]: [{
-          [ column ]: {
-            [ getOperator ]: values,
+        [Op.or]: [
+          {
+            [column]: {
+              [getOperator]: values,
+            },
           },
-        }],
+        ],
       });
     }
 
@@ -375,7 +377,7 @@ export class BaseModel<T = any> extends Model<T> {
      */
     if (isString(column) && ! getOperator) {
       return this.where({
-        [Op.or]: [ { [ column ]: operator } ],
+        [Op.or]: [ { [column]: operator } ],
       });
     }
 
@@ -389,13 +391,13 @@ export class BaseModel<T = any> extends Model<T> {
       for (const col of column) {
         if (Array.isArray(col) && col.length === 3 && getOperatorType(col[1])) {
           // 拼接为，例： { authorId: { [Op.eq]: 12 } }
-          realQueryParams.push({ [ col[0] ]: { [ getOperatorType(col[1]) ]: col[2] } });
+          realQueryParams.push({ [col[0]]: { [getOperatorType(col[1])]: col[2] } });
         } else {
           realQueryParams.push(col);
         }
       }
 
-      return this.where({ [ Op.or ]: realQueryParams });
+      return this.where({ [Op.or]: realQueryParams });
     }
   }
 
@@ -408,8 +410,8 @@ export class BaseModel<T = any> extends Model<T> {
    */
   static whereNull(column: string) {
     return this.where({
-      [ column ]: {
-        [ Op.eq ]: null,
+      [column]: {
+        [Op.eq]: null,
       },
     });
   }
@@ -423,8 +425,8 @@ export class BaseModel<T = any> extends Model<T> {
    */
   static whereNotNull(column: string) {
     return this.where({
-      [ column ]: {
-        [ Op.ne ]: null,
+      [column]: {
+        [Op.ne]: null,
       },
     } as any);
   }
@@ -438,8 +440,8 @@ export class BaseModel<T = any> extends Model<T> {
    */
   static whereNotNullString(column: string) {
     return this.where({
-      [ column ]: {
-        [ Op.ne ]: '',
+      [column]: {
+        [Op.ne]: '',
       },
     });
   }
@@ -454,8 +456,8 @@ export class BaseModel<T = any> extends Model<T> {
    */
   static whereBetween(column: string, values: any[]) {
     return this.where({
-      [ column ]: {
-        [ Op.between ]: values,
+      [column]: {
+        [Op.between]: values,
       },
     } as any);
   }
@@ -470,8 +472,8 @@ export class BaseModel<T = any> extends Model<T> {
    */
   static whereNotBetween(column: string, values: any[]) {
     return this.where({
-      [ column ]: {
-        [ Op.notBetween ]: values,
+      [column]: {
+        [Op.notBetween]: values,
       },
     } as any);
   }
@@ -485,8 +487,8 @@ export class BaseModel<T = any> extends Model<T> {
    */
   static whereLike(column: string, values: string) {
     return this.where({
-      [ column ]: {
-        [ Op.like ]: values,
+      [column]: {
+        [Op.like]: values,
       },
     });
   }
@@ -500,8 +502,8 @@ export class BaseModel<T = any> extends Model<T> {
    */
   static whereNotLike(column: string, values: string) {
     return this.where({
-      [ column ]: {
-        [ Op.notLike ]: values,
+      [column]: {
+        [Op.notLike]: values,
       },
     });
   }
@@ -515,8 +517,8 @@ export class BaseModel<T = any> extends Model<T> {
    */
   static whereIn(column: string, values: Array<string | number>) {
     return this.where({
-      [ column ]: {
-        [ Op.in ]: values,
+      [column]: {
+        [Op.in]: values,
       },
     });
   }
@@ -530,8 +532,8 @@ export class BaseModel<T = any> extends Model<T> {
    */
   static whereNotIn(column: string, values: Array<string | number>) {
     return this.where({
-      [ column ]: {
-        [ Op.notIn ]: values,
+      [column]: {
+        [Op.notIn]: values,
       },
     });
   }
@@ -542,27 +544,31 @@ export class BaseModel<T = any> extends Model<T> {
    * @param {FindOptions} options
    */
   static resolveQueryOptions(options: any = {}): any {
-    const { where, offset, limit, order, group, include, raw, attributes } = this.bindings;
+    const {
+      where, offset, limit, order, group, include, raw, attributes,
+    } = this.bindings;
+
+    const hasOwnProperty = (property: string) => Object.prototype.hasOwnProperty.call(options, property);
 
     // 合并 where
     // 使用 Symbol 作为 object 字面量时，Symbol 为不可枚举属性
-    if (options.hasOwnProperty('where') || Reflect.ownKeys(where || {}).length) {
-      options.where = { ...(options.where || {}), ...where };
+    if (hasOwnProperty('where') || Reflect.ownKeys(where || {}).length) {
+      options.where = { ...options.where || {}, ...where };
     }
 
     // offset 偏移条件
-    if (! options.hasOwnProperty('offset') && ! isEmpty(offset)) {
+    if (! hasOwnProperty('offset') && ! isEmpty(offset)) {
       options.offset = this.offset;
     }
 
     // limit 限制条件
-    if (! options.hasOwnProperty('limit') && ! isEmpty(limit)) {
+    if (! hasOwnProperty('limit') && ! isEmpty(limit)) {
       options.limit = this.limit;
     }
 
     // order 排序条件
-    if ((options.order && Array.isArray(options.order)) || (order as string[]).length) {
-      options.order = [ ...(order as string[]),  ...(options.order || [])];
+    if (options.order && Array.isArray(options.order) || (order as string[]).length) {
+      options.order = [...(order as string[]), ...options.order || []];
     }
 
     // 分组查询
@@ -586,8 +592,8 @@ export class BaseModel<T = any> extends Model<T> {
      * @see https://demopark.github.io/sequelize-docs-Zh-CN/querying.html
      */
     if (
-      (Array.isArray(attributes) && attributes.length) ||
-      typeof attributes === 'object' && Object.keys(attributes).length
+      Array.isArray(attributes) && attributes.length
+      || isObject(attributes) && Object.keys(attributes as object).length
     ) {
       options.attributes = attributes;
     }
@@ -640,7 +646,7 @@ export class BaseModel<T = any> extends Model<T> {
     return this._executeWrapper(
       this.findAndCountAll(resolveOptions),
       resolveOptions,
-      ({ count, rows }) => ({ count, data: rows }), // 自定义成功回调, 只返回总记录数、具体的数据列表
+      ({ count, rows }) => { return { count, data: rows } }, // 自定义成功回调, 只返回总记录数、具体的数据列表
     );
   }
 
@@ -662,7 +668,7 @@ export class BaseModel<T = any> extends Model<T> {
     }
 
     // 删除可能存在的 id
-    if (values.hasOwnProperty(this.primaryKeyAttribute)) {
+    if (Object.prototype.hasOwnProperty.call(values, this.primaryKeyAttribute)) {
       delete (values as any)[this.primaryKeyAttribute as any];
     }
 
@@ -680,7 +686,7 @@ export class BaseModel<T = any> extends Model<T> {
       options.fields = this.fillable;
     }
 
-    this.useHidden([ 'updated_at', 'created_at' ]);
+    this.useHidden(['updated_at', 'created_at']);
 
     const resolveOptions = this.resolveQueryOptions(options);
 
@@ -696,7 +702,7 @@ export class BaseModel<T = any> extends Model<T> {
    * 用主键作为更新条件
    */
   static _updateById(values: object, id: string | number) {
-    return this._update(values, { where: { [ this.primaryKeyAttribute ]: id } })
+    return this._update(values, { where: { [this.primaryKeyAttribute]: id } })
       .then((res: any) => res[0] || null);
   }
 
@@ -709,7 +715,7 @@ export class BaseModel<T = any> extends Model<T> {
       this.whereIn(this.primaryKeyAttribute, id);
     } else {
       // 单个删除
-      this.where({ [ this.primaryKeyAttribute ]: id });
+      this.where({ [this.primaryKeyAttribute]: id });
     }
 
     const resolveOptions = this.resolveQueryOptions(options || {});
@@ -751,7 +757,7 @@ export class BaseModel<T = any> extends Model<T> {
             thenCallback ? thenCallback(modelResult) : modelResult,
           );
         })
-        .catch((err) => reject(err));
+        .catch(err => reject(err));
     });
   }
 }

@@ -7,8 +7,10 @@
 */
 
 import * as qs from 'qs';
+
 import { BaseRequest } from './Request';
 import { md5 } from './Utils';
+
 
 export class AccessToken extends BaseRequest {
   /**

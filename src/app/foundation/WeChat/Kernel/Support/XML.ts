@@ -7,7 +7,9 @@
 */
 
 import { isNumber, isObject } from 'util';
+
 import { parseString } from 'xml2js';
+
 
 export class XML {
   /**
@@ -21,7 +23,7 @@ export class XML {
     return new Promise((resolve, reject) => {
       const opt = { trim: true, explicitArray: false, explicitRoot: false };
 
-      parseString(xml, opt, (err, res) => err ? reject(new Error('XMLDataError')) : resolve(res || {}));
+      parseString(xml, opt, (err, res) => (err ? reject(new Error('XMLDataError')) : resolve(res || {})));
     });
   }
 
@@ -62,6 +64,7 @@ export class XML {
    *
    * @return string
    */
+  // eslint-disable-next-line max-params
   static build(data: object, root = 'xml', item = 'item', attr = '', id = 'id') {
     if (String(attr) === '[object Object]') {
       //
@@ -82,10 +85,11 @@ export class XML {
    */
   static data2Xml(data: object, item = 'item', id = 'id') {
     let xml = '';
-    let attr: string = '';
+    let attr = '';
 
-    for (const [ key, val ] of Object.entries(data)) {
+    for (const [key, val] of Object.entries(data)) {
       if (isNumber(key) && id) {
+        // eslint-disable-next-line no-useless-escape
         attr = ` ${id}=\"${key}\"`;
       }
 

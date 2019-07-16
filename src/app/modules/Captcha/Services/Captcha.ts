@@ -6,18 +6,17 @@
 |
 */
 
-import { provide, inject, Context } from 'midway';
+import { provide } from 'midway';
+import * as dayjs from 'dayjs';
+
 import { Service } from '@/app/foundation/Bases/BaseService';
 import Captcha from '@/app/foundation/Support/Captcha';
-import * as dayjs from 'dayjs';
+
 
 export const SERVICE_PROVIDE = 'captchaService';
 
 @provide(SERVICE_PROVIDE)
 export class CaptchaService extends Service {
-  @inject()
-  ctx: Context;
-
   // 验证码 token 缓存标识
   private readonly tokenCachePrefix = 'captcha:token:';
 
@@ -49,7 +48,7 @@ export class CaptchaService extends Service {
    * @param token
    */
   async getCacheCaptchaValue(token: string) {
-    return this.ctx.helper.cache.get(this.tokenCachePrefix + token, '已失效');
+    return this.ctx.app.cache.get(this.tokenCachePrefix + token, '已失效');
   }
 
   /**
@@ -72,13 +71,13 @@ export class CaptchaService extends Service {
    * @return string
    */
   async setCaptchaToken(value: string, expiredAt: number = 2) {
-    const helper = this.ctx.helper;
+    const { app, helper } = this.ctx;
 
     // 后面还可以增加毫秒时间戳来保证唯一
     const cacheTokenKey = helper.strRandom() + dayjs().valueOf();
 
     // 将验证码保存到缓存中
-    helper.cache.set(this.getFillFullCaptchaTokenKey(cacheTokenKey), value, expiredAt, 'm');
+    app.cache.set(this.getFillFullCaptchaTokenKey(cacheTokenKey), value, expiredAt, 'm');
 
     return cacheTokenKey;
   }
@@ -92,7 +91,8 @@ export class CaptchaService extends Service {
    * @throws
    */
   async checkCaptcha(token: string, value: string) {
-    const cache = this.ctx.helper.cache;
+    const { cache } = this.ctx.app;
+
     // 获取完整的 key 名称
     const fullCaptchaTokenKey = this.getFillFullCaptchaTokenKey(token);
 

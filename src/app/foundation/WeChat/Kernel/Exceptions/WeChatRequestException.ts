@@ -8,6 +8,7 @@
 
 import { BaseException } from './BaseException';
 
+
 export class WeChatRequestException extends BaseException {
   constructor(code: number, message: string) {
     super('WeChatRequestException', code, message);

@@ -8,6 +8,7 @@
 
 import { BaseException } from './BaseException';
 
+
 export class ValidationException extends BaseException {
   constructor(message: string) {
     super('ValidationException', 422, message);

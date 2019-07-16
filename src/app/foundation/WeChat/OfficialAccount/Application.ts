@@ -6,23 +6,24 @@
 |
 */
 
-import { BaseApplication, IWeChatRequestAndAccessTokenOptions } from '../Kernel/BaseApplication';
-import { IWeChatRequestOptions } from '../Kernel/Request';
+import { BaseApplication, WeChatRequestAndAccessTokenOptions } from '../Kernel/BaseApplication';
+import { WeChatRequestOptions } from '../Kernel/Request';
 
 import { AccessToken } from './Auth/AccessToken';
 import { Server } from './Server/Server';
 import { Client as Material } from './Material/Client';
 
+
 export class OfficialAccountApplication extends BaseApplication {
-  server: Server;
+  server!: Server;
 
-  material: Material;
+  material!: Material;
 
-  constructor(options: IWeChatRequestOptions) {
+  constructor(options: WeChatRequestOptions) {
     super(options, new AccessToken(options));
   }
 
-  protected async init(appOptions: IWeChatRequestAndAccessTokenOptions) {
+  protected async init(appOptions: WeChatRequestAndAccessTokenOptions) {
     this.server = new Server(appOptions);
 
     this.material = new Material(appOptions);

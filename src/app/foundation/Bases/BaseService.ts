@@ -8,9 +8,11 @@
 
 import * as dayjs from 'dayjs';
 import { isString } from 'lodash';
+import { FindOptions } from 'sequelize/types';
+
 import { BaseModel } from './Model/BaseModel';
 import { BaseRequest } from './BaseRequest';
-import { FindOptions } from 'sequelize/types';
+
 
 export class Service extends BaseRequest {
   /**
@@ -27,7 +29,7 @@ export class Service extends BaseRequest {
    * @param {string} pageSizeColumn 当前查询条数字段参数名称（前端提交的参数）
    * @param {string} currentPage 当前页码字段参数名称（前端提交的参数）
    */
-  public handlePaginate(currentPage = 'current_page', pageSizeColumn = 'page_size') {
+  handlePaginate(currentPage = 'current_page', pageSizeColumn = 'page_size') {
     // 检测 model 数据存在
     this.detectionModel();
 
@@ -46,7 +48,7 @@ export class Service extends BaseRequest {
    *
    * @param fields 允许排序的字段集合
    */
-  public handleSort(fields: string[] = [ 'order', 'created_at' ]) {
+  handleSort(fields: string[] = ['order', 'created_at']) {
     // 检测 model 数据存在
     this.detectionModel();
 
@@ -72,7 +74,7 @@ export class Service extends BaseRequest {
    *
    * @param string column
    */
-  public handleTimeBetween(columns = 'created_at') {
+  handleTimeBetween(columns = 'created_at') {
     // 检测 model 数据存在
     this.detectionModel();
 
@@ -96,7 +98,7 @@ export class Service extends BaseRequest {
    *
    * @param array columns
    */
-  public handleLikeKeyword(columns: string[]) {
+  handleLikeKeyword(columns: string[]) {
     // 检测 model 数据存在
     this.detectionModel();
 
@@ -107,7 +109,7 @@ export class Service extends BaseRequest {
       // 拼接 or 条件
       const orWheres = [];
       for (const column of columns) {
-        orWheres.push([ column, 'like', like ]);
+        orWheres.push([column, 'like', like]);
       }
 
       // 储存到 query 条件中

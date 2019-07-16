@@ -8,12 +8,14 @@
 
 import * as getRawBody from 'raw-body'; // 获取 Buffer 缓冲区数据
 import { Context } from 'midway';
+
 import BaseClient from '../../Kernel/BaseClient';
 import { XML } from '../../Kernel/Support/XML';
 import { sha1 } from '../../Kernel/Utils';
-import { MessageHandle, MessageHandleParams } from './interceptors';
 import { Message, MessageEnum } from '../../Kernel/Messages/Message';
 import { Text } from '../../Kernel/Messages/Text';
+
+import { MessageHandle, MessageHandleParams } from './Interceptors';
 
 /**
  * todo: 待增加密文模式
@@ -21,9 +23,9 @@ import { Text } from '../../Kernel/Messages/Text';
  * @ref https://github.com/overtrue/wechat/blob/c78fbd3e6f/src/Kernel/ServerGuard.php
  */
 export class Server extends BaseClient {
-  request: Context['request'];
+  request: Context['request'] | undefined;
 
-  response: Context['response'];
+  response: Context['response'] | undefined;
 
   // 消息处理器集合
   handlers: Map<MessageEnum, MessageHandle[]> = new Map();
@@ -40,8 +42,8 @@ export class Server extends BaseClient {
 
     if (typeof handle === 'function') {
       // 设置到对应消息类型集合中
-      const handlers = this.handlers.get(condition);
-      handlers.push(handle);
+      const handlers = this.handlers.get(condition) as MessageHandle[];
+      handlers.push(handle as MessageHandle);
     }
 
     return this;
@@ -90,9 +92,9 @@ export class Server extends BaseClient {
     let handlersResult: any = 'SUCCESS';
 
     try {
-      for (const [ type, handles ] of this.handlers) {
+      for (const [type, handles] of this.handlers) {
         if (
-          ! [ MessageEnum.All, messageData.MsgType.toLowerCase() ].includes(type)
+          ! [MessageEnum.All, messageData.MsgType.toLowerCase()].includes(type)
           || ! handles.length
         ) {
           continue;
@@ -129,7 +131,7 @@ export class Server extends BaseClient {
    */
   protected async buildResponse(handlersResult: any, messageData: MessageHandleParams) {
     // 如果是字符、整数，那么就返回默认返回文本消息
-    if ([ 'string', 'number' ].includes(typeof handlersResult)) {
+    if (['string', 'number'].includes(typeof handlersResult)) {
       handlersResult = new Text(handlersResult);
     }
 
@@ -157,6 +159,10 @@ export class Server extends BaseClient {
       MsgType: message.getType(),
     };
 
+    if (! this.response) {
+      return
+    }
+
     this.response.type = 'application/xml';
     this.response.body = message.transformToXml(prepends);
   }
@@ -167,7 +173,6 @@ export class Server extends BaseClient {
    * @returns {string}
    */
   protected async signature(query: any) {
-
     // 将微信传递的 timestamp、nonce 跟自己在接口配置信息填写的 token 进行组成数组并排序
     const signature: any[] = [
       this.config.official_account.token,
@@ -185,15 +190,19 @@ export class Server extends BaseClient {
    * @returns {object}
    */
   protected async parseMessage() {
+    if (! this.request) {
+      return
+    }
+
     const body = this.request.body;
     // 取原始数据
     const xml = body && typeof body === 'string'
       ? body
       : await getRawBody(this.request.req, {
-          length: this.request.length,
-          limit: '1mb',
-          encoding: this.request.charset || 'utf-8',
-        });
+        length: this.request.length,
+        limit: '1mb',
+        encoding: this.request.charset || 'utf-8',
+      });
 
     return XML.check(xml as string) ? XML.parse(xml) : {};
   }

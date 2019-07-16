@@ -8,7 +8,8 @@
 
 import { BaseRequest } from './BaseRequest';
 
-interface IApiToResponse {
+
+interface ApiToResponse {
   code: number;
   data: any;
   total: number;
@@ -25,7 +26,7 @@ export class Controller extends BaseRequest {
   /**
    * @var {number} 总数
    */
-  statusTotal: number;
+  statusTotal: number | undefined;
 
   /**
    * @var {int} 返回的 code 状态码
@@ -66,7 +67,7 @@ export class Controller extends BaseRequest {
    *
    * @param {number} val 状态码
    */
-  setStatusCode (val: number): this {
+  setStatusCode(val: number): this {
     this.statusCode = val;
 
     return this;
@@ -97,7 +98,7 @@ export class Controller extends BaseRequest {
 
     // 如果有传入，那么就添加总页数的属性
     if (typeof this.statusTotal === 'number') {
-      (response as IApiToResponse).total = this.statusTotal;
+      (response as ApiToResponse).total = this.statusTotal;
     }
 
     // 响应返回

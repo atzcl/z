@@ -26,7 +26,8 @@ export function validate(identifier: validateIdentifier | object) {
   return (target: any, key: string, descriptor: PropertyDescriptor) => {
     // 被装饰的函数被保存在 value 中 [ 保存原有方法 ]
     const originFunction = descriptor.value;
-    descriptor.value = async function (..._params: any) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    descriptor.value = async function(..._params: any) {
       /**
        * @see 请看上面的注释
        */
@@ -45,6 +46,7 @@ export function validate(identifier: validateIdentifier | object) {
       }
 
       // 执行被装饰的函数自己
+      // eslint-disable-next-line prefer-rest-params
       await originFunction.apply(this, arguments);
     };
   };

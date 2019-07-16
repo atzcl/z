@@ -7,8 +7,10 @@
 */
 
 import { Application } from 'midway';
+import { Cache as CacheClient } from '@app/foundation/Support/Cache';
 
-const modulesSymbol = Symbol('Application#modules');
+
+const CACHE_SYMBOL = Symbol('Application#cache');
 
 const extendApplication = {
   /**
@@ -16,29 +18,25 @@ const extendApplication = {
    *
    * @return {Application}
    */
-  get self(): Application {
+  get self(): Application & { [CACHE_SYMBOL]: CacheClient } {
     return this as any;
   },
 
-  /**
-   * 创建 modules 对象，并挂载到 app 对象中
+    /**
+   * 缓存
    *
-   * @returns void
+   * todo: 当前只简单地返回缓存实例
+   * todo: 待实现缓存底层的类型切换、快捷的缓存操作
    */
-  get modules(): Application {
-    if (! (this as any)[modulesSymbol]) {
-      Object.defineProperty(this, modulesSymbol, {
-        value: {
-          config: {},
-          controller: {},
-          middleware: {},
-        },
-        writable: false,
-        configurable: false,
-      });
+  get cache(): CacheClient {
+    if (! this.self[CACHE_SYMBOL]) {
+      this.self[CACHE_SYMBOL] = new CacheClient(
+        this.self.redis,
+        this.self.config.myApp.appName || 'atzcl',
+      );
     }
 
-    return (this as any)[modulesSymbol];
+    return this.self[CACHE_SYMBOL];
   },
 
   /**

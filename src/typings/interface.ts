@@ -1,14 +1,14 @@
 /**
  * @description User-Service parameters
  */
-export interface IUserOptions {
+export interface UserOptions {
   id: number;
 }
 
 /**
  * @description User-Service response
  */
-export interface IUserResult {
+export interface UserResult {
   id: number;
   username: string;
   phone: string;
@@ -18,6 +18,6 @@ export interface IUserResult {
 /**
  * @description User-Service abstractions
  */
-export interface IUserService {
-  getUser(options: IUserOptions): Promise<IUserResult>;
+export interface UserService {
+  getUser(options: UserOptions): Promise<UserResult>;
 }

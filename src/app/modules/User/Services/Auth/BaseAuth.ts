@@ -7,17 +7,19 @@
 */
 
 import { Context, inject } from 'midway';
+import { CaptchaService } from '@my_modules/Captcha/Services/Captcha';
+
+import { UserModel } from '../../Models/user';
 
 import PhoneRule from '@/app/rules/Phone';
-import { CaptchaService } from '@my_modules/Captcha/Services/Captcha';
-import { UserModel } from '../../Models/user';
+
 
 export class BaseAuthService {
   @inject()
-  ctx: Context;
+  ctx!: Context;
 
   @inject()
-  captchaService: CaptchaService;
+  captchaService!: CaptchaService;
 
   /**
    * 获取登录用户的模型
@@ -31,7 +33,9 @@ export class BaseAuthService {
   // 验证登录数据
   validateLoginData() {
     const rules: any = {
-      password: { required: true, type: 'string', min: 6, max: 64 },
+      password: {
+        required: true, type: 'string', min: 6, max: 64,
+      },
     };
 
     // 根据登录类型，来返回验证条件
@@ -43,7 +47,9 @@ export class BaseAuthService {
         rules.phone = { equired: true, type: 'string', ...PhoneRule };
         break;
       default:
-        rules.username = { required: true, type: 'string', min: 4, max: 64 };
+        rules.username = {
+          required: true, type: 'string', min: 4, max: 64,
+        };
     }
 
     this.ctx.validate(rules);
@@ -78,7 +84,7 @@ export class BaseAuthService {
    * @param {object} userInfo
    */
   afterLogin(userInfo: any) {
-    //
+    return userInfo;
   }
 
   /**
@@ -146,7 +152,7 @@ export class BaseAuthService {
 
     // 查询用户信息
     const result = await this.getUserModel().findOne({
-      where: { [ userLoginType ]: this.ctx.request.body[userLoginType] },
+      where: { [userLoginType]: this.ctx.request.body[userLoginType] },
     });
 
     // 判断是否存在该用户跟密码是否一致

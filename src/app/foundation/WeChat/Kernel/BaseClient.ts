@@ -7,14 +7,16 @@
 */
 
 import * as qs from 'qs';
-import { BaseRequest, IWeChatRequestOptions, RequestOptions } from './Request';
+
+import { BaseRequest, WeChatRequestOptions, RequestOptions } from './Request';
 import { AccessToken } from './AccessToken';
+
 
 export default class BaseClient extends BaseRequest {
   /**
    * 微信 api 基础 url 前缀
    */
-  baseUri: string;
+  baseUri!: string;
 
   /**
    * accessToken 实例
@@ -23,7 +25,7 @@ export default class BaseClient extends BaseRequest {
    */
   accessTokenInstance: AccessToken;
 
-  constructor(options: IWeChatRequestOptions & { accessToken: AccessToken }) {
+  constructor(options: WeChatRequestOptions & { accessToken: AccessToken, }) {
     super(options);
 
     // 挂载 accessToken 实例
@@ -36,7 +38,7 @@ export default class BaseClient extends BaseRequest {
    * @param {string} url 请求 url
    * @param {object} options curl 请求配置
    */
-  public async httpGet(url: string, options?: RequestOptions) {
+  async httpGet(url: string, options: RequestOptions = {}) {
     const result = await this.baseRequest(await this.requestUrl(url, options.params));
 
     await this.resolveBodyHasError(result);
@@ -50,7 +52,7 @@ export default class BaseClient extends BaseRequest {
    * @param url 请求 url
    * @param options curl 请求配置
    */
-  public async httpPost(url: string, data: any = {}, options?: RequestOptions) {
+  async httpPost(url: string, data: any = {}, options: RequestOptions = {}) {
     const result = await this.baseRequest(
       await this.requestUrl(url, options.params),
       {

@@ -10,20 +10,21 @@ import * as AsyncValidator from 'async-validator';
 
 import CNLang from './lang/cn';
 
+
 export type ValidatorLang = 'cn' | 'en';
 
 export type ValidateCallback = (errors: any[], fields: any[]) => void;
 
-export interface IValidateOptions {
+export interface ValidateOptions {
   first?: boolean;
   firstFields?: boolean | string[];
 }
 
-export interface IAsyncValidator {
+export interface AsyncValidator {
   validate(source: object, callbak?: ValidateCallback): Promise<any>;
   validate(
     source: object,
-    options: IValidateOptions,
+    options: ValidateOptions,
     callbak?: ValidateCallback,
   ): Promise<any>;
 }
@@ -38,7 +39,7 @@ const langOptions = {
 };
 
 export class Validator {
-  validatorInstance: IAsyncValidator;
+  validatorInstance: AsyncValidator;
 
   constructor(rules: object, lang: keyof typeof langOptions = 'cn') {
     const validator = new AsyncValidator(rules);
@@ -53,23 +54,23 @@ export class Validator {
    * 校验数据
    *
    * @param {object} source 需要校验的数据
-   * @param {IValidateOptions} options 校验的配置
+   * @param {ValidateOptions} options 校验的配置
    *
    * @returns {Promise<any>}
    */
-  validate(source: object, options: IValidateOptions = {}) {
+  validate(source: object, options: ValidateOptions = {}) {
     return new Promise((resolve, reject) => {
       this.validatorInstance
         .validate(
           source,
           options,
-          (error: any[]) => error ? reject(error) : resolve(),
+          (error: any[]) => (error ? reject(error) : resolve()),
         );
     });
   }
 
   // 同步版本
-  validateSync(source: object, options: IValidateOptions = {}, callback?: (errors: any[]) => any) {
+  validateSync(source: object, options: ValidateOptions = {}, callback?: (errors: any[]) => any) {
     this.validatorInstance
       .validate(
         source,

@@ -10,7 +10,7 @@ const TABLE_NAME = 'user_admins';
 const TABLE_DEFAULT_INDEX_NAME = 'IDX_DEFAULT_NAME';
 
 export class CreateUserAdminsTable1550642878333 implements MigrationInterface {
-  public async up(queryRunner: QueryRunner): Promise<any> {
+  async up(queryRunner: QueryRunner): Promise<any> {
     await queryRunner.createTable(
       new Table({
         name: TABLE_NAME,
@@ -73,7 +73,7 @@ export class CreateUserAdminsTable1550642878333 implements MigrationInterface {
     );
   }
 
-  public async down(queryRunner: QueryRunner): Promise<any> {
+  async down(queryRunner: QueryRunner): Promise<any> {
     await queryRunner.dropTable(TABLE_NAME);
   }
 }

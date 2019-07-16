@@ -6,25 +6,27 @@
 |
 */
 
-import { Context } from 'midway';
 import * as path from 'path';
+
+import { Context } from 'midway';
 import * as fs from 'fs-extra';
 import * as dayjs from 'dayjs';
 import * as pump from 'mz-modules/pump';
 
-interface IUploadOptions {
+
+interface UploadOptions {
   whitelist?: string[];
   autoFields?: boolean;
   defCharset?: string;
   // eggjs 定义的 GetFileStreamOptions 没有导出，所以 copy 一份来用
   limits?: {
-    fieldNameSize?: number;
-    fieldSize?: number;
-    fields?: number;
-    fileSize?: number;
-    files?: number;
-    parts?: number;
-    headerPairs?: number;
+    fieldNameSize?: number,
+    fieldSize?: number,
+    fields?: number,
+    fileSize?: number,
+    files?: number,
+    parts?: number,
+    headerPairs?: number,
   };
   checkFile?: (fieldname: string, fileStream: any, filename: string) => void | Error;
 }
@@ -32,9 +34,9 @@ interface IUploadOptions {
 export class Upload {
   ctx: Context;
 
-  options: IUploadOptions = {};
+  options: UploadOptions = {};
 
-  constructor(ctx: Context, options?: IUploadOptions) {
+  constructor(ctx: Context, options?: UploadOptions) {
     this.ctx = ctx;
 
     if (options) {

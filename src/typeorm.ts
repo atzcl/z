@@ -8,6 +8,7 @@
 
 import { provide, scope, ScopeEnum, init, inject } from 'midway';
 import { createConnection, Connection, getConnectionOptions } from 'typeorm';
+
 import { SnakeNamingStrategy } from '@/lib/Other/SnakeNamingStrategy';
 import { TypeORMLogger } from '@/lib/Other/TypeORMLogger';
 
@@ -20,20 +21,19 @@ import { TypeORMLogger } from '@/lib/Other/TypeORMLogger';
 @provide('typeormSingleton')
 export default class TypeORM {
   @inject()
-  typeORMLogger: TypeORMLogger;
+  typeORMLogger!: TypeORMLogger;
 
   // typeorm 链接实例
-  typeORMConnection: Connection;
+  // typeorm 链接实例
+  typeORMConnection!: Connection;
 
   @init()
   async connect() {
     this.typeORMConnection = await getConnectionOptions()
-      .then((connectionOptions) => {
-        return createConnection({
-          ...connectionOptions,
-          logger: this.typeORMLogger, // 自定义日志
-          namingStrategy: new SnakeNamingStrategy(),
-        });
-      });
+      .then(connectionOptions => createConnection({
+        ...connectionOptions,
+        logger: this.typeORMLogger, // 自定义日志
+        namingStrategy: new SnakeNamingStrategy(),
+      }));
   }
 }

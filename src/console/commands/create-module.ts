@@ -7,18 +7,22 @@
 
 import * as yargs from 'yargs';
 import * as fs from 'fs-extra';
-
 import { getCommandConfig } from '@my_console/utils/config';
 import { resolve, abort, makeDirSuccess } from '@my_console/utils';
 
 import { createHandler as createControllerHandler } from './create-controller';
 
+
 const MAKE_TYPE_NAME = '模块';
 const MAKE_TYPE_EXTNAME = 'ts';
 
 export default class CreateControllerCommand implements yargs.CommandModule {
-  command = 'make:module'; // 定义的命令
-  describe = `生成${MAKE_TYPE_NAME}`; // 说明
+  command = 'make:module';
+
+  // 定义的命令
+  describe = `生成${MAKE_TYPE_NAME}`;
+
+  // 说明
   aliases = 'mm'; // 别名
 
   /**
@@ -57,7 +61,7 @@ export default class CreateControllerCommand implements yargs.CommandModule {
     };
 
     // 创建目录
-    Object.keys(needCreateDirs).forEach((attr: keyof typeof needCreateDirs) => {
+    Object.keys(needCreateDirs).forEach((attr: keyof typeof needCreateDirs | string) => {
       // 为了方便，创建模块根目录的处理也放在一起了
       const isModule = attr === 'module';
 
@@ -72,7 +76,7 @@ export default class CreateControllerCommand implements yargs.CommandModule {
           makeDirSuccess(attr);
 
           // 执行目录创建成功后，对应的相关处理
-          const value = needCreateDirs[attr];
+          const value = needCreateDirs[attr as keyof typeof needCreateDirs];
           // 生成的文件目录
           const filePath = resolve(currentModulePath, `${attr}/${moduleName}.${MAKE_TYPE_EXTNAME}`);
           // 调用的模板根目录

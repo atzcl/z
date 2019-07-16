@@ -12,7 +12,7 @@ import { BaseClient } from '../Kernel/BaseClient';
  * @see https://developers.weixin.qq.com/miniprogram/dev/api-backend/auth.code2Session.html
  */
 
-export interface IUnifyParams {
+export interface UnifyParams {
   openid: string;
   body: string;
   out_trade_no: string;
@@ -32,9 +32,9 @@ export class Client extends BaseClient {
    *
    * @desc 参数 appid, mch_id, nonce_str, sign, sign_type 可不用传入
    *
-   * @param {IUnifyParams} params 下单的参数
+   * @param {UnifyParams} params 下单的参数
    */
-  async unify(params: IUnifyParams): Promise<any> {
+  async unify(params: UnifyParams): Promise<any> {
     if (! params.spbill_create_ip) {
       params.spbill_create_ip = '127.0.0.1';
     }

@@ -1,4 +1,4 @@
-import { provide, inject, controller, post  } from 'midway';
+import { provide, inject, controller, post } from 'midway';
 
 import { UserLoginService } from '@/app/modules/User/Services/Auth/Login';
 import { Controller } from '@/app/foundation/Bases/BaseController';
@@ -8,7 +8,7 @@ import { validate } from '@/app/foundation/Decorators/Validate';
 @controller('/users')
 export class LoginController extends Controller {
   @inject()
-  userLoginService: UserLoginService;
+  private readonly userLoginService!: UserLoginService;
 
   @post('/login')
   @validate('userLoginValidate')

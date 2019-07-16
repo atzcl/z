@@ -6,18 +6,15 @@
 |
 */
 
-import { EggAppConfig, Context } from 'egg';
 import { createHash } from 'crypto';
-import { random } from 'lodash';
+import * as path from 'path';
+
+import { Context, EggAppConfig } from 'midway';
 import * as dayjs from 'dayjs';
 import * as bcryptjs from 'bcryptjs';
-import * as path from 'path';
 import * as UUIDV4 from 'uuid/v4';
-
-import CacheManager from '@/app/foundation/Support/Cache';
-import JwtManager from '@/app/foundation/Support/Jwt';
-
-const CACHE_SYMBOL = Symbol('my_app#cache');
+import { random } from 'lodash';
+import { JWT } from '@app/foundation/Support/Jwt';
 
 export default {
   /**
@@ -27,6 +24,20 @@ export default {
    */
   get _context(): Context {
     return (this as any).ctx;
+  },
+
+  /**
+   * jwt 辅助函数
+   */
+  jwt(options: EggAppConfig['jwt'] | any = {}) {
+    const { app } = this._context;
+    const { config } = app;
+
+    return new JWT(
+      app.jwt,
+      { ...config.jwt, ...options },
+      app.cache,
+    );
   },
 
   /**
@@ -120,8 +131,8 @@ export default {
   strRandom(len = 16, type: 'string' | 'number' | 'all' = 'all') {
     const number = '0123456789';
     // todo: 去掉了某些特殊的字符, 后面可以参考加上
-    const letter =
-      'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const letter
+      = 'abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     let chars = '';
     switch (type) {
@@ -160,59 +171,28 @@ export default {
     }
   },
 
-  /**
-   * 缓存辅助函数
-   *
-   * todo: 当前只简单地返回缓存实例
-   * todo: 待实现缓存底层的类型切换、快捷的缓存操作
-   */
-  get cache(): CacheManager {
-    if (! (this as any)[CACHE_SYMBOL]) {
-      const { app, config } = this._context;
-
-      // 给 app 加上 any, 避免在使用 typeorm cli 时出错
-      return new CacheManager(
-        (app as any).redis,
-        config.myApp.appName || 'atzcl',
-      );
-    }
-
-    return (this as any)[CACHE_SYMBOL];
-  },
-
-  /**
-   * jwt 辅助函数
-   */
-  jwt(options: EggAppConfig['jwt'] | any = {}) {
-    const { app, config } = this._context;
-
-    return new JwtManager(
-      (app as any).jwt,
-      { ...config.jwt, ...options },
-      this.cache,
-    );
-  },
-
-  getElChildren(
-    data: any[] = [],
+  getElChildren({
+    data = [],
     pid = 0,
     name = 'name',
     key = 'parent_id',
     pk = 'id',
     children = 'children',
-  ) {
+  }: { data: any[], pid: number, name: string, key: string, pk: string, children: string, }) {
     // 创建数据
     const tree = [];
 
     for (const item of data) {
       if (item[key] === pid) {
-          item[children] = this.getElChildren(data, item[pk], name, key, pk, children);
+        item[children] = this.getElChildren({
+          data, pid: item[pk], name, key, pk, children,
+        });
 
-          item.value = item[pk];
-          item.label = item[name];
-          console.log(item);
-          // 储存到数组
-          tree.push(item);
+        item.value = item[pk];
+        item.label = item[name];
+        console.log(item);
+        // 储存到数组
+        tree.push(item);
       }
     }
 

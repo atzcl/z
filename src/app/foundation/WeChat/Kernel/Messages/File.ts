@@ -8,6 +8,7 @@
 
 import { Media } from './Media';
 
+
 export class File extends Media {
   protected type = 'file' as 'file';
 }

@@ -20,7 +20,7 @@ export class Client {
   async getCacheKey() {
     const config = this.baseClient.config.payment;
 
-    return 'z.payment.sandbox.' +  md5(config.app_id + config.mch_id);
+    return 'z.payment.sandbox.' + md5(config.app_id + config.mch_id);
   }
 
   async getKey() {

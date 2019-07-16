@@ -7,7 +7,8 @@
 */
 
 import { Context } from 'egg';
-import { AppFlowException } from '../exceptions/AppFlowException';
+import { AppFlowException } from '@app/exceptions/AppFlowException';
+
 
 const extendContext = {
   /**

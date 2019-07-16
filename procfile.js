@@ -3,8 +3,7 @@
 
 'use strict';
 
-module.exports = pandora => {
-
+module.exports = (pandora) => {
   /**
    * default is fork mode
    */
@@ -28,5 +27,4 @@ module.exports = pandora => {
    * more features please visit our document.
    * https://github.com/midwayjs/pandora/
    */
-
 };

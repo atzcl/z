@@ -7,10 +7,12 @@
 */
 
 import { Request } from 'egg';
-import { Validator, ValidatorLang, IValidateOptions } from '../foundation/Support/Validator';
+
+import { Validator, ValidatorLang, ValidateOptions } from '../foundation/Support/Validator';
 import { ValidationException } from '../exceptions/ValidationException';
 import { BaseException } from '../exceptions/BaseException';
 import { AppFlowException } from '../exceptions/AppFlowException';
+
 
 export default {
   /**
@@ -34,7 +36,7 @@ export default {
   validate(
     rules: object,
     verifyData?: object,
-    options: IValidateOptions = { firstFields: true, first: true },
+    options: ValidateOptions = { firstFields: true, first: true },
     lang: ValidatorLang = 'cn',
   ) {
     (new Validator(rules, lang))
@@ -73,13 +75,13 @@ export default {
    * @returns {any}
    */
   all(keys?: string[]) {
-    const body = [ 'GET', 'HEAD' ].includes(this.self.method) ? this.formatQuery() : this._body();
+    const body = ['GET', 'HEAD'].includes(this.self.method) ? this.formatQuery() : this._body();
     if (! keys || ! keys.length) {
       return body;
     }
 
     const results = {} as any;
-    for (const [ key, value ] of Object.entries(body)) {
+    for (const [key, value] of Object.entries(body)) {
       if (keys.includes(key)) {
         results[key] = value;
       }
@@ -140,7 +142,7 @@ export default {
    */
   formatQuery() {
     const result = this._query();
-    for (const [ key, val ] of Object.entries(result)) {
+    for (const [key, val] of Object.entries(result)) {
       // 因为 queries 会确保任何一个有值的 key, 都会是数组的形式，但是在真实的情况下，我们获取的 key 的值基本都是单一的
       // 所以这里再判断一下，如果获取的值为数组并且长度为一，那么就返回数组的值就好了, 这样会更加自然、符合直觉
       if (Array.isArray(val) && val.length === 1) {
@@ -165,7 +167,7 @@ export default {
 
     const input = this.all();
 
-    for (const [ key, value ] of Object.entries(input)) {
+    for (const [key, value] of Object.entries(input)) {
       if (keys.includes(key)) {
         results[key] = value;
       }
@@ -185,7 +187,7 @@ export default {
     keys = this.transformArgToArray(keys);
 
     const results = JSON.parse(JSON.stringify(this.all()));
-    for (const [ key ] of Object.entries(results)) {
+    for (const [key] of Object.entries(results)) {
       if (keys.includes(key)) {
         delete results[key];
       }
@@ -203,7 +205,7 @@ export default {
 
     const input = this.all();
 
-    return keys.some((key: string) => !!input[key]);
+    return keys.some((key: string) => !! input[key]);
   },
 
   /**
@@ -235,7 +237,7 @@ export default {
    * @returns {string[]}
    */
   transformArgToArray(arg: string | string[]) {
-    return  Array.isArray(arg) ? arg : [ arg ];
+    return Array.isArray(arg) ? arg : [arg];
   },
 
   /**
@@ -247,7 +249,7 @@ export default {
    *
    * @returns {any}
    */
-  retrieveItem(source: 'body' | 'queries', key: string, def: any) {
+  retrieveItem(source: 'body' | 'queries', key?: string, def: any = null) {
     const payload = this.self[source];
 
     return key

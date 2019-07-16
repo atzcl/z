@@ -6,16 +6,22 @@
 |
 */
 
-import { Message, MessageMediaType } from './Message';
+
 import { isObject } from 'util';
+
 import { camelCase, upperFirst } from 'lodash';
 
-export class Media extends Message {
-  requireds = [
-    'media_id',
-  ];
+import { Message, MessageMediaType } from './Message';
 
-  constructor(mediaId: string, type: MessageMediaType = null, attributes: any = {}) {
+
+export class Media extends Message {
+  requireds = ['media_id'];
+
+  constructor(
+    mediaId: string,
+    type: MessageMediaType | null = null,
+    attributes: any = {},
+  ) {
     super({ media_id: mediaId, ...(isObject(attributes) && attributes || {}) });
 
     if (type) {
@@ -40,7 +46,7 @@ export class Media extends Message {
   toXmlObject() {
     // 转为 media_id => MediaId
     return {
-      [ upperFirst(camelCase(this.getType())) ]: {
+      [upperFirst(camelCase(this.getType()))]: {
         MediaId: this.getMediaId(),
       },
     };

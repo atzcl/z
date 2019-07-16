@@ -6,12 +6,12 @@
 |
 */
 
-import { provide, Context, WebMiddleware } from 'midway';
+import { provide, WebMiddleware, Middleware } from 'midway';
 
 @provide('verifyJWTMiddleware')
 export class VerifyJWTMiddleware implements WebMiddleware {
-  resolve() {
-    return async (ctx: Context, next: () => Promise<any>) => {
+  resolve(): Middleware {
+    return async (ctx, next) => {
       const { jwt, myApp } = ctx.app.config;
       const { adminPrefix } = myApp;
 
@@ -66,5 +66,4 @@ export class VerifyJWTMiddleware implements WebMiddleware {
       await ctx.abort(401, '请登录');
     };
   }
-
 }

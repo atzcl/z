@@ -7,22 +7,25 @@
 */
 
 import { controller, provide, inject, all, get } from 'midway';
+
+import { WeChatMessageService } from '../Services/Message';
+
 import { Controller } from '@/app/foundation/Bases/BaseController';
 import { WeChat } from '@/wechat';
 import { Image } from '@/app/foundation/WeChat/Kernel/Messages/Image';
 import { Text } from '@/app/foundation/WeChat/Kernel/Messages/Text';
 import { MessageEnum } from '@/app/foundation/WeChat/Kernel/Messages/Message';
-import { WeChatMessageText } from '@/app/foundation/WeChat/OfficialAccount/Server/interceptors';
-import { WeChatMessageService } from '../Services/Message';
+import { WeChatMessageText } from '@/app/foundation/WeChat/OfficialAccount/Server/Interceptors';
 
 @provide()
 @controller('/wechat')
 export class WeChatController extends Controller {
-  @inject()
-  wechat: WeChat;
-
-  @inject()
-  weChatMessageService: WeChatMessageService;
+  constructor(
+    @inject() private readonly wechat: WeChat,
+    @inject() private readonly weChatMessageService: WeChatMessageService,
+  ) {
+    super();
+  }
 
   /**
    * 微信入口
@@ -33,7 +36,7 @@ export class WeChatController extends Controller {
 
     // 图片消息处理器, 即只有当用户发送图片消息时，才会触发当前处理器
     await server.push<WeChatMessageText>(
-      (message) => new Text(`您发送了 text 消息: ${message.Content}`),
+      message => new Text(`您发送了 text 消息: ${message.Content}`),
       MessageEnum.TEXT,
     );
 

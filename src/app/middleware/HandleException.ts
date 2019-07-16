@@ -8,13 +8,14 @@
 
 import { Context } from 'midway';
 
+
 export default function exceptionsMiddleware() {
   return async (ctx: Context, next: () => Promise<any>) => {
     try {
       // 无错误则直接放行
       await next();
 
-      if (ctx.status === 404 && !ctx.body) {
+      if (ctx.status === 404 && ! ctx.body) {
         ctx.helper.toResponse(404, null, '当前请求不存在');
       }
     } catch (error) {

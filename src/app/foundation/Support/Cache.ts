@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/indent */
 /*
 +-----------------------------------------------------------------------------------------------------------------------
 | Author: atzcl <atzcl0310@gmail.com>  https://github.com/atzcl
@@ -9,11 +10,13 @@
 import { Redis } from 'ioredis';
 import { isNull } from 'lodash';
 
+
 type unitType = 'h' | 'm' | 's' | 'ms';
 
-export default class CacheManager {
+export class Cache {
   // 使用缓存类型
   private readonly store: Redis;
+
   private readonly prefixName: string;
 
   constructor(storeInstance: Redis, prefixName: string) {
@@ -40,7 +43,7 @@ export default class CacheManager {
    * @param {number} time 缓存过期时间
    * @param {string} unit 指定时间单位 （h/m/s/ms）默认为 s
    */
-  async set (
+  async set(
     key: string,
     value: any,
     time: number = 0,

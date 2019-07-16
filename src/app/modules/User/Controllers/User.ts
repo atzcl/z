@@ -1,5 +1,4 @@
 import { controller, provide, get, Context } from 'midway';
-
 import * as plural from 'plural';
 
 @provide()

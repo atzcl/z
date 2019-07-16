@@ -6,11 +6,11 @@
 |
 */
 
+import * as path from 'path';
+
 import chalk from 'chalk';
 import * as ejs from 'ejs';
-import * as path from 'path';
 import * as plural from 'plural';
-
 import { camelCase, upperFirst } from 'lodash';
 
 /**
@@ -29,7 +29,7 @@ export const echoMessage = (message: string) => {
  *
  * @param {string} message
  */
-export const abort = (message: string, code: number = null) => {
+export const abort = (message: string, code?: number) => {
   echoMessage(`${chalk.red('😣 ')}${chalk.red(message)}`);
 
   // 中断后续执行
@@ -67,9 +67,7 @@ export const makeDirSuccess = (message: string) => {
 /**
  * 项目根目录，跟随调用目录而变
  */
-export const getRootPath = () => {
-  return path.resolve(__dirname, '../../');
-};
+export const getRootPath = () => path.resolve(__dirname, '../../');
 
 /**
  * 跟项目根目录进行指定路径拼接
@@ -78,9 +76,7 @@ export const getRootPath = () => {
  *
  * @returns {string}
  */
-export const getRootPathResolve = (pathName: string) => {
-  return path.resolve(getRootPath(), pathName);
-};
+export const getRootPathResolve = (pathName: string) => path.resolve(getRootPath(), pathName);
 
 /**
  * 简单的路径拼接生成

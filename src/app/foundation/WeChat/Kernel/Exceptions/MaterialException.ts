@@ -8,6 +8,7 @@
 
 import { BaseException } from './BaseException';
 
+
 export class MaterialException extends BaseException {
   constructor(code: number, message: string) {
     super('MaterialException', code, message);

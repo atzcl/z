@@ -10,31 +10,33 @@
 
 import { EggLogger } from 'midway';
 import * as Request from 'request';
-import CacheManager from '@my_foundation/support/cache';
+import { Cache as CacheManager } from '@my_foundation/Support/Cache';
+
 import { WeChatRequestException } from './Exceptions/WeChatRequestException';
 
-export type RequestOptions = Request.CoreOptions & { params?: object };
 
-export interface IWeChatRequestOptions {
+export type RequestOptions = Request.CoreOptions & { params?: object, };
+
+export interface WeChatRequestOptions {
   cache: CacheManager;
   config: {
-    base_uri: string; // 基础 url
-    open_platform_base_uri: string; // 微信开放平台
-    payment_base_uri: string; // 微信支付
-    open_work_base_uri: string; // 企业微信服务商
-    work_base_uri: string; // 企业微信
+    base_uri: string, // 基础 url
+    open_platform_base_uri: string, // 微信开放平台
+    payment_base_uri: string, // 微信支付
+    open_work_base_uri: string, // 企业微信服务商
+    work_base_uri: string, // 企业微信
 
     /**
      * 公众号
      */
     official_account: {
-      app_id: string;
-      secret: string;
-      token: string;
-      aes_key: string;
+      app_id: string,
+      secret: string,
+      token: string,
+      aes_key: string,
       oauth: {
-        scopes: string;
-        callback: string;
+        scopes: string,
+        callback: string,
       },
     },
 
@@ -42,22 +44,22 @@ export interface IWeChatRequestOptions {
      * 小程序
      */
     mini_program: {
-      app_id: string;
-      secret: string;
-      token: string;
-      aes_key: string;
+      app_id: string,
+      secret: string,
+      token: string,
+      aes_key: string,
     },
 
     payment: {
       sandbox: boolean, // 沙箱模式
-      app_id: string;
-      mch_id: string;
-      key: string; // API 密钥
-      pfx: string; // 绝对路径
-      notify_url: string; // 默认的订单回调地址
-      spbill_create_ip: string; // IP 地址
-      sub_mch_id: string;
-      sub_appid: string;
+      app_id: string,
+      mch_id: string,
+      key: string, // API 密钥
+      pfx: string, // 绝对路径
+      notify_url: string, // 默认的订单回调地址
+      spbill_create_ip: string, // IP 地址
+      sub_mch_id: string,
+      sub_appid: string,
     },
   };
   logger: EggLogger;
@@ -65,15 +67,17 @@ export interface IWeChatRequestOptions {
 
 export class BaseRequest {
   // 缓存实例
-  cache: IWeChatRequestOptions['cache'];
+  cache: WeChatRequestOptions['cache'];
+
   // 配置
   // todo: 后面可以拓展内部维护
-  config: IWeChatRequestOptions['config'];
+  config: WeChatRequestOptions['config'];
+
   // 日志实例
   // todo: 后面可以拓展内部维护
-  logger: IWeChatRequestOptions['logger'];
+  logger: WeChatRequestOptions['logger'];
 
-  constructor(options: IWeChatRequestOptions) {
+  constructor(options: WeChatRequestOptions) {
     const { config, cache, logger } = options;
 
     this.cache = cache;
@@ -88,7 +92,9 @@ export class BaseRequest {
     const options = {
       url,
       method: 'GET',
-      headers: { Accept: 'application/json' },
+      headers: {
+        Accept: 'application/json',
+      },
       timeout: 60000, // 60秒超时
       json: true,
       ...opt,

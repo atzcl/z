@@ -8,12 +8,13 @@
 
 import { inject, Context, EggLogger } from 'midway';
 
+
 export class BaseRequest {
   @inject()
-  logger: EggLogger;
+  readonly ctx!: Context;
 
   @inject()
-  ctx: Context;
+  readonly logger!: EggLogger;
 
   get app() {
     return this.ctx.app;
@@ -45,7 +46,7 @@ export class BaseRequest {
   getJwtUserClaims(key?: string) {
     const jwtUserClaims = this.request._body('jwtUserClaims', {});
 
-    return key ? (jwtUserClaims[key] || null) : jwtUserClaims;
+    return key ? jwtUserClaims[key] || null : jwtUserClaims;
   }
 
   // 抛出异常

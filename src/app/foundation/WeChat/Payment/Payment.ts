@@ -7,11 +7,13 @@
 */
 
 import { EggLogger } from 'midway';
-import CacheManager from '@my_foundation/support/cache';
-import { IConfig } from './Application';
+import { Cache as CacheManager } from '@my_foundation/Support/Cache';
+
+import { ConfigOptions } from './Application';
 import { Client as SandboxClient } from './Sandbox/Client';
 
-export interface IWeChatRequestOptions {
+
+export interface WeChatRequestOptions {
   cache: CacheManager;
   config: any;
   logger: EggLogger;
@@ -20,16 +22,18 @@ export interface IWeChatRequestOptions {
 export class PaymentApplication {
   // 缓存实例
   cache: CacheManager;
+
   // 配置
   // todo: 后面可以拓展内部维护
-  config: IConfig;
+  config: ConfigOptions;
+
   // 日志实例
   // todo: 后面可以拓展内部维护
   logger: EggLogger;
 
   sandbox: SandboxClient;
 
-  constructor(options: IWeChatRequestOptions, sandbox: SandboxClient) {
+  constructor(options: WeChatRequestOptions, sandbox: SandboxClient) {
     const { config, cache, logger } = options;
 
     this.cache = cache;
@@ -53,21 +57,21 @@ export class PaymentApplication {
    * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
    */
   async getKey(endpoint: string | null = null) {
-      if (endpoint === 'sandboxnew/pay/getsignkey') {
-        return this.config.key;
-      }
+    if (endpoint === 'sandboxnew/pay/getsignkey') {
+      return this.config.key;
+    }
 
-      const key: string = await this.inSandbox() ? await this.sandbox.getKey() : this.config.key;
+    const key: string = await this.inSandbox() ? await this.sandbox.getKey() : this.config.key;
 
-      if (! key) {
-        this.abort(404, 'config key should not empty.');
-      }
+    if (! key) {
+      this.abort(404, 'config key should not empty.');
+    }
 
-      if (key.length !== 32) {
-          this.abort(404, `${key} should be 32 chars length.`);
-      }
+    if (key.length !== 32) {
+      this.abort(404, `${key} should be 32 chars length.`);
+    }
 
-      return key;
+    return key;
   }
 
   /**

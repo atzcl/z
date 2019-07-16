@@ -7,12 +7,13 @@
 */
 
 import { BaseApplication } from '../Kernel/BaseApplication';
-import { IWeChatRequestOptions } from '../Kernel/Request';
+import { WeChatRequestOptions } from '../Kernel/Request';
 
 import { Client as OrderClient } from './Order/Client';
 import { Client as JssdkClient } from './Jssdk/Client';
 
-export interface IConfig {
+
+export interface ConfigOptions {
   sandbox: boolean; // 沙箱模式
   app_id: string;
   mch_id: string;
@@ -23,10 +24,11 @@ export interface IConfig {
 }
 
 export class PaymentApplication extends BaseApplication {
-  order: OrderClient;
-  jssdk: JssdkClient;
+  order!: OrderClient;
 
-  constructor(options: IWeChatRequestOptions) {
+  jssdk!: JssdkClient;
+
+  constructor(options: WeChatRequestOptions) {
     options = {
       ...options,
       // 替换基础路径
@@ -36,10 +38,11 @@ export class PaymentApplication extends BaseApplication {
       },
     };
 
-    super(options, null);
+    // 当前模块无需 accessToken
+    super(options, null as any);
   }
 
-  protected async init(appOptions: IWeChatRequestOptions) {
+  protected async init(appOptions: WeChatRequestOptions) {
     this.order = new OrderClient(appOptions);
     this.jssdk = new JssdkClient(appOptions);
   }

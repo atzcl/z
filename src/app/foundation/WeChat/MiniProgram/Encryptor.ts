@@ -8,8 +8,8 @@
 
 import * as crypto from 'crypto';
 
-export class Encryptor {
 
+export class Encryptor {
   /**
    * 解密数据
    *

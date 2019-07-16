@@ -8,10 +8,11 @@
 |
 */
 
-import { Application, Context } from 'egg';
+import { Middleware } from 'midway';
 
-export default function authJWTMiddleware (app: Application) {
-  return async (ctx: Context, next: () => Promise<any>) => {
+
+export default function authJWTMiddleware(): Middleware {
+  return async (ctx, next) => {
     const { jwt, myApp } = ctx.app.config;
     const { adminPrefix } = myApp;
 
@@ -40,7 +41,7 @@ export default function authJWTMiddleware (app: Application) {
     ];
 
     // 验证码、后台前端路由接管模块全部允许放行
-    if ([ 'captchas', 'system_dashboard_app' ].includes(ctx.path.split('/')[1])) {
+    if (['captchas', 'system_dashboard_app'].includes(ctx.path.split('/')[1])) {
       return next();
     }
 
