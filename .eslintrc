@@ -1,0 +1,51 @@
+{
+  "extends": [
+    "@waiting/eslint-config/recommended",
+  ],
+  "rules": {
+    "import/no-unresolved": 0,
+    "semi": "off",
+    "@typescript-eslint/semi": [0, "error", "always"],
+    "array-bracket-newline": ["error", { "multiline": true }],
+    "padded-blocks": ["error", "never"],
+    "no-extra-parens": 0,
+    "import/no-cycle": 0,
+    "@typescript-eslint/no-extra-parens": 0,
+    "@typescript-eslint/no-empty-interface": 0,
+    "@typescript-eslint/explicit-member-accessibility": [
+      2,
+      {
+        "accessibility": "no-public",
+        "overrides": {
+          "accessors": "no-public",
+          "constructors": "no-public",
+          "methods": "no-public",
+          "properties": "off",
+          "parameterProperties": "explicit",
+        },
+      },
+    ],
+    "@typescript-eslint/member-delimiter-style": [
+      2,
+      {
+        "multiline": {
+          "delimiter": "comma",
+          "requireLast": true
+        },
+        "singleline": {
+            "delimiter": "comma",
+            "requireLast": true
+        },
+        "overrides": {
+            "interface": {
+                "multiline": {
+                    "delimiter": "semi",
+                    "requireLast": true
+                }
+            }
+        }
+      },
+    ],
+    "brace-style": ["error", "1tbs", { "allowSingleLine": true }]
+  }
+}
