@@ -24,7 +24,7 @@
 
 **1、安装依赖**
 ```bash
-yarn install
+yarn
 ```
 
 **2、copy `config` 配置**
@@ -33,21 +33,28 @@ cp src/config/config.example src/config/config.default.ts
 ```
 然后修改对应的配置信息
 
-**3、copy `ormconfig` 配置**
-```bash
-cp ormconfig.example ormconfig.ts
-```
-然后修改对应的配置, 用于下方执行数据库迁移
-
-**4、执行数据库迁移**
+**3、执行数据库迁移**
 >sequelize-cli 的数据库迁移并不好用，主要是它没办法定义多目录的 migration, 所以当前使用的是 typeorm 的数据库迁移功能
 ```bash
 yarn typeorm migration:run
 ```
 
-**5、运行**
+**4、运行**
 ```bash
 yarn dev
+```
+
+## 部署
+> 更多请看 [midway 部署](https://midwayjs.org/midway/guide.html#%E9%83%A8%E7%BD%B2)
+
+**使用 pm2**
+```bash
+pm2 start ecosystem.config.js
+```
+
+**使用 egg-scripts**
+```bash
+yarn start
 ```
 
 ## 辅助开发的 Cli 命令
