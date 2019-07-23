@@ -13,21 +13,18 @@ import { Controller } from '@app/foundation/Bases/BaseController';
 @provide()
 @controller('/captchas')
 export class CaptchaController extends Controller {
-  constructor(
-    @inject(SERVICE_PROVIDE) private readonly service: CaptchaService,
-  ) {
-    super();
-  }
+  @inject(SERVICE_PROVIDE)
+  private readonly service!: CaptchaService;
 
   // 根据传入的验证码 token，来获取缓存的验证码，然后生成图片，以流的方式输出
   @get('/:token')
   async show() {
     this.ctx.set({ 'Content-type': 'image/jpeg' });
 
+    const cacheCaptchaValue = await this.service.getCacheCaptchaValue(this.ctx.params.token);
+
     // 输出验证码
-    this.ctx.body = this.service.createCaptcha(
-      await this.service.getCacheCaptchaValue(this.ctx.params.token),
-    );
+    this.ctx.body = await this.service.createCaptcha(cacheCaptchaValue);
   }
 
   // 获取验证码 token
@@ -38,6 +35,6 @@ export class CaptchaController extends Controller {
       await this.service.generateCaptchaCode(),
     );
 
-    this.ctx.helper.toResponse(200, token);
+    this.setStatusData(token).succeed();
   }
 }
