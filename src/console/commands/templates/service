@@ -7,7 +7,7 @@
 */
 
 import { provide } from 'midway';
-import { Service } from '@/app/foundation/Bases/BaseService';
+import { Service } from '@app/foundation/Bases/BaseService';
 
 // 在容器的 id 名称
 export const SERVICE_PROVIDE = '<%= camelCaseName %>';

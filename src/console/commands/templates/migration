@@ -2,33 +2,33 @@
 +-----------------------------------------------------------------------------------------------------------------------
 | Author: atzcl <atzcl0310@gmail.com>  https://github.com/atzcl
 +-----------------------------------------------------------------------------------------------------------------------
-| <%= name %>
+| <%= tableName %>
 |
 */
 
 import { MigrationInterface, QueryRunner, Table, TableIndex } from 'typeorm';
 
-import uuidPrimary from '@/app/foundation/migrations/uuid-primary';
-import timestamps from '@/app/foundation/migrations/timestamps';
-import softDeletes from '@/app/foundation/migrations/soft-deletes';
+import UuidPrimary from '@/app/foundation/migrations/UuidPrimary';
+import Timestamps from '@/app/foundation/migrations/Timestamps';
+import SoftDeletes from '@/app/foundation/migrations/SoftDeletes';
 
 // 表名
-const TABLE_NAME = '<%= pluralName %>';
+const TABLE_NAME = '<%= tableName %>';
 // 索引
 const TABLE_DEFAULT_INDEX_NAME = 'IDX_DEFAULT_NAME';
 
-export class <%= studlyCaseName %> implements MigrationInterface {
-  public async up(queryRunner: QueryRunner): Promise<any> {
+export class <%= fileName %> implements MigrationInterface {
+  async up(queryRunner: QueryRunner): Promise<any> {
     await queryRunner.createTable(
       new Table({
         name: TABLE_NAME,
         columns: [
-          ...uuidPrimary,
+          ...UuidPrimary,
 
           // todo
 
-          ...timestamps,
-          ...softDeletes,
+          ...Timestamps,
+          ...SoftDeletes,
         ],
       }),
       true,
@@ -38,12 +38,12 @@ export class <%= studlyCaseName %> implements MigrationInterface {
       TABLE_NAME,
       new TableIndex({
         name: TABLE_DEFAULT_INDEX_NAME,
-        columnNames: [ 'id' ],
+        columnNames: ['id'],
       }),
     );
   }
 
-  public async down(queryRunner: QueryRunner): Promise<any> {
+  async down(queryRunner: QueryRunner): Promise<any> {
     await queryRunner.dropTable(TABLE_NAME);
   }
 }

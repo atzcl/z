@@ -21,7 +21,8 @@ export class CaptchaController extends Controller {
   async show() {
     this.ctx.set({ 'Content-type': 'image/jpeg' });
 
-    const cacheCaptchaValue = await this.service.getCacheCaptchaValue(this.ctx.params.token);
+    const cacheCaptchaValue = await this.service
+      .getCacheCaptchaValue(this.ctx.app.cache, this.ctx.params.token);
 
     // 输出验证码
     this.ctx.body = await this.service.createCaptcha(cacheCaptchaValue);
@@ -32,6 +33,7 @@ export class CaptchaController extends Controller {
   async captchaToken() {
     // todo: 后面可以考虑节流来限制刷新次数
     const token = await this.service.setCaptchaToken(
+      this.ctx.app.cache,
       await this.service.generateCaptchaCode(),
     );
 

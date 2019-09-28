@@ -6,8 +6,10 @@
 |
 */
 
-import { Context } from 'egg';
+import { Context } from 'midway';
 import { AppFlowException } from '@app/exceptions/AppFlowException';
+
+import { ValidationRules } from '../foundation/Support/Validator';
 
 
 const extendContext = {
@@ -28,12 +30,12 @@ const extendContext = {
    *
    * @throws {Error}
    */
-  abort(code: number, message: string = 'error') {
+  abort(code: number, message = 'error') {
     throw new AppFlowException(message, code);
   },
 
-  validate(rules: object, verifyData?: object, options = { firstFields: true, first: true }) {
-    this.self.request.validate(rules, verifyData, options);
+  validate(rules: ValidationRules, verifyData?: object, options = { firstFields: true, first: true }) {
+    return this.self.request.validate(rules, verifyData, options);
   },
 };
 

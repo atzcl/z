@@ -1,14 +1,16 @@
 interface ParserOptions {
-  isUseHidden: boolean;
-  tempHidden?: string[];
+  tempHidden: string[];
   hidden: string[];
-  isUseVisible: boolean;
-  tempVisible?: string[];
+  tempVisible: string[];
   visible: string[];
 }
 
 // 判断是否为空
 export const isEmpty = (value: any) => value === null || value === undefined;
+
+export const hasOwnProperty = (obj: object, property: string) => (
+  Object.prototype.hasOwnProperty.call(obj, property)
+);
 
 /**
  * 传入查询结果，过滤指定字段值
@@ -24,9 +26,8 @@ export const makeHiddenColumn = (dataValues: object, columns: string[] = []) => 
     return dataValues;
   }
 
-  // 当前先处理一层吧，后面有需求再拓展
-  for (let i = 0; i < columns.length; i++) {
-    const column = columns[i];
+  // 当前先处理一层吧，后面有需求再递归
+  for (const column of columns) {
     if (Object.prototype.hasOwnProperty.call(dataValues, 'column')) {
       delete (dataValues as any)[column];
     }
@@ -49,12 +50,12 @@ export const makeVisibleColumn = (dataValues: object, columns: string[] = []) =>
     return dataValues;
   }
 
-  // 当前先处理一层吧，后面有需求再拓展
+  // 当前先处理一层吧，后面有需求再递归
   const keys = Object.keys(dataValues);
-  for (let i = 0; i < keys.length; i++) {
+  for (const columnName of keys) {
     // 因为当前都是使用了 static，所以就不开启新的值来储存配对结果了，直接对传入的查询结果取反值就好了
-    if (! columns.includes(keys[i])) {
-      delete (dataValues as any)[keys[i]];
+    if (! columns.includes(columnName)) {
+      delete (dataValues as any)[columnName];
     }
   }
 
@@ -72,7 +73,11 @@ export const parserResult = (modelResult: any, options: ParserOptions) => {
   /**
    * @desc 当结果是数组的时候，那么默认是更新操作后的结果, 而更新的成功返回都是影响条数的数组
    */
-  if (! modelResult || typeof modelResult !== 'object' || Array.isArray(modelResult)) {
+  if (! modelResult
+    || typeof modelResult !== 'object'
+    || Array.isArray(modelResult)
+    || ! Object.keys(options).length
+  ) {
     return modelResult;
   }
 
@@ -80,12 +85,12 @@ export const parserResult = (modelResult: any, options: ParserOptions) => {
   let dataValues = modelResult.dataValues || modelResult;
 
   // 处理 visible
-  if (options.isUseVisible) {
+  if (options.tempVisible.length || options.visible.length) {
     dataValues = makeHiddenColumn(dataValues, options.tempVisible || options.visible);
   }
 
   // 处理 hidden
-  if (options.isUseHidden) {
+  if (options.tempHidden.length || options.hidden.length) {
     dataValues = makeVisibleColumn(dataValues, options.tempHidden || options.hidden);
   }
 

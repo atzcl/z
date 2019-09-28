@@ -7,6 +7,7 @@
 |
 */
 
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { Redis } from 'ioredis';
 import { isNull } from 'lodash';
 
@@ -46,7 +47,7 @@ export class Cache {
   async set(
     key: string,
     value: any,
-    time: number = 0,
+    time = 0,
     unit: unitType = 's',
   ) {
     if (isNull(key) || isNull(value)) {
@@ -54,19 +55,21 @@ export class Cache {
     }
 
     // 为了能传入 object、array 这类的值，所以这里转换成 json
-    value = JSON.stringify(value);
+    const data = JSON.stringify(value);
+    let un = unit;
+    let t = time;
 
-    if (! isNull(time)) {
+    if (! isNull(t)) {
       // 转换为小写
-      unit = unit.toLowerCase() as unitType;
+      un = un.toLowerCase() as unitType;
 
       // 判断时间单位
-      switch (unit) {
+      switch (un) {
         case 'h':
-          time *= 3600;
+          t *= 3600;
           break;
         case 'm':
-          time *= 60;
+          t *= 60;
           break;
         case 's':
           break;
@@ -77,13 +80,13 @@ export class Cache {
       }
 
       // EX: 单位为秒; PX: 单位为毫秒
-      const mill = unit === 'ms' ? 'PX' : 'EX';
+      const mill = un === 'ms' ? 'PX' : 'EX';
 
-      return this.store.set(this.getPrefixKey(key), value, mill, time);
+      return this.store.set(this.getPrefixKey(key), data, mill, t);
     }
 
     // 不设置过期时间
-    return this.store.set(this.getPrefixKey(key), value);
+    return this.store.set(this.getPrefixKey(key), data);
   }
 
   /**
@@ -216,7 +219,7 @@ export class Cache {
    *
    * @throws {Error}
    */
-  async abortError(message: string = 'error', code: number = 422) {
+  async abortError(message = 'error', code = 422) {
     const error: any = new Error(`[cache]: ${message}`);
     error.status = code;
     error.name = 'CacheException';

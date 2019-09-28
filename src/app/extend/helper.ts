@@ -16,6 +16,7 @@ import * as UUIDV4 from 'uuid/v4';
 import { random } from 'lodash';
 import { JWT } from '@app/foundation/Support/Jwt';
 
+
 export default {
   /**
    * 获取 egg loader 当前 helper 拓展时，注入的 BaseContextClass
@@ -34,9 +35,11 @@ export default {
     const { config } = app;
 
     return new JWT(
-      app.jwt,
+      // 防止 typeorm 扫描报错
+      (app as any).jwt,
       { ...config.jwt, ...options },
-      app.cache,
+      // 防止 typeorm 扫描报错
+      (app as any).cache,
     );
   },
 
@@ -47,7 +50,7 @@ export default {
    *
    * @returns { object }
    */
-  toResponse(code: number, data: any, msg: string = 'success') {
+  toResponse(code: number, data: any, msg = 'success') {
     const response = {
       code,
       data,
@@ -67,7 +70,7 @@ export default {
    *
    * @returns string
    */
-  createBcrypt(value: string, salt: number = 10): string {
+  createBcrypt(value: string, salt = 10): string {
     return bcryptjs.hashSync(value, bcryptjs.genSaltSync(salt));
   },
 
@@ -104,6 +107,11 @@ export default {
   // 转化为真实金额
   getAmountByPoints(amount: number) {
     return Number(amount) / 100;
+  },
+
+  // 生成不带
+  generateNotHorizontalLineOfUUID() {
+    return UUIDV4().replace(/-/ug, '');
   },
 
   /**
@@ -148,6 +156,7 @@ export default {
     }
 
     let strValue = '';
+    // eslint-disable-next-line no-plusplus
     for (let index = 0; index < len; index++) {
       strValue += chars[random(0, chars.length - 1)];
     }
@@ -162,11 +171,12 @@ export default {
    * @param {string[]} [whitelist=[]] 上传文件的格式白名单
    */
   checkUploadFileExt(filename: string, whitelist: string[] = []) {
-    if (whitelist.length === 0) {
-      whitelist = this._context.config.myApp.uploadExtWhiteList;
+    let realWhitelist = whitelist;
+    if (realWhitelist.length === 0) {
+      realWhitelist = this._context.config.myApp.uploadExtWhiteList;
     }
 
-    if (! whitelist.includes(path.extname(filename).toLowerCase())) {
+    if (! realWhitelist.includes(path.extname(filename).toLowerCase())) {
       this._context.abort(400, `当前文件: ${filename} 的格式不符合要求`);
     }
   },
@@ -190,7 +200,7 @@ export default {
 
         item.value = item[pk];
         item.label = item[name];
-        console.log(item);
+
         // 储存到数组
         tree.push(item);
       }

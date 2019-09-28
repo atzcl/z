@@ -29,17 +29,15 @@ export class PaymentApplication extends BaseApplication {
   jssdk!: JssdkClient;
 
   constructor(options: WeChatRequestOptions) {
-    options = {
+    // 当前模块无需 accessToken
+    super({
       ...options,
       // 替换基础路径
       config: {
         ...options.config,
         base_uri: options.config.payment_base_uri,
       },
-    };
-
-    // 当前模块无需 accessToken
-    super(options, null as any);
+    }, null as any);
   }
 
   protected async init(appOptions: WeChatRequestOptions) {

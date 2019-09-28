@@ -59,7 +59,7 @@ export default class CreateModelCommand implements yargs.CommandModule {
     const config = getCommandConfig();
     // 当前模块的路径
     const currentModulePath = resolve(config.modulePath, module);
-    const currentFilePath = resolve(currentModulePath, `${MAKE_TYPE_DIR}/${name}.${MAKE_TYPE_EXTNAME}`);
+    const currentFilePath = resolve(currentModulePath, `${MAKE_TYPE_DIR}/${upperFirst(name)}.${MAKE_TYPE_EXTNAME}`);
 
     if (! fs.existsSync(currentModulePath)) {
       abort('当前模块不存在，请先创建对应模块');

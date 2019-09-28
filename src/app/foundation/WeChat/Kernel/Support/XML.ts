@@ -11,6 +11,7 @@ import { isNumber, isObject } from 'util';
 import { parseString } from 'xml2js';
 
 
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 export class XML {
   /**
    * 解析 xml
@@ -50,7 +51,7 @@ export class XML {
    * @param {string} str
    */
   static check(str: string) {
-    return (/^(<\?xml.*\?>)?(\r?\n)*<xml>(.|\r?\n)*<\/xml>$/i).test(str.trim());
+    return (/^(<\?xml.*\?>)?(\r?\n)*<xml>(.|\r?\n)*<\/xml>$/ui).test(str.trim());
   }
 
   /**

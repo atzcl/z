@@ -55,7 +55,7 @@ export class WeChat {
 
     // 微信支付
     // 拼接绝对路径
-    options.config.payment.pfx = __dirname + '/app/' + options.config.payment.pfx;
+    options.config.payment.pfx = `${__dirname}/app/${options.config.payment.pfx}`;
     this.payment = new PaymentApplication(options);
   }
 }

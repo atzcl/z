@@ -25,13 +25,22 @@ export default class CreateControllerCommand implements yargs.CommandModule {
   // 说明
   aliases = 'mm'; // 别名
 
+  // 给当前命令添加额外的设置
+  builder(args: yargs.Argv) {
+    return args
+      .option('name', {
+        alias: 'n',
+        describe: `${MAKE_TYPE_NAME}名称`,
+      })
+  }
+
   /**
    * 执行业务处理
    *
    * @param args
    */
   async handler(args: yargs.Arguments) {
-    const moduleName = args._[1];
+    const moduleName = `${args.name || args._[1]}`;
     if (! moduleName) {
       abort('请输入创建的模块名称');
     }
@@ -80,7 +89,7 @@ export default class CreateControllerCommand implements yargs.CommandModule {
           // 生成的文件目录
           const filePath = resolve(currentModulePath, `${attr}/${moduleName}.${MAKE_TYPE_EXTNAME}`);
           // 调用的模板根目录
-          const templateRootPath = config.templateRootPath;
+          const { templateRootPath } = config;
 
           // 生成初始文件
           if ((value as any).initFile && typeof (value as any).initFile === 'function') {

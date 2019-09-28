@@ -20,6 +20,7 @@ export class Client extends BaseClient {
     const { payment } = this.config;
     const params: any = {
       appId: payment.sub_appid || payment.app_id,
+      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
       timeStamp: '' + dayjs().unix(),
       nonceStr: uniqId(),
       package: `prepay_id=${prepayId}`,

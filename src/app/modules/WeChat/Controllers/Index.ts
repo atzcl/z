@@ -35,19 +35,19 @@ export class WeChatController extends Controller {
     const { server } = this.wechat.officialAccount;
 
     // 图片消息处理器, 即只有当用户发送图片消息时，才会触发当前处理器
-    await server.push<WeChatMessageText>(
+    server.push<WeChatMessageText>(
       message => new Text(`您发送了 text 消息: ${message.Content}`),
       MessageEnum.TEXT,
     );
 
     // 图片消息处理器, 即只有当用户发送图片消息时，才会触发当前处理器
-    await server.push(
+    server.push(
       () => new Image('mzU3sC5Us6lulaLHvRN3gBEDbMgBMJ6Aly3e_r-FFX0-MgKs0bcoDhe0bXF_GQZF'),
       MessageEnum.IMAGE,
     );
 
     // 在一个事件里面处理分发
-    await server.push(this.weChatMessageService.handleAllMessage.bind(this.weChatMessageService));
+    server.push(this.weChatMessageService.handleAllMessage.bind(this.weChatMessageService));
 
     // 响应给微信服务器
     await server.serve(this.request, this.response);

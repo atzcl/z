@@ -1,13 +1,12 @@
 import { controller, post, provide, inject } from 'midway';
+import { Controller, getAdminRoute } from '@app/foundation/Bases/BaseController';
+import { validate } from '@app/foundation/Decorators/Validate';
 
-import { UserAdminLoginService } from '../../Services/Auth/AdminLogin';
+import { UserAdminLoginService } from '../../Services/Admin/AdminLogin';
 
-import { Controller } from '@/app/foundation/Bases/BaseController';
-import { validate } from '@/app/foundation/Decorators/Validate';
-import { adminPrefix } from '@/config/config.default';
 
 @provide()
-@controller(`/users/${adminPrefix}`)
+@controller(getAdminRoute('users'))
 export class AdminLoginController extends Controller {
   @inject()
   private readonly userAdminLoginService!: UserAdminLoginService;

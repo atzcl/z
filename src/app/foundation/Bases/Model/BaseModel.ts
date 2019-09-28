@@ -6,9 +6,9 @@
 |
 */
 
-import { isObject } from 'util';
+import { isObject, isString } from 'util';
 
-import { Op } from 'sequelize';
+import { Op, Sequelize } from 'sequelize';
 import { Model } from 'sequelize-typescript';
 import {
   WhereOptions,
@@ -21,135 +21,130 @@ import {
   DestroyOptions,
   Includeable,
 } from 'sequelize/types/lib/model';
-import { isString, cloneDeep, isPlainObject } from 'lodash';
+import { isPlainObject, cloneDeep } from 'lodash';
+import { FormatTimestamp } from '@app/foundation/Decorators/Model/FormatTimestamp';
+import { UUID } from '@app/foundation/Decorators/Model/UUID';
+import { DefaultColumns, IDefaultColumns } from '@app/foundation/Decorators/Model/DefaultColumns';
 
-import { parserResult, isEmpty } from './Utils';
+import { IBindings, bindingsDefault } from './binding';
+import { parserResult, isEmpty, hasOwnProperty } from './Utils';
+import { ITemporaryFormattings, temporaryFormattingsDefault } from './temporaryFormattings';
+import { TOperatorTypeOfKeys, getOperatorType } from './operatorTypes';
 
-import { FormatTimestamp } from '@/app/foundation/Decorators/Model/FormatTimestamp';
 
-
-export { FormatTimestamp };
-
-const operatorTypes = {
-  and: Op.and,
-  or: Op.or,
-
-  '=': Op.eq,
-  '<>': Op.ne,
-  '>': Op.gt,
-  '>=': Op.gte,
-  '<': Op.lt,
-  '<=': Op.lte,
-
-  eq: Op.eq,
-  ne: Op.ne,
-  gt: Op.gt,
-  gte: Op.gte,
-  lt: Op.lt,
-  lte: Op.lte,
-
-  in: Op.in,
-  'not in': Op.notIn,
-  like: Op.like,
-  'not like': Op.notLike,
-  between: Op.between,
-  'not between': Op.notBetween,
+export {
+  UUID,
+  DefaultColumns,
+  IDefaultColumns,
+  FormatTimestamp,
 };
 
-type OperatorTypeOfKeys = keyof typeof operatorTypes;
-
-/**
- * 获取查询类型
- *
- * @param {OperatorTypeOfKeys} type
- *
- * @return {symbol}
- */
-export const getOperatorType = (type: OperatorTypeOfKeys) => operatorTypes[type] || null;
-
 export class BaseModel<T = any> extends Model<T> {
-  // 是否使用隐藏
-  static isUseHidden = false;
-
   /**
    * @param {string[]} 输出数据时，隐藏字段数组 [ 黑名单 ]
    */
-  static hidden: string[] = [];
-
-  // 临时值，优先级比 hidden 高
-  static tempHidden: string[] = [];
-
-  static isUseVisible = false;
+  protected static hidden: string[] = [];
 
   /**
    * @param {array} 输出数据时显示的属性 [ 白名单 ]
    */
-  static visible: string[] = [];
-
-  // 临时值，优先级比 visible 高
-  static tempVisible: string[] = [];
+  protected static visible: string[] = [];
 
   /**
    * @param {object} 序列化字段类型
    */
-  static casts = {};
+  protected static casts = {};
 
   /**
    * sequelize、typeorm 这类 orm 会根据定义的 column 来做底层的过滤的, 所以这里其实是可以去掉的了
    *
    * @returns {string[]} 可批量赋值的数组,当为空时，会自动遍历 model 定义的字段属性来进行过滤
    */
-  static fillable: string[] = [];
+  protected static fillable: string[] = [];
 
-  static bindings: FindOptions = {
-    // 查询条件
-    where: {},
-    // 查询偏移量
-    offset: undefined,
-    // 限制查询条数
-    limit: undefined,
-    // 分组属性
-    group: undefined,
-    // 排序方式
-    order: [],
-    // 限制字段查询
-    attributes: [],
-    // 关联查询
-    include: [],
-    // 是否获取原始数据, 反之会为搜索出的每一条数据生成一个对应 model 的实例，用于更新，删除等操作
-    raw: false,
-  };
+  // 当前表在当前进程的唯一标识
+  protected static currentModelUniqueId: string;
+
+  /**
+   * 链式设置查询属性
+   * 为了避免 static 的变量污染，这里增加表 + pid 作为 key
+   */
+  protected static bindings: { [k: string]: IBindings, } = {};
+
+  /**
+   * 链式设置格式属性
+   * 为了避免 static 的变量污染，这里增加表 + pid 作为 key
+   */
+  protected static temporaryFormattings: { [k: string]: ITemporaryFormattings, } = {};
+
+  /**
+   * 检查当前模型的 bindings、temporaryFormattings 数据是否存在，如果不存在，就创建对应模型的默认数据
+   *
+   * @param {boolean} forceReset 是否强制重置对应模型的默认数据
+   */
+  static checkOrMakeDefaultData(forceReset = false) {
+    if (! this.currentModelUniqueId) {
+      this.currentModelUniqueId = `${this.getTableName()}_${process.pid}`;
+    }
+
+    if (! this.bindings[this.currentModelUniqueId] || forceReset) {
+      this.bindings[this.currentModelUniqueId] = cloneDeep(bindingsDefault);
+    }
+
+    if (! this.temporaryFormattings[this.currentModelUniqueId] || forceReset) {
+      this.temporaryFormattings[this.currentModelUniqueId] = cloneDeep(temporaryFormattingsDefault);
+    }
+  }
+
+  // 获取当前表的 bindings 数据
+  static getBindings() {
+    this.checkOrMakeDefaultData();
+
+    return this.bindings[this.currentModelUniqueId]
+  }
+
+  /**
+   * 设置 bindings 的某一属性的数据
+   *
+   * @param {keyof IBindings} property 属性名称
+   * @param {any} value 属性值
+   */
+  static setBinding<T extends keyof IBindings>(property: T, value: IBindings[T]) {
+    this.getBindings()[property] = value;
+
+    return this;
+  }
+
+  // 获取当前表的 temporaryFormattings 数据
+  static getTemporaryFormattings() {
+    this.checkOrMakeDefaultData();
+
+    return this.temporaryFormattings[this.currentModelUniqueId]
+  }
+
+  /**
+   * 设置 bindings 的某一属性的数据
+   *
+   * @param {keyof IBindings} property 属性名称
+   * @param {any} value 属性值
+   */
+  static setTemporaryFormatting<T extends keyof ITemporaryFormattings>(property: T, value: ITemporaryFormattings[T]) {
+    this.getTemporaryFormattings()[property] = value;
+
+    return this;
+  }
 
   /**
    * 因为都使用了 static 静态属性来储存，所以在本次操作结束后，需要将当前 model 的相关属性值初始化一下
    */
   static resetModel() {
-    this.bindings = {
-      where: {},
-      offset: undefined,
-      limit: undefined,
-      group: undefined,
-      order: [],
-      attributes: [],
-      include: [],
-      raw: false,
-    };
-
-    // 重置 hidden 相关
-    this.isUseHidden = false;
-    this.tempHidden = [];
-
-    // 重置 visible 相关
-    this.isUseVisible = false;
-    this.tempVisible = [];
+    this.checkOrMakeDefaultData(true);
   }
 
   // 使用 hidden 处理
   static useHidden(hiddens?: string[]) {
     if (hiddens && hiddens.length) {
-      this.isUseHidden = true;
-
-      this.tempHidden = hiddens;
+      return this.setTemporaryFormatting('tempHidden', hiddens);
     }
 
     return this;
@@ -158,9 +153,7 @@ export class BaseModel<T = any> extends Model<T> {
   // 使用 visible 处理
   static useVisible(visibles?: string[]) {
     if (visibles && visibles.length) {
-      this.isUseVisible = true;
-
-      this.tempVisible = visibles;
+      return this.setTemporaryFormatting('tempVisible', visibles);
     }
 
     return this;
@@ -174,9 +167,7 @@ export class BaseModel<T = any> extends Model<T> {
    * @param {FindAttributeOptions} attributes
    */
   static setAttributes(attributes: FindAttributeOptions) {
-    this.bindings.attributes = attributes;
-
-    return this;
+    return this.setBinding('attributes', attributes);
   }
 
   /**
@@ -184,7 +175,7 @@ export class BaseModel<T = any> extends Model<T> {
    *
    * @param {Array<string | ProjectionAlias>} attributes
    */
-  static field(attributes: Array<string | ProjectionAlias>) {
+  static field(attributes: (string | ProjectionAlias)[]) {
     return this.setAttributes(attributes);
   }
 
@@ -203,9 +194,7 @@ export class BaseModel<T = any> extends Model<T> {
    * @param {FindOptions['group']} group
    */
   static setGroup(group: FindOptions['group']) {
-    this.bindings.group = group;
-
-    return this;
+    return this.setBinding('group', group);
   }
 
   /**
@@ -213,12 +202,10 @@ export class BaseModel<T = any> extends Model<T> {
    *
    * @param {FindOptions['include']} include
    */
-  static setInclude(include: Includeable | Includeable[]) {
-    if (this.bindings.include) {
-      this.bindings.include = this.bindings.include.concat(include);
-    }
+  static setInclude(includeVal: Includeable | Includeable[]) {
+    const { include } = this.getBindings();
 
-    return this;
+    return this.setBinding('include', include.concat(includeVal))
   }
 
   /**
@@ -227,9 +214,7 @@ export class BaseModel<T = any> extends Model<T> {
    * @param {boolean} raw
    */
   static setRaw(raw: boolean) {
-    this.bindings.raw = raw;
-
-    return this;
+    return this.setBinding('raw', raw);
   }
 
   /**
@@ -240,9 +225,7 @@ export class BaseModel<T = any> extends Model<T> {
    * @returns {this}
    */
   static offset(num: number) {
-    this.bindings.offset = Number(num);
-
-    return this;
+    return this.setBinding('offset', Number(num));
   }
 
   /**
@@ -253,9 +236,7 @@ export class BaseModel<T = any> extends Model<T> {
    * @returns {this}
    */
   static limit(num: number) {
-    this.bindings.limit = Number(num);
-
-    return this;
+    return this.setBinding('limit', Number(num));
   }
 
   /**
@@ -267,7 +248,9 @@ export class BaseModel<T = any> extends Model<T> {
    * @returns {this}
    */
   static page(offset: number, limit: number) {
-    return this.offset(offset - 1).limit(limit);
+    this.offset(offset - 1).limit(limit);
+
+    return this;
   }
 
   /**
@@ -279,9 +262,8 @@ export class BaseModel<T = any> extends Model<T> {
    * @returns {this}
    */
   static orderBy(column: string, values: 'DESC' | 'ASC') {
-    this.bindings.order = [ [column, values] ];
-
-    return this;
+    // TODO: 待完善多种 order 的方式
+    return this.setBinding('order', [[column, values]]);
   }
 
   /**
@@ -314,12 +296,10 @@ export class BaseModel<T = any> extends Model<T> {
    * @returns {this}
    */
   static where(where: WhereOptions) {
-    this.bindings.where = {
-      ...this.bindings.where,
+    return this.setBinding('where', {
+      ...this.getBindings().where,
       ...where,
-    };
-
-    return this;
+    });
   }
 
   /**
@@ -332,7 +312,7 @@ export class BaseModel<T = any> extends Model<T> {
    */
   static orWhere(
     column: string | any[],
-    operator?: OperatorTypeOfKeys | any[],
+    operator?: TOperatorTypeOfKeys | any[],
     values?: string | boolean | number | any[],
   ) {
     /**
@@ -355,12 +335,12 @@ export class BaseModel<T = any> extends Model<T> {
      *  为了符合 laravel 的使用习惯，这样转一下
      */
 
-    const getOperator = getOperatorType(operator as any);
+    const getOperator = isString(operator) ? getOperatorType(operator) : operator;
 
     /**
      * @desc 第一种用法: orWhere('authorId', 'ne', 12)
      */
-    if (isString(column) && isString(operator) && getOperator && values && ! Array.isArray(values)) {
+    if (isString(column) && isString(getOperator) && values && ! Array.isArray(values)) {
       return this.where({
         [Op.or]: [
           {
@@ -377,7 +357,7 @@ export class BaseModel<T = any> extends Model<T> {
      */
     if (isString(column) && ! getOperator) {
       return this.where({
-        [Op.or]: [ { [column]: operator } ],
+        [Op.or]: [{ [column]: operator }],
       });
     }
 
@@ -388,13 +368,13 @@ export class BaseModel<T = any> extends Model<T> {
      */
     if (Array.isArray(column)) {
       const realQueryParams = [];
-      for (const col of column) {
+      for (let col of column) {
         if (Array.isArray(col) && col.length === 3 && getOperatorType(col[1])) {
           // 拼接为，例： { authorId: { [Op.eq]: 12 } }
-          realQueryParams.push({ [col[0]]: { [getOperatorType(col[1])]: col[2] } });
-        } else {
-          realQueryParams.push(col);
+          col = { [col[0]]: { [getOperatorType(col[1])]: col[2] } };
         }
+
+        realQueryParams.push(col);
       }
 
       return this.where({ [Op.or]: realQueryParams });
@@ -515,7 +495,7 @@ export class BaseModel<T = any> extends Model<T> {
    *
    * @returns {this}
    */
-  static whereIn(column: string, values: Array<string | number>) {
+  static whereIn(column: string, values: (string | number)[]) {
     return this.where({
       [column]: {
         [Op.in]: values,
@@ -530,7 +510,7 @@ export class BaseModel<T = any> extends Model<T> {
    *
    * @returns {this}
    */
-  static whereNotIn(column: string, values: Array<string | number>) {
+  static whereNotIn(column: string, values: (string | number)[]) {
     return this.where({
       [column]: {
         [Op.notIn]: values,
@@ -546,28 +526,26 @@ export class BaseModel<T = any> extends Model<T> {
   static resolveQueryOptions(options: any = {}): any {
     const {
       where, offset, limit, order, group, include, raw, attributes,
-    } = this.bindings;
-
-    const hasOwnProperty = (property: string) => Object.prototype.hasOwnProperty.call(options, property);
+    } = this.getBindings();
 
     // 合并 where
     // 使用 Symbol 作为 object 字面量时，Symbol 为不可枚举属性
-    if (hasOwnProperty('where') || Reflect.ownKeys(where || {}).length) {
+    if (hasOwnProperty(options, 'where') || Reflect.ownKeys(where || {}).length) {
       options.where = { ...options.where || {}, ...where };
     }
 
     // offset 偏移条件
-    if (! hasOwnProperty('offset') && ! isEmpty(offset)) {
-      options.offset = this.offset;
+    if (! hasOwnProperty(options, 'offset') && ! isEmpty(offset)) {
+      options.offset = offset;
     }
 
     // limit 限制条件
-    if (! hasOwnProperty('limit') && ! isEmpty(limit)) {
-      options.limit = this.limit;
+    if (! hasOwnProperty(options, 'limit') && ! isEmpty(limit)) {
+      options.limit = limit;
     }
 
     // order 排序条件
-    if (options.order && Array.isArray(options.order) || (order as string[]).length) {
+    if ((options.order && Array.isArray(options.order)) || (order as string[]).length) {
       options.order = [...(order as string[]), ...options.order || []];
     }
 
@@ -577,7 +555,7 @@ export class BaseModel<T = any> extends Model<T> {
     }
 
     // 关联查询
-    if (! options.include && (include as any[]).length) {
+    if (! options.include && (Array.isArray(include) && include.length)) {
       options.include = include;
     }
 
@@ -592,8 +570,8 @@ export class BaseModel<T = any> extends Model<T> {
      * @see https://demopark.github.io/sequelize-docs-Zh-CN/querying.html
      */
     if (
-      Array.isArray(attributes) && attributes.length
-      || isObject(attributes) && Object.keys(attributes as object).length
+      (Array.isArray(attributes) && attributes.length)
+      || (isObject(attributes) && Object.keys(attributes as object).length)
     ) {
       options.attributes = attributes;
     }
@@ -601,10 +579,9 @@ export class BaseModel<T = any> extends Model<T> {
     // 拷贝一份解析结果，然后传递使用，避免污染
     const cloneDeepOptions = cloneDeep({
       ...options,
-      isUseHidden: this.isUseHidden,
-      tempHidden: this.tempHidden,
-      isUseVisible: this.isUseVisible,
-      tempVisible: this.tempVisible,
+      ...this.getTemporaryFormattings(),
+      visible: this.visible,
+      hidden: this.hidden,
     });
 
     // 解析完后就重置，比如污染后续操作
@@ -614,12 +591,27 @@ export class BaseModel<T = any> extends Model<T> {
   }
 
   /**
+   * mysql json 的 json_set 函数操作
+   *
+   * @param {string} column json 字段的名称
+   * @param {object} value json 数据
+   */
+  static _JSON_SET(column: string, value: { [k: string]: any, }) {
+    const fields = Object.keys(value).reduce(
+      (previous, current) => [...previous, `$.${String(current)}`, value[String(current)]],
+      [] as string[],
+    );
+
+    return { [column]: Sequelize.fn('JSON_SET', Sequelize.col(column), ...fields) };
+  }
+
+  /**
    * 查询单条数据
    */
-  static _findOne(options?: FindOptions): Promise<any> {
+  static _findOne<T = any>(options?: FindOptions): Promise<any> {
     const resolveOptions = this.resolveQueryOptions(options);
 
-    return this._executeWrapper(
+    return this._executeWrapper<T>(
       this.findOne(resolveOptions),
       resolveOptions,
     );
@@ -628,10 +620,10 @@ export class BaseModel<T = any> extends Model<T> {
   /**
    * 查询全部数据
    */
-  static _findAll(options?: FindOptions): Promise<any> {
+  static _findAll<T = any>(options?: FindOptions) {
     const resolveOptions = this.resolveQueryOptions(options);
 
-    return this._executeWrapper(
+    return this._executeWrapper<T[]>(
       this.findAll(resolveOptions),
       resolveOptions,
     );
@@ -640,13 +632,13 @@ export class BaseModel<T = any> extends Model<T> {
   /**
    * 查询所有数据，并计算当前表的总数
    */
-  static _findAndCountAll(options?: FindAndCountOptions): Promise<any> {
+  static _findAndCountAll(options?: FindAndCountOptions) {
     const resolveOptions = this.resolveQueryOptions(options);
 
     return this._executeWrapper(
       this.findAndCountAll(resolveOptions),
       resolveOptions,
-      ({ count, rows }) => { return { count, data: rows } }, // 自定义成功回调, 只返回总记录数、具体的数据列表
+      ({ count, rows }) => ({ count, data: rows }), // 自定义成功回调, 只返回总记录数、具体的数据列表
     );
   }
 
@@ -661,6 +653,7 @@ export class BaseModel<T = any> extends Model<T> {
 
     if ((! options || ! options.fields) && this.fillable.length) {
       if (! options) {
+        // eslint-disable-next-line no-param-reassign
         options = {};
       }
 
@@ -668,7 +661,7 @@ export class BaseModel<T = any> extends Model<T> {
     }
 
     // 删除可能存在的 id
-    if (Object.prototype.hasOwnProperty.call(values, this.primaryKeyAttribute)) {
+    if (hasOwnProperty(values, this.primaryKeyAttribute)) {
       delete (values as any)[this.primaryKeyAttribute as any];
     }
 
@@ -681,7 +674,7 @@ export class BaseModel<T = any> extends Model<T> {
   /**
    * 更新数据
    */
-  static _update(values: object, options: UpdateOptions) {
+  static _update<T = any>(values: object, options: UpdateOptions) {
     if (! options.fields && this.fillable.length) {
       options.fields = this.fillable;
     }
@@ -692,7 +685,7 @@ export class BaseModel<T = any> extends Model<T> {
 
     delete (values as any).id;
 
-    return this._executeWrapper(
+    return this._executeWrapper<T>(
       this.update(values, resolveOptions),
       resolveOptions,
     );
@@ -701,15 +694,15 @@ export class BaseModel<T = any> extends Model<T> {
   /**
    * 用主键作为更新条件
    */
-  static _updateById(values: object, id: string | number) {
-    return this._update(values, { where: { [this.primaryKeyAttribute]: id } })
+  static _updateById<T = any>(values: object, id: string | number) {
+    return this._update<T>(values, { where: { [this.primaryKeyAttribute]: id } })
       .then((res: any) => res[0] || null);
   }
 
   /**
    * 删除 or 软删除
    */
-  static _destroy(id: string | number | Array<string | number>, options?: DestroyOptions) {
+  static _destroy<T = any>(id: string | number | (string | number)[], options?: DestroyOptions) {
     if (Array.isArray(id)) {
       // 多个删除
       this.whereIn(this.primaryKeyAttribute, id);
@@ -720,7 +713,7 @@ export class BaseModel<T = any> extends Model<T> {
 
     const resolveOptions = this.resolveQueryOptions(options || {});
 
-    return this._executeWrapper(
+    return this._executeWrapper<T>(
       this.destroy(resolveOptions),
       resolveOptions,
     );
@@ -729,14 +722,18 @@ export class BaseModel<T = any> extends Model<T> {
   /**
    * 真实删除
    */
-  static _forceDelete(id: string | number | Array<string | number>) {
-    return this._destroy(id, { force: true });
+  static _forceDelete<T = any>(id: string | number | (string | number)[]) {
+    return this._destroy<T>(id, { force: true });
   }
 
   /**
    * 包装一下执行的方法，减少样板代码
    */
-  static _executeWrapper(executeFunction: Promise<any>, resolveOptions: object, thenCallback?: (result: any) => any) {
+  static _executeWrapper<T = any>(
+    executeFunction: Promise<any>,
+    resolveOptions: object,
+    thenCallback?: (result: any) => any,
+  ): Promise<T> {
     return new Promise((resolve, reject) => {
       executeFunction
         .then((result) => {

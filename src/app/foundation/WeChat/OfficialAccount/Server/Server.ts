@@ -6,6 +6,7 @@
 |
 */
 
+// eslint-disable-next-line import/no-extraneous-dependencies
 import * as getRawBody from 'raw-body'; // 获取 Buffer 缓冲区数据
 import { Context } from 'midway';
 
@@ -101,6 +102,7 @@ export class Server extends BaseClient {
         }
 
         for (const handle of handles) {
+          // eslint-disable-next-line no-await-in-loop
           const handleResult = await handle(messageData);
 
           // 只会拿最后一个非空返回值将作为最终应答给用户的消息内容
@@ -113,8 +115,8 @@ export class Server extends BaseClient {
           }
         }
       }
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+      console.log(error);
     }
 
     // 清空重置消息处理器
@@ -132,6 +134,7 @@ export class Server extends BaseClient {
   protected async buildResponse(handlersResult: any, messageData: MessageHandleParams) {
     // 如果是字符、整数，那么就返回默认返回文本消息
     if (['string', 'number'].includes(typeof handlersResult)) {
+      // eslint-disable-next-line no-param-reassign
       handlersResult = new Text(handlersResult);
     }
 
@@ -174,6 +177,7 @@ export class Server extends BaseClient {
    */
   protected async signature(query: any) {
     // 将微信传递的 timestamp、nonce 跟自己在接口配置信息填写的 token 进行组成数组并排序
+    // eslint-disable-next-line @typescript-eslint/require-array-sort-compare
     const signature: any[] = [
       this.config.official_account.token,
       query.timestamp,
@@ -194,7 +198,7 @@ export class Server extends BaseClient {
       return
     }
 
-    const body = this.request.body;
+    const { body } = this.request;
     // 取原始数据
     const xml = body && typeof body === 'string'
       ? body
@@ -204,6 +208,6 @@ export class Server extends BaseClient {
         encoding: this.request.charset || 'utf-8',
       });
 
-    return XML.check(xml as string) ? XML.parse(xml) : {};
+    return XML.check(xml) ? XML.parse(xml) : {};
   }
 }

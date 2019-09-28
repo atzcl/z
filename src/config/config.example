@@ -173,7 +173,7 @@ export const customizeConfig = {
       app_id: '',
       secret: '',
       token: '',
-      aes_key: '',
+      encoding_aes_key: '',
       oauth: {
         scopes: 'snsapi_userinfo',
         callback: '',
@@ -187,7 +187,7 @@ export const customizeConfig = {
       app_id: 'your',
       secret: 'your',
       token: '',
-      aes_key: '',
+      encoding_aes_key: '',
     },
 
     payment: {

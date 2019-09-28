@@ -6,6 +6,8 @@
 |
 */
 
+import { adminPrefix } from '@my_config/config.default';
+
 import { BaseRequest } from './BaseRequest';
 
 
@@ -16,6 +18,9 @@ interface ApiToResponse {
   msg: string;
   time: number;
 }
+
+// 拼接 admin 的路由
+export const getAdminRoute = (prefix: string) => `/${prefix}/${adminPrefix}`
 
 export class Controller extends BaseRequest {
   /**
@@ -31,12 +36,12 @@ export class Controller extends BaseRequest {
   /**
    * @var {int} 返回的 code 状态码
    */
-  statusCode: number = 200;
+  statusCode = 200;
 
   /**
    * @var {string} 返回的 msg 提示
    */
-  statusMessage: string = 'success';
+  statusMessage = 'success';
 
   /**
    * 设置返回 data 数据
@@ -112,7 +117,7 @@ export class Controller extends BaseRequest {
    *
    * @returns {object} response
    */
-  async succeed(message: string = ''): Promise<void> {
+  async succeed(message = ''): Promise<void> {
     if (message) {
       this.setStatusMessage(message);
     }
@@ -128,7 +133,7 @@ export class Controller extends BaseRequest {
    *
    * @returns {object} response
    */
-  async failed(message: string = 'error', code: number = 422): Promise<void> {
+  async failed(message = 'error', code = 422): Promise<void> {
     await this.setStatusCode(code).setStatusMessage(message).toResponse();
   }
 }

@@ -16,7 +16,7 @@ export class AccessToken extends BaseRequest {
   /**
    * @val {string} 获取 access_toen 的 url
    */
-  endpointToGetToken: string = '';
+  endpointToGetToken = '';
 
   /**
    * access_token 缓存标识
@@ -36,20 +36,20 @@ export class AccessToken extends BaseRequest {
   /**
    * @var {string} 储存到缓存的前缀
    */
-  private cachePrefix: string = 'z.wechat.access_token';
+  private cachePrefix = 'z.wechat.access_token';
 
   /**
    * 因为微信的 access_token 有效期为 7200/S，为了确保每次使用的 access_token 都是有效的
    * 这里设置一个安全秒数的参数，用于保存到缓存时，过期时间的设置 = 7200 - safeSeconds
    */
-  private safeSeconds: number = 500;
+  private safeSeconds = 500;
 
   /**
    * 获取 access_token
    *
    * @param {boolean} refresh 是否需要刷新 access_token
    */
-  async getToken(refresh: boolean = false): Promise<object> {
+  async getToken(refresh = false): Promise<object> {
     // 如果不是指定需要刷新 token,并且存在缓存
     if (! refresh && await this.cache.has(this.getCacheKey)) {
       // 那么就返回缓存的 token
@@ -72,7 +72,7 @@ export class AccessToken extends BaseRequest {
    * @param {string} token 需要储存的 access_toen 值
    * @param {number} lifetime 过期时间
    */
-  async setToken(token: string, lifetime: number = 7200) {
+  async setToken(token: string, lifetime = 7200) {
     this.cache.set(
       this.getCacheKey, // 标识
       token, // 值
@@ -97,7 +97,7 @@ export class AccessToken extends BaseRequest {
     const result = await this.baseRequest(`${this.endpointToGetToken}?${qs.stringify(this.getCredentials)}`);
 
     // 判断是否返回错误
-    await this.resolveBodyHasError(result);
+    this.resolveBodyHasError(result);
 
     return result;
   }

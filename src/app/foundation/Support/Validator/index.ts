@@ -6,28 +6,17 @@
 |
 */
 
-import * as AsyncValidator from 'async-validator';
+import AsyncValidator, { Rules as ValidationRules, ValidateOption } from 'async-validator';
 
 import CNLang from './lang/cn';
 
 
+export {
+  ValidationRules,
+  ValidateOption,
+}
+
 export type ValidatorLang = 'cn' | 'en';
-
-export type ValidateCallback = (errors: any[], fields: any[]) => void;
-
-export interface ValidateOptions {
-  first?: boolean;
-  firstFields?: boolean | string[];
-}
-
-export interface AsyncValidator {
-  validate(source: object, callbak?: ValidateCallback): Promise<any>;
-  validate(
-    source: object,
-    options: ValidateOptions,
-    callbak?: ValidateCallback,
-  ): Promise<any>;
-}
 
 /**
  * @see https://github.com/yiminghe/async-validator/blob/e782748f0345b462d84e96a582c0dd38db2de666/src/messages.js
@@ -41,11 +30,11 @@ const langOptions = {
 export class Validator {
   validatorInstance: AsyncValidator;
 
-  constructor(rules: object, lang: keyof typeof langOptions = 'cn') {
+  constructor(rules: ValidationRules, lang: keyof typeof langOptions = 'cn') {
     const validator = new AsyncValidator(rules);
 
     // 挂载语言信息
-    validator.messages(langOptions[lang] || langOptions.cn);
+    (validator as any).messages(langOptions[lang] || langOptions.cn);
 
     this.validatorInstance = validator;
   }
@@ -58,7 +47,7 @@ export class Validator {
    *
    * @returns {Promise<any>}
    */
-  validate(source: object, options: ValidateOptions = {}) {
+  validate(source: object, options: ValidateOption = {}) {
     return new Promise((resolve, reject) => {
       this.validatorInstance
         .validate(
@@ -70,12 +59,8 @@ export class Validator {
   }
 
   // 同步版本
-  validateSync(source: object, options: ValidateOptions = {}, callback?: (errors: any[]) => any) {
+  validateSync(source: object, options: ValidateOption = {}, callback: (errors: any[]) => any = () => {}) {
     this.validatorInstance
-      .validate(
-        source,
-        options,
-        (error: any[]) => callback && callback(error),
-      );
+      .validate(source, options, callback);
   }
 }

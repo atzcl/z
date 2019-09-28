@@ -6,9 +6,9 @@
 |
 */
 
-import { Request } from 'egg';
+import { Request } from 'midway';
 
-import { Validator, ValidatorLang, ValidateOptions } from '../foundation/Support/Validator';
+import { Validator, ValidatorLang, ValidateOption, ValidationRules } from '../foundation/Support/Validator';
 import { ValidationException } from '../exceptions/ValidationException';
 import { BaseException } from '../exceptions/BaseException';
 import { AppFlowException } from '../exceptions/AppFlowException';
@@ -34,21 +34,18 @@ export default {
    * erroe info: [ { message: 'username 必填', field: 'username' }, { message: 'password 必填', field: 'password' } ]
    */
   validate(
-    rules: object,
+    rules: ValidationRules,
     verifyData?: object,
-    options: ValidateOptions = { firstFields: true, first: true },
+    options: ValidateOption = { firstFields: true, first: true },
     lang: ValidatorLang = 'cn',
   ) {
-    (new Validator(rules, lang))
-      .validateSync(
+    return (new Validator(rules, lang))
+      .validate(
         verifyData || this.all(),
         options,
-        (errors) => {
-          if (Array.isArray(errors)) {
-            throw new ValidationException(errors[0].message);
-          }
-        },
-      );
+      ).catch((errors) => {
+        throw new ValidationException(errors[0].message)
+      });
   },
 
   /**
@@ -98,10 +95,14 @@ export default {
    *
    * @returns {any | null}
    */
-  _body(key?: string, def: any = null) {
-    return key
-      ? this.self.body[key] || def
-      : this.self.body;
+  _body(key?: string | string[], def: any = null) {
+    return ! key
+      ? this.self.body
+      : (
+        ! Array.isArray(key)
+          ? this.self.body[key] || def
+          : key.map(k => (this.self.body[k] || def))
+      );
   },
 
   /**
@@ -161,14 +162,14 @@ export default {
    * @return {object}
    */
   only(keys: string | string[]) {
-    keys = this.transformArgToArray(keys);
+    const newKeys = this.transformArgToArray(keys);
 
     const results = {} as any;
 
     const input = this.all();
 
     for (const [key, value] of Object.entries(input)) {
-      if (keys.includes(key)) {
+      if (newKeys.includes(key)) {
         results[key] = value;
       }
     }
@@ -184,11 +185,11 @@ export default {
    * @return {object}
    */
   except(keys: string | string[]) {
-    keys = this.transformArgToArray(keys);
+    const newKeys = this.transformArgToArray(keys);
 
     const results = JSON.parse(JSON.stringify(this.all()));
     for (const [key] of Object.entries(results)) {
-      if (keys.includes(key)) {
+      if (newKeys.includes(key)) {
         delete results[key];
       }
     }
@@ -201,11 +202,11 @@ export default {
    * 如果传入的是一个数组， has 方法将判断在请求中，指定的值是否全部存在
    */
   has(keys: string | string[]) {
-    keys = this.transformArgToArray(keys);
+    const newKeys = this.transformArgToArray(keys);
 
     const input = this.all();
 
-    return keys.some((key: string) => !! input[key]);
+    return newKeys.some((key: string) => !! input[key]);
   },
 
   /**

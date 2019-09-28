@@ -6,36 +6,15 @@
 |
 */
 
-import {
-  DataType, Table, Column, CreatedAt, UpdatedAt, DeletedAt,
-} from 'sequelize-typescript';
-import { UUIDV4 } from 'sequelize';
-import { BaseModel, FormatTimestamp } from '@/app/foundation/Bases/BaseModel';
+import { DataType, Table, Column } from 'sequelize-typescript';
+import { BaseModel, DefaultColumns } from '@app/foundation/Bases/Model/BaseModel';
 
 const { STRING } = DataType;
 
 @Table({
   modelName: '<%= pluralName %>',
 })
+@DefaultColumns
 export class <%= name %>Model extends BaseModel<<%= name %>Model> {
-  // tslint:disable:variable-name
-  @Column({ type: STRING, primaryKey: true, unique: true, defaultValue: UUIDV4 })
-  id: string;
-
-  // more...
-
-  @Column({ defaultValue: 'cn' })
-  lang_type: string;
-
-  @CreatedAt
-  @FormatTimestamp
-  created_at: Date;
-
-  @UpdatedAt
-  @FormatTimestamp
-  updated_at: Date;
-
-  @DeletedAt
-  @FormatTimestamp
-  deleted_at: Date;
+  //
 }

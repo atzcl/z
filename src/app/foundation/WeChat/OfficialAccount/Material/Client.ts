@@ -73,9 +73,7 @@ export class Client extends BaseClient {
       media: fs.createReadStream(path),
     };
 
-    params = { ...params, type };
-
-    return this.httpUpload(this.getApiByType(type), formData, { params });
+    return this.httpUpload(this.getApiByType(type), formData, { params: { ...params, type } });
   }
 
   /**

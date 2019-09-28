@@ -77,7 +77,7 @@ export class PaymentApplication {
   /**
    * 抛出异常
    */
-  abort(code: number, message: string = 'error') {
+  abort(code: number, message = 'error') {
     const error: any = new Error(message);
     error.status = code;
     error.name = 'WeChatException';
@@ -97,6 +97,6 @@ export class PaymentApplication {
       return;
     }
 
-    await this.abort(422, `【 微信调用异常 】${res.errcode} ---> ${res.errmsg}`);
+    this.abort(422, `【 微信调用异常 】${res.errcode} ---> ${res.errmsg}`);
   }
 }

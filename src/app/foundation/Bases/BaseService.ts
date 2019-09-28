@@ -10,11 +10,13 @@ import * as dayjs from 'dayjs';
 import { isString } from 'lodash';
 import { FindOptions } from 'sequelize/types';
 
-import { BaseModel } from './Model/BaseModel';
 import { BaseRequest } from './BaseRequest';
+import { BaseModel } from './Model/BaseModel';
+
+import { AppFlowException } from '@/app/exceptions/AppFlowException';
 
 
-export class Service extends BaseRequest {
+export class Service {
   /**
    * 为了能够智能提示，先这样实现吧
    */
@@ -23,21 +25,25 @@ export class Service extends BaseRequest {
   }
 
   /**
-   * 处理分页
+   * 处理分页，内部黑盒操作
    *
-   * @param model
+   * @param {BaseRequest.prototype.request} request 封装过的请求对象
    * @param {string} pageSizeColumn 当前查询条数字段参数名称（前端提交的参数）
    * @param {string} currentPage 当前页码字段参数名称（前端提交的参数）
    */
-  handlePaginate(currentPage = 'current_page', pageSizeColumn = 'page_size') {
+  async handlePaginate(
+    request: typeof BaseRequest.prototype.request,
+    currentPage = 'current_page',
+    pageSizeColumn = 'page_size',
+  ) {
     // 检测 model 数据存在
     this.detectionModel();
 
-    const current = this.request._query(currentPage, 1);
+    const current = request._query(currentPage, 1);
     // 单次最大查询次数
     const maxLimit = 100;
     // 获取查询条数
-    const limit = this.request._query(pageSizeColumn, 15); // todo: 后面抽离到 config 配置中
+    const limit = request._query(pageSizeColumn, 15); // todo: 后面抽离到 config 配置中
 
     // 添加分页条件
     this.model.page(current, limit > maxLimit ? maxLimit : limit);
@@ -46,16 +52,19 @@ export class Service extends BaseRequest {
   /**
    * 动态处理排序
    *
+   * @param {string} order 排序值
    * @param fields 允许排序的字段集合
    */
-  handleSort(fields: string[] = ['order', 'created_at']) {
+  async handleSort(
+    order: string,
+    fields: string[] = ['order', 'created_at'],
+  ) {
     // 检测 model 数据存在
     this.detectionModel();
 
-    const order = this.request._query('order', '');
     if (order && isString(order)) {
       // 是否是以 _asc 或者 _desc 结尾
-      const pregMatch = order.match(/^(.+)_(asc|desc)$/);
+      const pregMatch = order.match(/^(.+)_(asc|desc)$/u);
       if (! pregMatch || ! pregMatch[1] || ! pregMatch[2] || fields.includes(pregMatch[0])) {
         return;
       }
@@ -72,13 +81,17 @@ export class Service extends BaseRequest {
   /**
    * 动态时间区间查询
    *
-   * @param string column
+   * @param {Array<string | number>} timeBetween 查询的时间区间
+   * @param {string} string column
    */
-  handleTimeBetween(columns = 'created_at') {
+  async handleTimeBetween(
+    timeBetween: (string | number)[],
+    columns = 'created_at',
+  ) {
     // 检测 model 数据存在
     this.detectionModel();
 
-    const times = this.request._query('time_between', []);
+    const times = timeBetween;
     if (times && Array.isArray(times) && times.length === 2) {
       const format = 'YYYY-MM-DD';
 
@@ -86,8 +99,8 @@ export class Service extends BaseRequest {
       this.model.whereBetween(
         columns,
         [
-          dayjs(times[0].replace(/"/g, '')).format(format) + ' 00:00:00',
-          dayjs(times[1].replace(/"/g, '')).format(format) + ' 23:59:59',
+          dayjs(String(times[0]).replace(/"/ug, '')).format(format) + ' 00:00:00',
+          dayjs(String(times[1]).replace(/"/ug, '')).format(format) + ' 23:59:59',
         ],
       );
     }
@@ -98,11 +111,13 @@ export class Service extends BaseRequest {
    *
    * @param array columns
    */
-  handleLikeKeyword(columns: string[]) {
+  async handleLikeKeyword(
+    keyword: string,
+    columns: string[],
+  ) {
     // 检测 model 数据存在
     this.detectionModel();
 
-    const keyword = this.request._query('keyword', '');
     if (keyword) {
       const like = `%${keyword}%`;
 
@@ -122,8 +137,12 @@ export class Service extends BaseRequest {
   /**
    * 分页
    */
-  async getPaginate() {
-    this.handlePaginate();
+  async getPaginate(
+    request: typeof BaseRequest.prototype.request,
+    currentPage = 'current_page',
+    pageSizeColumn = 'page_size',
+  ) {
+    await this.handlePaginate(request, currentPage, pageSizeColumn);
 
     return this.model._findAndCountAll();
   }
@@ -138,39 +157,36 @@ export class Service extends BaseRequest {
   /**
    * 创建数据
    *
-   * @param {object?} data 可选的创建数据
+   * @param {object} data 可选的创建数据
    */
-  async store(data?: object) {
-    return this.model._create(data || this.request._body());
+  async store(data: object) {
+    return this.model._create(data);
   }
 
   /**
    * 更新数据
    *
    * @param {string} id
-   * @param {object?} data 可选的更新数据
+   * @param {object} data 可选的更新数据
    */
-  async update(id: string, data?: object) {
-    return this.model._updateById(data || this.request._body(), id);
+  async update(id: string, data: object) {
+    return this.model._updateById(data, id);
   }
 
   /**
    * 删除数据
    *
-   * @param {string} id
+   * @param {string | string[]} id 单个 id OR id 集合
    * @param {boolean} isForce 是否真实删除
    */
-  async delete(id: string, isForce = false) {
-    // 判断是否是多个删除
-    const ids = this.request._body().ids;
-    if (ids && Array.isArray(ids) && ids.length) {
-      id = this.request._body().ids;
-    }
-
+  async delete(id: string | string[], isForce = false) {
     // 判断是否需要真实删除
-    const method = isForce ? '_forceDelete' : '_destroy';
+    return isForce ? this.model._forceDelete(id) : this.model._destroy(id);
+  }
 
-    return this.model[method](id);
+  // 抛出异常
+  abort(code: number, message = 'error') {
+    throw new AppFlowException(message, code);
   }
 
   // 检测 model 数据存在

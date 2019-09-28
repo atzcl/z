@@ -34,7 +34,7 @@ export class VerifyJWTMiddleware implements WebMiddleware {
       // 判断是否有有携带 authorization 头
       if (getToken) {
         try {
-          const token = getToken.split(' ')[1];
+          const [, token] = getToken.split(' ');
 
           /**
            * @desc 根据不同入口, 设置不同的 jwt secret 来进行 jwt 鉴权,
@@ -63,7 +63,7 @@ export class VerifyJWTMiddleware implements WebMiddleware {
       }
 
       // 中断后续
-      await ctx.abort(401, '请登录');
+      ctx.abort(401, '请登录');
     };
   }
 }

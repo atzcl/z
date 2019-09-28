@@ -41,7 +41,7 @@ export default class BaseClient extends BaseRequest {
   async httpGet(url: string, options: RequestOptions = {}) {
     const result = await this.baseRequest(await this.requestUrl(url, options.params));
 
-    await this.resolveBodyHasError(result);
+    this.resolveBodyHasError(result);
 
     return result;
   }
@@ -62,7 +62,7 @@ export default class BaseClient extends BaseRequest {
       },
     );
 
-    await this.resolveBodyHasError(result);
+    this.resolveBodyHasError(result);
 
     return result;
   }

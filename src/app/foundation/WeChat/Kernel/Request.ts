@@ -33,7 +33,7 @@ export interface WeChatRequestOptions {
       app_id: string,
       secret: string,
       token: string,
-      aes_key: string,
+      encoding_aes_key: string,
       oauth: {
         scopes: string,
         callback: string,
@@ -47,7 +47,7 @@ export interface WeChatRequestOptions {
       app_id: string,
       secret: string,
       token: string,
-      aes_key: string,
+      encoding_aes_key: string,
     },
 
     payment: {
@@ -85,6 +85,12 @@ export class BaseRequest {
     this.logger = logger;
   }
 
+  setConfig(config: WeChatRequestOptions['config']) {
+    this.config = config;
+
+    return this;
+  }
+
   /**
    * 发送请求
    */
@@ -116,7 +122,7 @@ export class BaseRequest {
   /**
    * 抛出异常
    */
-  abort(code: number, message: string = 'error') {
+  abort(code: number, message = 'error') {
     throw new WeChatRequestException(code, message);
   }
 

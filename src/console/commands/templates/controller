@@ -7,29 +7,33 @@
 */
 
 import { controller, provide, inject, get, post, put, del } from 'midway';
-import { Controller } from '@/app/foundation/Bases/BaseController';
+import { Controller } from '@app/foundation/Bases/BaseController';
 
 @provide()
-@controller('/<%= routerName %>')
+@controller('/<%= routerName %>', { middleware: ['verifyJWTMiddleware'] as GlobalMiddlewareNames })
 export class <%= name %>Controller extends Controller {
   @inject('Service')
-  service: Service;
+  service!: Service;
 
   @get('/')
   async index() {
-    const result = await this.service.getPaginate();
+    const result = await this.service.getPaginate(this.request);
 
     return this.setStatusData(result.data).setStatusTotal(result.count).succeed();
   }
 
   @post('/')
   async store() {
-    return this.setStatusData(await this.service.store()).succeed();
+    const result = await this.service.store(this.request._body());
+
+    return this.setStatusData(result).succeed();
   }
 
   @put('/:id')
   async update() {
-    return this.setStatusData(await this.service.update(this.ctx.params.id)).succeed();
+    const result = await this.service.update(this.request._query('id'), this.request._body());
+
+    return this.setStatusData(result).succeed();
   }
 
   @del('/:id')

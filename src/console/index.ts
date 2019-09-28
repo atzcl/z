@@ -10,26 +10,41 @@
 
 import * as yargs from 'yargs';
 
-import { abort, getRootPathResolve } from './utils';
+import { abort, getRootPath, getSrcPathResolve } from './utils';
 import { setCommandConfig } from './utils/config';
 import CreateModule from './commands/create-module';
 import CreateController from './commands/create-controller';
 import CreateService from './commands/create-service';
 import CreateMigration from './commands/create-migration';
+import CreateMigrationRunCommand from './commands/create-migration-run';
+import CreateMigrationRevertCommand from './commands/create-migration-revert';
+import CreateModelCommand from './commands/create-model';
 
 
-const appPath = getRootPathResolve('app');
-const modulePath = getRootPathResolve('app/modules');
-const templateRootPath = getRootPathResolve('console/commands/templates');
+const rootPath = getRootPath();
+const srcPath = getSrcPathResolve();
+const appPath = getSrcPathResolve('app');
+const modulePath = getSrcPathResolve('app/modules');
+const templateRootPath = getSrcPathResolve('console/commands/templates');
+
 // 设置全局配置
-setCommandConfig({ appPath, modulePath, templateRootPath });
+setCommandConfig({
+  rootPath,
+  srcPath,
+  appPath,
+  modulePath,
+  templateRootPath,
+});
 
 yargs
   .usage('使用方式: <command> [options]')
   .command(new CreateModule())
   .command(new CreateController())
   .command(new CreateService())
+  .command(new CreateModelCommand())
   .command(new CreateMigration())
+  .command(new CreateMigrationRunCommand())
+  .command(new CreateMigrationRevertCommand())
   .recommendCommands()
   .demandCommand(1)
   .strict()
@@ -54,6 +69,7 @@ yargs
   .argv;
 
 // 定义 yargs 的输出样式
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 require('yargonaut')
   .style('blue')
   .style('yellow', 'required')

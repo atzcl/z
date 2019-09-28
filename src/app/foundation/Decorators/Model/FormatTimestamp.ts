@@ -7,22 +7,35 @@
 */
 
 import * as dayjs from 'dayjs';
-import { getSequelizeTypeByDesignType } from 'sequelize-typescript/dist/model/shared/model-service';
+import { DataType } from 'sequelize-typescript';
+// import { getSequelizeTypeByDesignType } from 'sequelize-typescript/dist/model/shared/model-service';
 import { addAttribute } from 'sequelize-typescript/dist/model/column/attribute-service';
+
+
+export const FormatTimestampOptions = (propertyName: string) => ({
+  type: DataType.DATE,
+  get() {
+    const time = (this as any).getDataValue(propertyName);
+
+    return time ? dayjs(time).format('YYYY-MM-DD HH:mm:ss') : null;
+  },
+})
 
 /**
  * @see https://github.com/RobinBuschmann/sequelize-typescript/blob/master/lib/annotations/Column.ts
  */
 export function FormatTimestamp(target: any, propertyName: string): void {
-  const options = {
-    type: getSequelizeTypeByDesignType(target, propertyName),
-    get() {
-      const time = (this as any).getDataValue(propertyName);
+  // const options = {
+  //   type: getSequelizeTypeByDesignType(target, propertyName),
+  //   get() {
+  //     const time = (this as any).getDataValue(propertyName);
 
-      // todo: 到时候可以把时间的格式设置到 model 表上
-      return time ? dayjs(time).format('YYYY-MM-DD HH:mm:ss') : null;
-    },
-  };
+  //     // todo: 到时候可以把时间的格式设置到 model 表上
+  //     return time ? dayjs(time).format('YYYY-MM-DD HH:mm:ss') : null;
+  //   },
+  // };
+
+  const options = FormatTimestampOptions(propertyName);
 
   addAttribute(target, propertyName, options);
 }

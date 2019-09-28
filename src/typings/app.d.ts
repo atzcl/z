@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { Redis } from 'ioredis';
 import ExtendApplication from '@app/extend/application';
 import ExtendContext from '@app/extend/context';

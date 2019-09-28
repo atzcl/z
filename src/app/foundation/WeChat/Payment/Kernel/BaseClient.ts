@@ -6,6 +6,7 @@
 |
 */
 
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { RequestOptions } from 'urllib';
 import * as fs from 'fs-extra';
 
@@ -59,13 +60,13 @@ export class BaseClient extends BaseRequest {
     const secretKey = await this.app.getKey(endpoint);
 
     // 拼接参数
-    params = await this.resolveParams(config, params);
-    params.sign = await this.generateSign(params, secretKey, params.sign_type || 'MD5');
+    const newParams = await this.resolveParams(config, params);
+    newParams.sign = await this.generateSign(newParams, secretKey, newParams.sign_type || 'MD5');
 
     // 合成请求参数
     const requestOptions = {
       method,
-      data: buildXML(params),
+      data: buildXML(newParams),
       json: false,
       ...options,
     };
@@ -141,19 +142,19 @@ export class BaseClient extends BaseRequest {
       sub_appid: '',
     };
 
-    params = {
+    const newParams = {
       ...base,
       ...(await this.prepends()),
       ...params,
     };
 
-    Object.keys(params).forEach((attr: string) => {
-      if (! params[attr]) {
-        delete params[attr];
+    Object.keys(newParams).forEach((attr: string) => {
+      if (! newParams[attr]) {
+        delete newParams[attr];
       }
     });
 
-    return params;
+    return newParams;
   }
 
   /**

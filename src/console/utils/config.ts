@@ -7,6 +7,8 @@
 */
 
 export interface ConfigOptions {
+  srcPath: string;
+  rootPath: string;
   appPath: string;
   modulePath: string;
   templateRootPath: string;
@@ -14,4 +16,6 @@ export interface ConfigOptions {
 
 let commandConfig: any = {};
 export const getCommandConfig = (): ConfigOptions => commandConfig;
-export const setCommandConfig = (config: any) => commandConfig = config;
+export const setCommandConfig = (config: ConfigOptions) => {
+  commandConfig = config
+};

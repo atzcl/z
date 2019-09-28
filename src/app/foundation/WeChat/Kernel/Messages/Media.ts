@@ -22,7 +22,7 @@ export class Media extends Message {
     type: MessageMediaType | null = null,
     attributes: any = {},
   ) {
-    super({ media_id: mediaId, ...(isObject(attributes) && attributes || {}) });
+    super({ media_id: mediaId, ...((isObject(attributes) && attributes) || {}) });
 
     if (type) {
       this.setType(type);

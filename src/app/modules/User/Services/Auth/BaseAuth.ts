@@ -66,7 +66,11 @@ export class BaseAuthService {
 
     const { captcha_token, captcha_code } = this.ctx.request.body;
 
-    await this.captchaService.checkCaptcha(captcha_token, captcha_code);
+    await this.captchaService.checkCaptcha(
+      this.ctx.app.cache,
+      captcha_token,
+      captcha_code,
+    );
   }
 
   /**

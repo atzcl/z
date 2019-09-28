@@ -31,10 +31,11 @@ export const sha1 = (str: string) => createHash('sha1').update(str).digest('hex'
  * 生成签名
  */
 export const toQueryString = (obj: object) => (
+  // eslint-disable-next-line @typescript-eslint/require-array-sort-compare
   Object.keys(obj)
     .filter((key: string) => key !== 'sign' && (obj as any)[key] !== undefined && (obj as any)[key] !== '')
     .sort()
-    .map((key: string) => key + '=' + (obj as any)[key])
+    .map((key: string) => `${key}=${(obj as any)[key]}`)
     .join('&')
 );
 
@@ -43,14 +44,14 @@ export const toQueryString = (obj: object) => (
  *
  * @returns {void}
  */
-export const uniqId = () => UUIDV4().replace(/-/g, '');
+export const uniqId = () => UUIDV4().replace(/-/ug, '');
 
 /**
  * 判断是否是 xml
  *
  * @param {string} str 需要检查的 xml
  */
-export const checkXML = (str: string) => (/^(<\?xml.*\?>)?(\r?\n)*<xml>(.|\r?\n)*<\/xml>$/i).test(str.trim());
+export const checkXML = (str: string) => (/^(<\?xml.*\?>)?(\r?\n)*<xml>(.|\r?\n)*<\/xml>$/ui).test(str.trim());
 
 /**
  * 生成 xml
