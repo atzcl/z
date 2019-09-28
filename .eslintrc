@@ -1,17 +1,30 @@
 {
   "extends": [
-    "@waiting/eslint-config/recommended",
+    "@waiting/eslint-config"
   ],
   "rules": {
     "import/no-unresolved": 0,
     "semi": "off",
+    "@typescript-eslint/brace-style": 0,
+    "@typescript-eslint/interface-name-prefix": [0, "error", "always"],
     "@typescript-eslint/semi": [0, "error", "always"],
     "array-bracket-newline": ["error", { "multiline": true }],
     "padded-blocks": ["error", "never"],
     "no-extra-parens": 0,
     "import/no-cycle": 0,
+    "array-bracket-spacing": ["error", "never"],
+    "import/max-dependencies": ["error", {"max": 20}],
+    "no-negated-condition": 0,
+    "@typescript-eslint/no-floating-promises": 0,
     "@typescript-eslint/no-extra-parens": 0,
     "@typescript-eslint/no-empty-interface": 0,
+    "@typescript-eslint/no-explicit-any": 0,
+    "@typescript-eslint/unbound-method": [
+      "error",
+      {
+        "ignoreStatic": true
+      }
+    ],
     "@typescript-eslint/explicit-member-accessibility": [
       2,
       {
