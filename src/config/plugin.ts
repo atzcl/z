@@ -1,5 +1,7 @@
 // 启用 ts 的 paths 路径映射 (路径别名)
+// eslint-disable-next-line import/no-extraneous-dependencies
 import 'tsconfig-paths/register';
+
 
 export default {
   // 挂载 egg-jwt

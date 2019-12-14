@@ -1,6 +1,6 @@
 import { EggAppConfig, PowerPartial } from 'midway';
 
-import { uploadImageWhiteList, uploadTextWhiteList, uploadVideoWhiteList } from './upload.config';
+import { uploadImageWhiteList, uploadFileWhiteList, uploadVideoWhiteList, uploadAudioWhiteList } from './upload.config';
 
 // for config.{env}.ts
 export type DefaultConfig = PowerPartial<EggAppConfig>;
@@ -15,6 +15,16 @@ export const appUrl = 'https://xxx.com';
 export const staticUrls = {
   default: appUrl,
 };
+
+const mail = {
+  host: 'smtp.qq.com', // 地址
+  port: 465, // 端口
+  secure: true, // TLS 设置
+  auth: {
+    user: 'xxx@qq.com', // 账号
+    pass: 'your', // 密码
+  },
+}
 
 // 自定义配置/未提供 .d.ts 文件的拓展配置
 export const customizeConfig = {
@@ -122,39 +132,37 @@ export const customizeConfig = {
       en: 1,
     },
 
-    mail: {
-      host: 'smtp.qq.com', // 地址
-      port: 465, // 端口
-      secure: true, // TLS 设置
-      auth: {
-        user: 'xxx@qq.com', // 账号
-        pass: 'your', // 密码
-      },
-    },
+    mail,
 
     exceptionNotify: {
-      isOpen: 0, // 是否打开异常通知，0 关闭；1 开启
-      type: 2, // 异常通知类型，1 微信； 2 邮件；更多...
+      enable: false, // 是否打开异常通知
+      type: 'dingtalk' as 'dingtalk', // 异常通知类型，wechat 微信； mail 邮件；dingtalk 钉钉：更多...
       wechatOpt: {
         touser: 'xxxxx', // 接收通知的用户 open_id
         templateId: 'xxxxx', // 模板消息的 id
       },
       emailOpt: {
         to: 'xxxxx', // 接收通知的用户邮件地址
+        from: mail.auth.user,
       },
     },
 
     uploadImageWhiteList,
-    uploadTextWhiteList,
+    uploadFileWhiteList,
     uploadVideoWhiteList,
+    uploadAudioWhiteList,
+    uploadsMaxSizes: {
+      image: 1,
+      file: 1,
+      video: 1,
+      audio: 1,
+    },
     // 文件上传白名单
     uploadExtWhiteList: [
       ...uploadImageWhiteList,
-      ...uploadImageWhiteList,
-      ...uploadImageWhiteList,
-      // tar
-      '.zip',
-      '.gz', '.tgz', '.gzip',
+      ...uploadVideoWhiteList,
+      ...uploadFileWhiteList,
+      ...uploadAudioWhiteList,
     ],
   },
 

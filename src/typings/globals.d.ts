@@ -13,4 +13,10 @@ interface GlobalControllerRouterOptions {
 
 type GlobalMiddlewareNames = (keyof GlobalMiddlewareNameObject)[] | undefined;
 
+interface GlobalValidateIdentifierObject {
+  //
+}
+
+type GlobalValidateIdentifier = keyof GlobalValidateIdentifierObject;
+
 interface AnyObject { [k: string]: any, }
