@@ -15,10 +15,12 @@
     "array-bracket-spacing": ["error", "never"],
     "import/max-dependencies": ["error", {"max": 20}],
     "no-negated-condition": 0,
+    "@typescript-eslint/indent": [ "error", 2, { "FunctionDeclaration": { "arguments": 1 } }],
     "@typescript-eslint/no-floating-promises": 0,
     "@typescript-eslint/no-extra-parens": 0,
     "@typescript-eslint/no-empty-interface": 0,
     "@typescript-eslint/no-explicit-any": 0,
+    "@typescript-eslint/member-ordering": ["error", { "classes": ["public-static-field", "public-instance-method"] }],
     "@typescript-eslint/unbound-method": [
       "error",
       {

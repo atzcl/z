@@ -27,12 +27,13 @@
     "paths": {
       "@/*": [ "src/*" ],
       "@app/*": [ "src/app/*" ],
+      "@my_config/*": [ "src/config/*" ],
       "@my_modules/*": [ "src/app/modules/*" ],
       "@my_types/*": [ "src/typings/*" ],
-      "@my_foundation/*": [ "src/app/foundation/*" ],
-      "@my_migration/*": [ "src/app/foundation/Migrations/*" ],
+      "@my_foundation/*": [ "src/app/foundations/*" ],
+      "@my_migration/*": [ "src/app/foundations/Migrations/*" ],
       "@my_console/*": [ "src/console/*" ],
-      "@my_decorator/*": [ "src/foundation/decorators/*" ]
+      "@my_decorator/*": [ "src/foundations/decorators/*" ]
     }
   },
   "include": [
