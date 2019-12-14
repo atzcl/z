@@ -18,5 +18,8 @@ export default (app: Application) => {
     await app.applicationContext.getAsync('sequelizeSingleton');
     // 创建微信相关服务
     await app.applicationContext.getAsync('wechat');
+
+    // 启动队列
+    // await app.applicationContext.getAsync('queue')
   });
 };

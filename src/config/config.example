@@ -26,6 +26,13 @@ const mail = {
   },
 }
 
+const redisBaseConfig = {
+  host: '127.0.0.1',
+  port: 6379,
+  password: 'your',
+  db: 1,
+}
+
 // 自定义配置/未提供 .d.ts 文件的拓展配置
 export const customizeConfig = {
   // 中间件配置
@@ -34,9 +41,7 @@ export const customizeConfig = {
   // redis 配置 [ 后面如果需要对某一业务进行缓存的时候，可以开启多实例来进行特定储存 ]
   redis: {
     client: {
-      host: '127.0.0.1',
-      port: 6379,
-      password: 'your',
+      ...redisBaseConfig,
       db: '5',
     },
     agent: true,
@@ -92,9 +97,8 @@ export const customizeConfig = {
       },
     },
     redis: {
-      host: '127.0.0.1',
-      port: 6379,
-      auth_pass: 'your',
+      ...redisBaseConfig,
+      auth_pass: redisBaseConfig.password,
       db: 6,
     },
   },
@@ -133,6 +137,14 @@ export const customizeConfig = {
     },
 
     mail,
+
+    queue: {
+      enable: false, // 是否开启队列
+      redis: {
+        ...redisBaseConfig,
+        db: 7,
+      },
+    },
 
     exceptionNotify: {
       enable: false, // 是否打开异常通知
