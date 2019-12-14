@@ -9,7 +9,6 @@
 import { provide } from 'midway';
 
 import { UserAdminModel } from '../../Models/UserAdmin';
-
 import { BaseAuthService } from '../Auth/BaseAuth';
 
 @provide()
@@ -19,7 +18,7 @@ export class UserAdminLoginService extends BaseAuthService {
    *
    * @returns
    */
-  getUserModel() {
+  model() {
     return UserAdminModel;
   }
 
@@ -35,5 +34,20 @@ export class UserAdminLoginService extends BaseAuthService {
 
     // 将加密的密钥设置为后台用户的密钥
     return ctx.helper.jwt({ secret: ctx.app.config.jwt.adminSecret }).create(encryptUserData);
+  }
+
+  /**
+   * 获取需要加密的数据
+   *
+   * @param {object} userInfo
+   *
+   * @returns {object}
+   */
+  encryptUserData(userInfo: any) {
+    const { id } = userInfo;
+
+    return {
+      id,
+    };
   }
 }

@@ -6,16 +6,20 @@
 |
 */
 
-import { Context, provide, inject } from 'midway';
+import { Context, provide } from 'midway';
 
 import { ValidationInterface } from '@/app/interfaces/Validation';
 import PhoneRule from '@/app/rules/Phone';
 
+
+declare global {
+  interface GlobalValidateIdentifierObject {
+    userLoginValidate: string;
+  }
+}
+
 @provide()
 export class UserLoginValidate implements ValidationInterface {
-  @inject()
-  ctx!: Context;
-
   /**
    * 验证规则
    *

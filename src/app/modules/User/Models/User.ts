@@ -8,8 +8,7 @@
 
 import { DataType, Table, Column } from 'sequelize-typescript';
 import Helper from '@app/extend/helper';
-
-import { BaseModel } from '@/app/foundation/Bases/Model/BaseModel';
+import { BaseModel } from '@app/foundations/ORM/Model';
 
 
 const { STRING } = DataType;

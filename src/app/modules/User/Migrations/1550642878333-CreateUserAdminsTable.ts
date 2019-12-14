@@ -1,92 +1,51 @@
-import { MigrationInterface, QueryRunner, Table, TableIndex } from 'typeorm';
+/*
++-----------------------------------------------------------------------------------------------------------------------
+| Author: atzcl <atzcl0310@gmail.com>  https://github.com/atzcl
++-----------------------------------------------------------------------------------------------------------------------
+| user_admins
+|
+*/
 
-import uuidPrimary from '@/app/foundation/Migrations/UuidPrimary';
-import timestamps from '@/app/foundation/Migrations/Timestamps';
-import softDeletes from '@/app/foundation/Migrations/SoftDeletes';
+import { MigrationInterface, QueryRunner } from 'typeorm';
+import { Blueprint } from '@app/foundations/Migrations/Blueprint';
+
+import { DEFAULT_STATUS } from '@/app/constants/Global';
 
 // 表名
 const TABLE_NAME = 'user_admins';
-// 索引
-const TABLE_DEFAULT_INDEX_NAME = 'IDX_DEFAULT_NAME';
 
 export class CreateUserAdminsTable1550642878333 implements MigrationInterface {
   async up(queryRunner: QueryRunner): Promise<any> {
-    await queryRunner.createTable(
-      new Table({
-        name: TABLE_NAME,
-        columns: [
-          ...uuidPrimary,
+    await (new Blueprint(TABLE_NAME, queryRunner))
+      .build((table) => {
+        table.quicklyAddDefaultFields(() => {
+          table.char('username', 64).unique().comment('用户名').index();
+          table.char('email', 150).unique().nullable().comment('邮箱');
+          table.char('phone', 20).unique().nullable().comment('手机号码');
 
-          {
-            name: 'username', type: 'varchar', length: '64', isUnique: true, isNullable: true, default: null,
-          },
-          {
-            name: 'email', type: 'varchar', length: '150', isUnique: true, isNullable: true, default: null,
-          },
-          {
-            name: 'phone', type: 'varchar', length: '50', isUnique: true, isNullable: true, default: null,
-          },
+          table.string('password').comment('密码');
 
-          { name: 'password', type: 'varchar' },
+          table.string('name', 20).nullable().comment('真实姓名');
+          table.string('nickname', 100).nullable().comment('昵称');
+          table.string('avatar').nullable().comment('用户头像');
 
-          {
-            name: 'name', type: 'varchar', length: '50', isNullable: true, comment: '真实姓名',
-          },
-          {
-            name: 'nickname', type: 'varchar', length: '100', isNullable: true, comment: '昵称',
-          },
-          {
-            name: 'avatar', type: 'varchar', isNullable: true, comment: '用户头像',
-          },
-          {
-            name: 'bio', type: 'varchar', isNullable: true, comment: '用户简介',
-          },
-          {
-            name: 'sex', type: 'tinyint', length: '1', default: 0, comment: '用户性别',
-          },
-          {
-            name: 'location', type: 'varchar', isNullable: true, comment: '用户位置',
-          },
-          {
-            name: 'birthdate', type: 'timestamp', isNullable: true, comment: '出生日期',
-          },
+          table.string('bio').nullable().comment('用户简介');
+          table.tinyInteger('sex').default(1).comment('用户性别');
+          table.string('location').nullable().comment('用户位置');
 
-          {
-            name: 'email_verified_at', type: 'timestamp', isNullable: true, comment: '邮件验证时间',
-          },
-          {
-            name: 'phone_verified_at', type: 'timestamp', isNullable: true, comment: '手机验证时间',
-          },
+          table.timestamp('birthdate').nullable().comment('出生日期');
+          table.timestamp('email_verified_at').nullable().comment('邮件验证时间');
+          table.timestamp('phone_verified_at').nullable().comment('手机验证时间');
 
-          {
-            name: 'user_level_id', type: 'int', isNullable: true, comment: '用户等级',
-          },
+          table.integer('user_level_id').nullable().comment('用户等级');
 
-          {
-            name: 'status', type: 'tinyint', length: '1', default: 1, comment: '用户状态：1 正常，其他： 异常',
-          },
-          {
-            name: 'online_status', type: 'tinyint', length: '1', default: 1, comment: '在线状态',
-          },
+          table.tinyInteger('status').default(DEFAULT_STATUS.NORMAL).comment('状态：1 正常，其他： 异常');
 
-          {
-            name: 'user_token', type: 'text', isNullable: true, comment: '用户 token',
-          },
+          table.tinyInteger('online_status').default(DEFAULT_STATUS.NORMAL).comment('在线状态：1 正常，其他： 异常');
 
-          ...timestamps,
-          ...softDeletes,
-        ],
-      }),
-      true,
-    );
-
-    await queryRunner.createIndex(
-      TABLE_NAME,
-      new TableIndex({
-        name: TABLE_DEFAULT_INDEX_NAME,
-        columnNames: ['id'],
-      }),
-    );
+          table.string('user_token', 500).nullable().comment('用户 token');
+        })
+      });
   }
 
   async down(queryRunner: QueryRunner): Promise<any> {

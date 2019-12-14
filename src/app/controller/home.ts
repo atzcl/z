@@ -1,5 +1,5 @@
 import { provide, controller, get, all } from 'midway';
-import { Controller } from '@app/foundation/Bases/BaseController';
+import { Controller } from '@app/foundations/Bases/BaseController';
 
 @provide()
 @controller('/')

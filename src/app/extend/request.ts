@@ -6,9 +6,11 @@
 |
 */
 
+import { isString } from 'util';
+
 import { Request } from 'midway';
 
-import { Validator, ValidatorLang, ValidateOption, ValidationRules } from '../foundation/Support/Validator';
+import { Validator, ValidatorLang, ValidateOption, ValidationRules } from '../foundations/Support/Validator';
 import { ValidationException } from '../exceptions/ValidationException';
 import { BaseException } from '../exceptions/BaseException';
 import { AppFlowException } from '../exceptions/AppFlowException';
@@ -122,18 +124,25 @@ export default {
    *
    * @returns {any | null}
    */
-  _query(key?: string, def: any = null) {
-    /**
-     * 这里默认使用 queries 而不是 query, 原因具体可以查看文档
-     *
-     * @see https://eggjs.org/zh-cn/basics/controller.html#queries
-     */
-    const result = this.retrieveItem('queries', key, def);
+  _query(keys?: string | string[], def: any = null) {
+    const get = (key?: string) => {
+      /**
+       * 这里默认使用 queries 而不是 query, 原因具体可以查看文档
+       *
+       * @see https://eggjs.org/zh-cn/basics/controller.html#queries
+       */
+      const result = this.retrieveItem('queries', key, def);
 
-    // 因为 queries 会确保任何一个有值的 key, 都会是数组的形式，但是在真实的情况下，我们获取的 key 的值基本都是单一的
-    // 所以这里再判断一下，如果获取的值为数组并且长度为一，那么就返回数组的值就好了
-    return key && Array.isArray(result) && result.length === 1
-      ? result[0] : result;
+      // 因为 queries 会确保任何一个有值的 key, 都会是数组的形式，但是在真实的情况下，我们获取的 key 的值基本都是单一的
+      // 所以这里再判断一下，如果获取的值为数组并且长度为一，那么就返回数组的值就好了
+      return key && Array.isArray(result) && result.length === 1
+        ? result[0]
+        : result;
+    }
+
+    return ! keys || isString(keys)
+      ? get(keys)
+      : keys.map(k => get(k))
   },
 
   /**

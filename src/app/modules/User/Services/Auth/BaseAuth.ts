@@ -7,14 +7,12 @@
 */
 
 import { Context, inject } from 'midway';
+import PhoneRule from '@app/rules/Phone';
 import { CaptchaService } from '@my_modules/Captcha/Services/Captcha';
-
-import { UserModel } from '../../Models/user';
-
-import PhoneRule from '@/app/rules/Phone';
+import { BaseModel, BuildsQueries } from '@app/foundations/ORM/Model';
 
 
-export class BaseAuthService {
+export abstract class BaseAuthService {
   @inject()
   ctx!: Context;
 
@@ -22,12 +20,33 @@ export class BaseAuthService {
   captchaService!: CaptchaService;
 
   /**
+   * 查询构造器实例
+   *
+   * @description 需要注意作用域问题，避免属性被污染 https://midwayjs.org/midway/ioc.html#%E9%85%8D%E7%BD%AE%E4%BD%9C%E7%94%A8%E5%9F%9F
+   */
+  protected queryBuilderInstance?: BuildsQueries;
+
+  /**
    * 获取登录用户的模型
    *
    * @returns {UserModel}
    */
-  getUserModel() {
-    return UserModel;
+  abstract model(): typeof BaseModel
+
+  /**
+   * 创建查询构造器
+   */
+  makeQueryBuilder(): BuildsQueries {
+    this.queryBuilderInstance = new BuildsQueries(this.model());
+
+    return this.queryBuilderInstance;
+  }
+
+  /**
+   * 获取查询构造器
+   */
+  queryBuilder(): BuildsQueries {
+    return this.queryBuilderInstance || this.makeQueryBuilder();
   }
 
   // 验证登录数据
@@ -155,9 +174,10 @@ export class BaseAuthService {
     const userLoginType = this.getUserLoginType();
 
     // 查询用户信息
-    const result = await this.getUserModel().findOne({
-      where: { [userLoginType]: this.ctx.request.body[userLoginType] },
-    });
+    const result = await this.queryBuilder()
+      .where(userLoginType, this.ctx.request.body[userLoginType])
+      .skipHidden()
+      .first();
 
     // 判断是否存在该用户跟密码是否一致
     if (! result || ! this.ctx.helper.verifyBcrypt(password, result.password)) {
@@ -191,6 +211,7 @@ export class BaseAuthService {
     return {
       id: userInfo.id || '',
       username: userInfo.username || '',
+      name: userInfo.name || '',
       nickname: userInfo.nickname || '',
       avatar: userInfo.avatar || '',
     };

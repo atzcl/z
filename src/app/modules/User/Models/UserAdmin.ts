@@ -6,18 +6,14 @@
 |
 */
 
-import {
-  DataType, Table, Column, CreatedAt, UpdatedAt, DeletedAt,
-} from 'sequelize-typescript';
+import { Table, Column } from 'sequelize-typescript';
 import Helper from '@app/extend/helper';
-import { BaseModel, FormatTimestamp } from '@app/foundation/Bases/Model/BaseModel';
-
-
-const { STRING } = DataType;
+import { BaseModel, DefaultColumns } from '@app/foundations/ORM/Model';
 
 @Table({
   modelName: 'user_admins',
 })
+@DefaultColumns({ except: ['user_application_platform_id'] })
 export class UserAdminModel extends BaseModel<UserAdminModel> {
   /**
    * @param {string[]} 输出数据时，隐藏字段数组 [ 黑名单 ]
@@ -32,9 +28,6 @@ export class UserAdminModel extends BaseModel<UserAdminModel> {
   set password(value: string) {
     this.setDataValue('password', Helper.createBcrypt(value));
   }
-
-  @Column({ type: STRING, primaryKey: true, unique: true })
-  id!: string;
 
   @Column({ unique: true, allowNull: true })
   username!: string;
@@ -84,26 +77,15 @@ export class UserAdminModel extends BaseModel<UserAdminModel> {
   @Column({ allowNull: true })
   userToken!: string;
 
-  @CreatedAt
-  @FormatTimestamp
-  createdAt!: Date;
-
-  @UpdatedAt
-  @FormatTimestamp
-  updatedAt!: Date;
-
-  @DeletedAt
-  @FormatTimestamp
-  deletedAt!: Date;
-
   /**
    * 用 id 查询指定用户信息
    *
    * @param id
    */
   static async getUserById(id: string) {
-    return this.where({ id })
-      .field(['id', 'avatar', 'sex', 'phone', 'name', 'username'])
-      ._findOne();
+    return this.findOne({
+      where: { id },
+      attributes: ['id', 'avatar', 'sex', 'phone', 'name', 'username'],
+    });
   }
 }

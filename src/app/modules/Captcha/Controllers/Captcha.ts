@@ -8,7 +8,12 @@
 
 import { controller, get, provide, inject, post } from 'midway';
 import { CaptchaService, SERVICE_PROVIDE } from '@app/modules/Captcha/Services/Captcha';
-import { Controller } from '@app/foundation/Bases/BaseController';
+import { Controller } from '@app/foundations/Bases/BaseController';
+
+import { SkipPermissionCheck } from '@/app/foundations/Support/SkipPermissionCheck';
+
+
+SkipPermissionCheck.addWildRoute('/captchas');
 
 @provide()
 @controller('/captchas')

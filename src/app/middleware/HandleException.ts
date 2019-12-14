@@ -8,6 +8,28 @@
 
 import { Context } from 'midway';
 
+import { CONTAINER_NAME, Queue } from '../foundations/Queue';
+
+
+const exceptionNotify = async (ctx: Context, error: Error) => {
+  const queue = await ctx.requestContext.getAsync(CONTAINER_NAME) as Queue
+
+  const { myApp } = ctx.app.config;
+
+  queue.clients.dingtalk.dispatch(
+    'exceptionNotify',
+    {
+      error: { name: error.name, message: error.message, stack: error.stack },
+      config: {
+        appName: myApp.appName,
+        url: ctx.request.href,
+        ip: ctx.ip,
+        exceptionNotify: myApp.exceptionNotify,
+      },
+    },
+  )
+}
+
 
 export default function exceptionsMiddleware() {
   return async (ctx: Context, next: () => Promise<any>) => {
@@ -48,8 +70,8 @@ export default function exceptionsMiddleware() {
         statusMessage = '非法的 token';
       }
 
-      // 应用异常通知, 异步调用，不需要等待，避免阻塞
-      // ctx.service.exceptions.handler(error);
+      // 应用异常通知
+      await exceptionNotify(ctx, error)
 
       // 响应返回
       ctx.helper.toResponse(statusCode, null, statusMessage);

@@ -7,10 +7,12 @@
 */
 
 import { Application } from 'midway';
-import { Cache as CacheClient } from '@app/foundation/Support/Cache';
+import { Cache as CacheClient } from '@app/foundations/Support/Cache';
 
 
 const CACHE_SYMBOL = Symbol('Application#cache');
+
+type ExpandApplication = Application & { [CACHE_SYMBOL]: CacheClient, }
 
 const extendApplication = {
   /**
@@ -28,15 +30,15 @@ const extendApplication = {
    * todo: 当前只简单地返回缓存实例
    * todo: 待实现缓存底层的类型切换、快捷的缓存操作
    */
-  get cache(): CacheClient {
-    if (! this.self[CACHE_SYMBOL]) {
-      this.self[CACHE_SYMBOL] = new CacheClient(
-        this.self.redis,
-        this.self.config.myApp.appName || 'atzcl',
+  get cache(this: ExpandApplication): CacheClient {
+    if (! this[CACHE_SYMBOL]) {
+      this[CACHE_SYMBOL] = new CacheClient(
+        this.redis,
+        this.config.myApp.appName || 'atzcl',
       );
     }
 
-    return this.self[CACHE_SYMBOL];
+    return this[CACHE_SYMBOL];
   },
 
   /**

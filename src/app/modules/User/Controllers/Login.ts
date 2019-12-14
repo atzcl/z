@@ -1,8 +1,8 @@
 import { provide, inject, controller, post } from 'midway';
 
 import { UserLoginService } from '@/app/modules/User/Services/Auth/Login';
-import { Controller } from '@/app/foundation/Bases/BaseController';
-import { validate } from '@/app/foundation/Decorators/Validate';
+import { Controller } from '@/app/foundations/Bases/BaseController';
+import { validate } from '@/app/foundations/Decorators/Validate';
 
 @provide()
 @controller('/users')

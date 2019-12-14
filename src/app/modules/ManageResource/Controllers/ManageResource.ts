@@ -10,7 +10,7 @@ import * as path from 'path';
 
 import { controller, provide, post, get, Context } from 'midway';
 import * as fs from 'fs-extra';
-import { Upload } from '@app/foundation/Support/Upload';
+import { Upload } from '@app/foundations/Support/Upload';
 
 @provide()
 @controller('/resources')

@@ -9,7 +9,7 @@
 import { Context } from 'midway';
 import { AppFlowException } from '@app/exceptions/AppFlowException';
 
-import { ValidationRules } from '../foundation/Support/Validator';
+import { ValidationRules } from '../foundations/Support/Validator';
 
 
 const extendContext = {

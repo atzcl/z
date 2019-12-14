@@ -8,9 +8,9 @@
 
 import { provide } from 'midway';
 import * as dayjs from 'dayjs';
-import { Service } from '@app/foundation/Bases/BaseService';
-import { Captcha } from '@app/foundation/Support/Captcha';
-import { Cache } from '@app/foundation/support/cache';
+import { Service } from '@app/foundations/Bases/BaseService';
+import { Captcha } from '@app/foundations/Support/Captcha';
+import { Cache } from '@app/foundations/support/cache';
 import Helper from '@app/extend/helper';
 
 
@@ -20,6 +20,10 @@ export const SERVICE_PROVIDE = 'captchaService';
 export class CaptchaService extends Service {
   // 验证码 token 缓存标识
   private readonly tokenCachePrefix = 'captcha:token:';
+
+  model() {
+    return '' as any
+  }
 
   /**
    * 生成验证码

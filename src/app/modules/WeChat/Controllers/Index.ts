@@ -7,15 +7,19 @@
 */
 
 import { controller, provide, inject, all, get } from 'midway';
+import { Controller } from '@app/foundations/Bases/BaseController';
 
 import { WeChatMessageService } from '../Services/Message';
 
-import { Controller } from '@/app/foundation/Bases/BaseController';
-import { WeChat } from '@/wechat';
-import { Image } from '@/app/foundation/WeChat/Kernel/Messages/Image';
-import { Text } from '@/app/foundation/WeChat/Kernel/Messages/Text';
-import { MessageEnum } from '@/app/foundation/WeChat/Kernel/Messages/Message';
-import { WeChatMessageText } from '@/app/foundation/WeChat/OfficialAccount/Server/Interceptors';
+import { WeChat } from '@/app/foundations/WeChat';
+import { Image } from '@/app/foundations/WeChat/Kernel/Messages/Image';
+import { Text } from '@/app/foundations/WeChat/Kernel/Messages/Text';
+import { MessageEnum } from '@/app/foundations/WeChat/Kernel/Messages/Message';
+import { WeChatMessageText } from '@/app/foundations/WeChat/OfficialAccount/Server/Interceptors';
+import { SkipPermissionCheck } from '@/app/foundations/Support/SkipPermissionCheck';
+
+
+SkipPermissionCheck.addWildRoute('/wechat');
 
 @provide()
 @controller('/wechat')
@@ -50,7 +54,7 @@ export class WeChatController extends Controller {
     server.push(this.weChatMessageService.handleAllMessage.bind(this.weChatMessageService));
 
     // 响应给微信服务器
-    await server.serve(this.request, this.response);
+    return server.serve(this.request, this.response);
   }
 
   // 上传素材

@@ -8,15 +8,19 @@
 
 import { provide } from 'midway';
 
-import { Service } from '@/app/foundation/Bases/BaseService';
-import { Text } from '@/app/foundation/WeChat/Kernel/Messages/Text';
-import { WeChatMessageEvent, WeChatMessageSubject } from '@/app/foundation/WeChat/OfficialAccount/Server/Interceptors';
+import { Service } from '@/app/foundations/Bases/BaseService';
+import { Text } from '@/app/foundations/WeChat/Kernel/Messages/Text';
+import { WeChatMessageEvent, WeChatMessageSubject } from '@/app/foundations/WeChat/OfficialAccount/Server/Interceptors';
 
 // 在容器的 id 名称
 export const SERVICE_PROVIDE = 'weChatMessageService';
 
 @provide(SERVICE_PROVIDE)
 export class WeChatMessageService extends Service {
+  model() {
+    return void '' as any
+  }
+
   /**
    * 在一个方式里面处理分发所有的消息事件
    *

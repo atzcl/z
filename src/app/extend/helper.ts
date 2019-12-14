@@ -8,14 +8,32 @@
 
 import { createHash } from 'crypto';
 import * as path from 'path';
+import { isObject } from 'util';
 
 import { Context, EggAppConfig } from 'midway';
 import * as dayjs from 'dayjs';
 import * as bcryptjs from 'bcryptjs';
 import * as UUIDV4 from 'uuid/v4';
 import { random } from 'lodash';
-import { JWT } from '@app/foundation/Support/Jwt';
+import { JWT } from '@app/foundations/Support/Jwt';
 
+
+interface LoopOrganizeDataAsTreeFormatProps<V extends any>{
+  // 数据源
+  dataSource: V[];
+  // 上级节点的数据, 默认为 0
+  pid?: number | string;
+  // 主键的字段名称
+  pkField?: string;
+  // name 的字段名称
+  nameField?: string;
+  // 上级节点的字段名称
+  pidField?: string;
+  // 下级数据的字段名称
+  childrenField?: string;
+  // 自定义格式回调
+  customFormatCallback?: (data: V) => V;
+}
 
 export default {
   /**
@@ -181,25 +199,61 @@ export default {
     }
   },
 
-  getElChildren({
-    data = [],
+  /**
+   * 安全的JSON.parse
+   */
+  safeJsonParse(data: any = ''): object {
+    if (isObject(data)) {
+      return data;
+    }
+
+    try {
+      return JSON.parse(data);
+    } catch (error) {
+      return {}
+    }
+  },
+
+  /**
+   * 将一维数组转化为树形结构
+   *
+   * @param {LoopOrganizeDataAsTreeFormatProps<any>} props 配置项
+   */
+  loopConvertOneDimensionalArrayIntoTree<V extends any>({
+    dataSource = [],
     pid = 0,
-    name = 'name',
-    key = 'parent_id',
-    pk = 'id',
-    children = 'children',
-  }: { data: any[], pid: number, name: string, key: string, pk: string, children: string, }) {
+    pkField = 'id',
+    nameField = 'name',
+    pidField = 'parent_id',
+    childrenField = 'children',
+    customFormatCallback,
+  }: LoopOrganizeDataAsTreeFormatProps<V>) {
     // 创建数据
     const tree = [];
 
-    for (const item of data) {
-      if (item[key] === pid) {
-        item[children] = this.getElChildren({
-          data, pid: item[pk], name, key, pk, children,
-        });
+    // eslint-disable-next-line no-plusplus
+    for (let index = 0; index < dataSource.length; index++) {
+      let item = dataSource[index];
 
-        item.value = item[pk];
-        item.label = item[name];
+      if (item[pidField] === pid) {
+        if (customFormatCallback) {
+          // 自定义格式
+          item = customFormatCallback(item)
+        } else {
+          item.value = item[pkField];
+          item.label = item[nameField];
+        }
+
+        // 剔除已命中的数据，减少内存使用
+        dataSource.splice(index, index);
+
+        item[childrenField] = ! dataSource.length
+          ? []
+          : (
+            this.loopConvertOneDimensionalArrayIntoTree({
+              dataSource, pid: item[pkField], nameField, pidField, pkField, childrenField,
+            })
+          );
 
         // 储存到数组
         tree.push(item);
@@ -207,5 +261,5 @@ export default {
     }
 
     return tree;
-  },
+  }
 };
