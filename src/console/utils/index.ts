@@ -8,7 +8,7 @@
 
 import * as path from 'path';
 
-import chalk from 'chalk';
+import * as chalk from 'chalk';
 import * as ejs from 'ejs';
 import * as plural from 'plural';
 import { camelCase, upperFirst } from 'lodash';

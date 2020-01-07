@@ -12,9 +12,12 @@ import { CONTAINER_NAME, Queue } from '../foundations/Queue';
 
 
 const exceptionNotify = async (ctx: Context, error: Error) => {
-  const queue = await ctx.requestContext.getAsync(CONTAINER_NAME) as Queue
-
   const { myApp } = ctx.app.config;
+  if (!myApp.exceptionNotify.enable) {
+    return;
+  }
+
+  const queue = await ctx.requestContext.getAsync(CONTAINER_NAME) as Queue;
 
   queue.clients.dingtalk.dispatch(
     'exceptionNotify',

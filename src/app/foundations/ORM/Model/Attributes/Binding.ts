@@ -13,7 +13,7 @@ import {
 
 export type TScopesValue = (string | { method: string | [string, ...unknown[]], })[];
 
-export type TTransactionLOCK = keyof Transaction.LOCK;
+export type TTransactionLOCK = keyof typeof Transaction.LOCK;
 
 
 export interface IBindings {
