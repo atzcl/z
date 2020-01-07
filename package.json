@@ -73,6 +73,7 @@
     "stop": "egg-scripts stop --title=z",
     "start_build": "npm run build && cross-env NODE_ENV=development midway-bin dev",
     "dev": "cross-env NODE_ENV=local midway-bin dev --ts",
+    "docker": "NODE_ENV=production node ./node_modules/midway/server.js",
     "debug": "cross-env NODE_ENV=local midway-bin debug --ts",
     "test": "npm run lint && midway-bin test --ts",
     "cov": "midway-bin cov --ts",

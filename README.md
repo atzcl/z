@@ -35,6 +35,8 @@ cp src/config/config.example src/config/config.default.ts
 
 **3、执行数据库迁移**
 >sequelize-cli 的数据库迁移并不好用，主要是它没办法定义多目录的 migration, 所以当前使用的是 typeorm 的数据库迁移功能
+
+>遇到出现 UnhandledPromiseRejectionWarning: QueryRunnerAlreadyReleasedError: Query runner already released. Cannot run queries anymore. 错误，请无需担心，这是 typeorm 的一个 bug, 不会影响迁移结果
 ```bash
 yarn typeorm migration:run
 ```
@@ -46,6 +48,9 @@ yarn dev
 
 ## 部署
 > 更多请看 [midway 部署](https://midwayjs.org/midway/guide.html#%E9%83%A8%E7%BD%B2)
+
+**使用 docker**
+详见 docker 手册跟 Dockerfile
 
 **使用 pm2**
 ```bash
