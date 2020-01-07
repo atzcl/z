@@ -9,7 +9,7 @@ export class CreateUserAdminsData1550642892566 implements MigrationInterface {
         const password = Helper.createBcrypt('~!!~123');
         const name = 'atzcl';
 
-        await queryRunner.query("INSERT INTO `user_admins`(`id`, `username`, `password`, `nickname`, `avatar`) VALUES ('77786bfc-7a75-4a6a-a761-9c1681e1419c', '" + username + "', '" + password + "', '" + name + "', 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg');");
+        await queryRunner.query("INSERT INTO `user_admins`(`id`, `username`, `password`, `nickname`, `avatar`) VALUES ('77786bfc7a754a6aa7619c1681e1419c', '" + username + "', '" + password + "', '" + name + "', 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg');");
     }
 
     public async down(queryRunner: QueryRunner): Promise<any> {
