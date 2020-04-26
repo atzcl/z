@@ -7,7 +7,9 @@
 */
 
 import { controller, provide, inject, get, post, put, del } from 'midway';
-import { Controller } from '@app/foundation/Bases/BaseController';
+import { Controller } from '@app/foundations/Bases/BaseController';
+import { validate } from '@app/foundations/Decorators/Validate';
+import { CURD } from '@/app/foundations/Decorators';
 
 @provide()
 @controller('/<%= routerName %>', { middleware: ['verifyJWTMiddleware'] as GlobalMiddlewareNames })
@@ -16,28 +18,37 @@ export class <%= name %>Controller extends Controller {
   service!: Service;
 
   @get('/')
+  @CURD.paginate()
   async index() {
-    const result = await this.service.getPaginate(this.request);
+    //
+  }
 
-    return this.setStatusData(result.data).setStatusTotal(result.count).succeed();
+  @get('/:id')
+  @CURD.show
+  async show() {
+    //
   }
 
   @post('/')
+  @validate({
+    data: {
+      required: true, message: '请提交数据',
+    },
+  })
+  @CURD.store
   async store() {
-    const result = await this.service.store(this.request._body());
-
-    return this.setStatusData(result).succeed();
+    //
   }
 
   @put('/:id')
+  @CURD.update
   async update() {
-    const result = await this.service.update(this.request._query('id'), this.request._body());
-
-    return this.setStatusData(result).succeed();
+    //
   }
 
   @del('/:id')
+  @CURD.destroy
   async destroy() {
-    return this.setStatusData(await this.service.delete(this.ctx.params.id)).succeed();
+    //
   }
 }

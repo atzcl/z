@@ -37,29 +37,3 @@ export const AddUserApplicationPlatformScope = {
     }
   },
 }
-
-// export const AddUserApplicationPlatformScope = (target: any) => {
-//   addScopeOptions(target.prototype, {
-//     getScopes: () => ({
-//       // user_application_platform_id 的 where 条件
-//       [UserApplicationPlatformScopes.where](id: string) {
-//         return {
-//           where: {
-//             user_application_platform_id: id,
-//           },
-//         }
-//       },
-
-//       // user_application_platform_id 的 orWhere 条件
-//       [UserApplicationPlatformScopes.orWhere](id: string) {
-//         return {
-//           where: {
-//             user_application_platform_id: {
-//               [operatorTypes.or]: id,
-//             },
-//           },
-//         }
-//       },
-//     }),
-//   });
-// }

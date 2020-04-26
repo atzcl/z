@@ -58,9 +58,9 @@ export default {
    * @throws {AppFlowException}
    */
   bearerToken() {
-    const getToken = this.self.get('authorization');
-    if (getToken && getToken.length > 10) {
-      return getToken.split(' ')[1];
+    const authorizationValue = this.self.get('authorization');
+    if (authorizationValue && authorizationValue.length > 10) {
+      return authorizationValue.split(' ')[1];
     }
 
     throw new AppFlowException('authorization bearer token empty', 422);

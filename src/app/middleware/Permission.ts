@@ -37,40 +37,34 @@ export default function permissionMiddleware(): Middleware {
       return next();
     }
 
-    // 获取 header 携带的 authorization 头
-    const getToken = ctx.get('authorization');
-    // 判断是否有有携带 authorization 头
-    if (getToken) {
-      try {
-        const [, token] = getToken.split(' ');
+    try {
+      // 获取通过 authorization 携带的 token 数据
+      const token = ctx.request.bearerToken();
 
-        /**
-         * @desc 根据不同入口, 设置不同的 jwt secret 来进行 jwt 鉴权,
-         *       这个不同入口的判断就是根据 url 来判断，当前约定，如果在 url 上面携带了指定的入口名称，那么就切换到对应的 jwt secret
-         *       所以在设置路由的时候，应该避开这样关键词
-         *
-         * @example /users/login ---> 客户端入口，使用默认的 jwt secret 解签
-         *          /users/admin/login ----> 管理后台入口，使用 jwt.adminSecret 解签
-         */
+      /**
+       * @desc 根据不同入口, 设置不同的 jwt secret 来进行 jwt 鉴权,
+       *       这个不同入口的判断就是根据 url 来判断，当前约定，如果在 url 上面携带了指定的入口名称，那么就切换到对应的 jwt secret
+       *       所以在设置路由的时候，应该避开这样关键词
+       *
+       * @example /users/login ---> 客户端入口，使用默认的 jwt secret 解签
+       *          /users/admin/login ----> 管理后台入口，使用 jwt.adminSecret 解签
+       */
 
-        // 默认为初始化的 secret, 用于正常客户端入口
-        let entryJwtSecret = jwt.secret;
-        // 判断是否是后台用户
-        if (ctx.path.split('/').includes(adminPrefix)) {
-          entryJwtSecret = jwt.adminSecret;
-        }
-
-        // 验证 token 是否合法有效，并将解密后的 sub 数据挂载到 request 的 body 的 jwt_sub 中，方便后续使用
-        ctx.request.body.jwtUserClaims = await ctx.helper.jwt({ secret: entryJwtSecret }).getCustomClaims(token);
-
-        // 放行
-        return next();
-      } catch (error) {
-        //
+      // 默认为初始化的 secret, 用于正常客户端入口
+      let entryJwtSecret = jwt.secret;
+      // 判断是否是后台用户
+      if (ctx.path.split('/').includes(adminPrefix)) {
+        entryJwtSecret = jwt.adminSecret;
       }
-    }
 
-    // 中断后续
-    ctx.abort(401, '请登录');
+      // 验证 token 是否合法有效，并将解密后的 sub 数据挂载到 request 的 body 的 jwt_sub 中，方便后续使用
+      ctx.request.body.jwtUserClaims = await ctx.helper.jwt({ secret: entryJwtSecret }).getCustomClaims(token);
+
+      // 放行
+      return next();
+    } catch (error) {
+      // 中断后续
+      ctx.abort(401, '请登录');
+    }
   };
 }

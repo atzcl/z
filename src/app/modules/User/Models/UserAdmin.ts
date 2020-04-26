@@ -13,7 +13,7 @@ import { BaseModel, DefaultColumns } from '@app/foundations/ORM/Model';
 @Table({
   modelName: 'user_admins',
 })
-@DefaultColumns({ except: ['user_application_platform_id'] })
+@DefaultColumns
 export class UserAdminModel extends BaseModel<UserAdminModel> {
   /**
    * @param {string[]} 输出数据时，隐藏字段数组 [ 黑名单 ]

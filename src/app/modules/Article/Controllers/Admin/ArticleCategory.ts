@@ -14,7 +14,7 @@ import { validate } from '@app/foundations/Decorators/Validate';
 
 import { ArticleCategoryServiceFromAdmin, SERVICE_PROVIDE } from '../../Services/Admin/ArticleCategory';
 
-import { CURD, SetApplicationPlatformIdToRequestBody, Body, Param } from '@/app/foundations/Decorators';
+import { CURD, Body, Param } from '@/app/foundations/Decorators';
 
 @provide()
 @controller(getAdminRoute('articles/categories'))
@@ -41,7 +41,6 @@ export class ArticleAdminArticleCategoryController extends Controller {
 
   // 更新排序
   @put('/sort')
-  @SetApplicationPlatformIdToRequestBody
   @validate({
     ids: { required: true, type: 'array' },
   })

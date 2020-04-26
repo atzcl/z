@@ -6,7 +6,6 @@
 |
 */
 
-import { DataType } from 'sequelize-typescript';
 import { addOptions } from 'sequelize-typescript/dist/model/shared/model-service';
 import { addAttribute } from 'sequelize-typescript/dist/model/column/attribute-service';
 
@@ -19,7 +18,6 @@ import { FormatTimestampOptions } from './FormatTimestamp';
 
 export interface IDefaultColumns {
   id: string;
-  user_application_platform_id: string;
   created_at: Date;
   updated_at: Date;
   deleted_at: Date;
@@ -28,12 +26,6 @@ export interface IDefaultColumns {
 // https://github.com/RobinBuschmann/sequelize-typescript/blob/master/src/model/column/timestamps/deleted-at.ts
 const columnOptions = {
   id: uuidPrimaryKeyOptions('id'),
-
-  user_application_platform_id: {
-    type: DataType.STRING,
-    allowNull: false,
-    comment: '当前应用所属人的 id',
-  },
 
   created_at: FormatTimestampOptions('created_at'),
   updated_at: FormatTimestampOptions('updated_at'),

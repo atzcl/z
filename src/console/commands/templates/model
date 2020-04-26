@@ -6,15 +6,14 @@
 |
 */
 
-import { DataType, Table, Column } from 'sequelize-typescript';
-import { BaseModel, DefaultColumns } from '@app/foundation/Bases/Model/BaseModel';
-
-const { STRING } = DataType;
+import { Table, Column } from 'sequelize-typescript';
+import { BaseModel, DefaultColumns } from '@app/foundations/ORM/Model';
 
 @Table({
   modelName: '<%= pluralName %>',
 })
 @DefaultColumns
 export class <%= name %>Model extends BaseModel<<%= name %>Model> {
-  //
+  @Column
+  str!: string;
 }
