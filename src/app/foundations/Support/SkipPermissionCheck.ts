@@ -6,7 +6,7 @@ export class SkipPermissionCheck {
   protected static routePaths: string[] = [];
 
   protected static addRoutePaths(path: string) {
-    if (this && isStr(path) && this.routePaths && ! this.routePaths.includes(path)) {
+    if (isStr(path) && ! this.routePaths.includes(path)) {
       this.routePaths.push(path)
     }
   }
@@ -20,6 +20,6 @@ export class SkipPermissionCheck {
   }
 
   static add(path: string | string[]) {
-    isArr(path) ? path.forEach(this.addRoutePaths) : this.addRoutePaths(path);
+    isArr(path) ? path.forEach(url => this.addRoutePaths(url)) : this.addRoutePaths(path);
   }
 }
