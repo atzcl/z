@@ -30,15 +30,17 @@ const extendApplication = {
    * todo: 当前只简单地返回缓存实例
    * todo: 待实现缓存底层的类型切换、快捷的缓存操作
    */
-  get cache(this: ExpandApplication): CacheClient {
-    if (! this[CACHE_SYMBOL]) {
-      this[CACHE_SYMBOL] = new CacheClient(
-        this.redis,
-        this.config.myApp.appName || 'atzcl',
+  get cache(): CacheClient {
+    const self = (this as any) as ExpandApplication;
+
+    if (! self[CACHE_SYMBOL]) {
+      self[CACHE_SYMBOL] = new CacheClient(
+        self.redis,
+        self.config.myApp.appName || 'atzcl',
       );
     }
 
-    return this[CACHE_SYMBOL];
+    return self[CACHE_SYMBOL];
   },
 
   /**

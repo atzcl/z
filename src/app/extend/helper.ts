@@ -13,7 +13,7 @@ import { isObject } from 'util';
 import { Context, EggAppConfig } from 'midway';
 import * as dayjs from 'dayjs';
 import * as bcryptjs from 'bcryptjs';
-import * as UUIDV4 from 'uuid/v4';
+import { v4 as UUIDV4 } from 'uuid';
 import { random } from 'lodash';
 import { JWT } from '@app/foundations/Support/Jwt';
 
@@ -233,7 +233,7 @@ export default {
 
     // eslint-disable-next-line no-plusplus
     for (let index = 0; index < dataSource.length; index++) {
-      let item = dataSource[index];
+      let item = dataSource[index] as any;
 
       if (item[pidField] === pid) {
         if (customFormatCallback) {
