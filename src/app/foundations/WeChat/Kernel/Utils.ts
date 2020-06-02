@@ -9,7 +9,7 @@
 import { createHash, createHmac } from 'crypto';
 
 import { Builder, parseString, OptionsV2 } from 'xml2js';
-import * as UUIDV4 from 'uuid/v4';
+import { v4 as UUIDV4 } from 'uuid';
 
 
 type Sha256Encoding = 'utf8' | 'ascii' | 'latin1';

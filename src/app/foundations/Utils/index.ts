@@ -1,5 +1,5 @@
-import * as UUIDV4 from 'uuid/v4';
 import * as pinyin from 'pinyin-no-jieba';
+import { v4 as UUIDV4 } from 'uuid';
 
 
 export { pinyin }
