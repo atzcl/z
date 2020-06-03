@@ -1,5 +1,6 @@
 import * as pinyin from 'pinyin-no-jieba';
 import { v4 as UUIDV4 } from 'uuid';
+import { isNaN } from 'lodash';
 
 
 export { pinyin }
@@ -51,7 +52,7 @@ export const isEmpty = (value: any) => value === null || value === undefined
 export const isEmptyByAllTypes = (value: any) =>
   isEmpty(value)
   || value === ''
-  || value === NaN
+  || isNaN(value)
   || value === 0
   || (isObj(value)
     ? !!Object.keys(value).length
