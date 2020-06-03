@@ -9,7 +9,7 @@
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Redis } from 'ioredis';
-import { isEmptyByAllTypes } from '../Utils';
+import { isEmptyByAllTypes, isEmpty } from '../Utils';
 
 
 type unitType = 'h' | 'm' | 's' | 'ms';
@@ -52,7 +52,7 @@ export class Cache {
   ) {
     let t = Number(time);
 
-    if (isEmptyByAllTypes(key) || isEmptyByAllTypes(value) || Number.isNaN(t)) {
+    if (isEmptyByAllTypes(key) || isEmpty(value) || Number.isNaN(t)) {
       return this.abortError('请传入正确参数');
     }
 
@@ -118,7 +118,7 @@ export class Cache {
    * @returns {boolean} 是否存在
    */
   async has(key: string): Promise<boolean> {
-    return !isEmptyByAllTypes(await this.get(key));
+    return !isEmpty(await this.get(key));
   }
 
   /**

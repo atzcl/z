@@ -46,9 +46,10 @@ export const isStr = isType<string>('String');
 
 export const isNum = isType<number>('Number');
 
+export const isEmpty = (value: any) => value === null || value === undefined
 
-export const isEmptyByAllTypes = (value: any) => value === null
-  || value === undefined
+export const isEmptyByAllTypes = (value: any) =>
+  isEmpty(value)
   || value === ''
   || value === NaN
   || value === 0
