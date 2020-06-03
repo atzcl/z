@@ -45,3 +45,16 @@ export const isObj = isType<object>('Object');
 export const isStr = isType<string>('String');
 
 export const isNum = isType<number>('Number');
+
+
+export const isEmptyByAllTypes = (value: any) => value === null
+  || value === undefined
+  || value === ''
+  || value === NaN
+  || value === 0
+  || (isObj(value)
+    ? !!Object.keys(value).length
+    : isArr(value)
+      ? !!value.length
+      : false
+    );

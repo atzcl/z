@@ -9,7 +9,7 @@
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Redis } from 'ioredis';
-import { isNull } from 'lodash';
+import { isEmptyByAllTypes } from '../Utils';
 
 
 type unitType = 'h' | 'm' | 's' | 'ms';
@@ -50,16 +50,17 @@ export class Cache {
     time = 0,
     unit: unitType = 's',
   ) {
-    if (isNull(key) || isNull(value)) {
+    let t = Number(time);
+
+    if (isEmptyByAllTypes(key) || isEmptyByAllTypes(value) || Number.isNaN(t)) {
       return this.abortError('请传入正确参数');
     }
 
     // 为了能传入 object、array 这类的值，所以这里转换成 json
     const data = JSON.stringify(value);
     let un = unit;
-    let t = time;
 
-    if (! isNull(t)) {
+    if (t) {
       // 转换为小写
       un = un.toLowerCase() as unitType;
 
@@ -96,7 +97,7 @@ export class Cache {
    * @param {any} def 当缓存不存在的时候, 返回的默认值
    */
   async get(key: string, def: any = null) {
-    if (isNull(key)) {
+    if (isEmptyByAllTypes(key)) {
       return this.abortError('请传入需要获取的缓存名称');
     }
 
@@ -114,10 +115,10 @@ export class Cache {
    * 判断缓存是否存在
    *
    * @param {string} key
-   * @returns {boolean} tue 存在；false 不存在
+   * @returns {boolean} 是否存在
    */
   async has(key: string): Promise<boolean> {
-    return ! isNull(await this.get(key));
+    return !isEmptyByAllTypes(await this.get(key));
   }
 
   /**
@@ -126,7 +127,7 @@ export class Cache {
    * @param {string} key 缓存标识
    */
   async del(key: string) {
-    if (isNull(key)) {
+    if (isEmptyByAllTypes(key)) {
       return this.abortError('请传入需要删除的缓存名称');
     }
 
