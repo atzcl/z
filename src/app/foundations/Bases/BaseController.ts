@@ -21,7 +21,7 @@ interface ApiToResponse {
 
 // 拼接 admin 的路由
 export const getAdminRoute = (prefix: string, suffix?: string) => (
-  `/${prefix}/${adminPrefix}${suffix ? '/' + suffix.replace('/', '') : ''}`
+  `/${prefix}/${adminPrefix}${suffix ? ('/' + suffix).replace('//', '/') : ''}`
 )
 
 export class Controller extends BaseRequest {
