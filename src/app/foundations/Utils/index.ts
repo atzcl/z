@@ -50,13 +50,14 @@ export const isNum = isType<number>('Number');
 export const isEmpty = (value: any) => value === null || value === undefined
 
 export const isEmptyByAllTypes = (value: any) =>
-  isEmpty(value)
-  || value === ''
-  || isNaN(value)
-  || value === 0
-  || (isObj(value)
-    ? !!Object.keys(value).length
+  isEmpty(value) ||
+  value === '' ||
+  Number.isNaN(value) ||
+  value === 0 ||
+  (
+    isObj(value)
+    ? !Object.keys(value).length
     : isArr(value)
-      ? !!value.length
+      ? !value.length
       : false
-    );
+  );
