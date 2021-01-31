@@ -1,7 +1,5 @@
 import * as pinyin from 'pinyin-no-jieba';
 import { v4 as UUIDV4 } from 'uuid';
-import { isNaN } from 'lodash';
-
 
 export { pinyin }
 
